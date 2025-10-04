@@ -57,13 +57,13 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-xl shadow-lg border-t-4 border-custom-red mb-6">
                 <h2 class="text-xl font-semibold text-gray-800 mb-3 sm:mb-0">Active Staff Roster</h2>
                 <div class="flex space-x-3 w-full sm:w-auto">
-                    <select class="p-2 border border-gray-300 rounded-lg text-sm focus:ring-custom-blue focus:border-custom-blue">
-                        <option>Filter by Status</option>
-                        <option>Active</option>
-                        <option>On Leave</option>
-                        <option>Suspended</option>
+                    <select id="status-filter" class="p-2 border border-gray-300 rounded-lg text-sm focus:ring-custom-blue focus:border-custom-blue">
+                        <option value="">Filter by Status</option>
+                        <option value="Active">Active</option>
+                        <option value="On Leave">On Leave</option>
+                        <option value="Suspended">Suspended</option>
                     </select>
-                    <button class="bg-custom-blue text-white p-2 rounded-lg text-sm font-medium hover:bg-indigo-600 transition-colors shadow-md flex items-center">
+                    <button id="add-employee-button" class="bg-custom-blue text-white p-2 rounded-lg text-sm font-medium hover:bg-indigo-600 transition-colors shadow-md flex items-center">
                         <i class="fa-solid fa-user-plus sm:mr-2"></i> <span class="hidden sm:inline">Add New Employee</span>
                     </button>
                 </div>
@@ -71,7 +71,7 @@
 
             <div class="bg-white rounded-xl shadow-xl overflow-x-auto">
                 <div class="p-6">
-                    <h3 class="text-lg font-medium text-gray-700 mb-4 border-b pb-2">Employee Details (5 Total)</h3>
+                    <h3 class="text-lg font-medium text-gray-700 mb-4 border-b pb-2">Employee Details (<span id="employee-count-header">5</span> Total)</h3>
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
@@ -88,12 +88,14 @@
                     </table>
                 </div>
                 <div class="p-4 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">
-                    <span class="mb-2 sm:mb-0">Showing 1 to 5 of 45 total employees</span>
+                    <span class="mb-2 sm:mb-0">Showing <span id="pagination-start-index">1</span> to <span id="pagination-end-index">5</span> of <span id="employee-total-count-footer">45</span> total employees</span>
                     <div class="space-x-1">
-                        <button class="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50" disabled>&leftarrow; Previous</button>
-                        <span class="px-3 py-1 bg-custom-blue text-white rounded-lg">1</span>
-                        <button class="p-2 rounded-lg hover:bg-gray-100">2</button>
-                        <button class="p-2 rounded-lg hover:bg-gray-100">Next &rightarrow;</button>
+                        <button id="pagination-prev" class="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50" disabled>&leftarrow; Previous</button>
+                        <span id="pagination-pages" class="space-x-1">
+                            <span class="px-3 py-1 bg-custom-blue text-white rounded-lg">1</span>
+                            <button class="p-2 rounded-lg hover:bg-gray-100">2</button>
+                        </span>
+                        <button id="pagination-next" class="p-2 rounded-lg hover:bg-gray-100">Next &rightarrow;</button>
                     </div>
                 </div>
             </div>

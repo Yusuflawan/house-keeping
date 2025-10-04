@@ -61,7 +61,7 @@
                         <li class="text-gray-400">/</li>
                         <li><a href="employees-list.html" class="hover:text-custom-blue">Employees</a></li>
                         <li class="text-gray-400">/</li>
-                        <li class="font-semibold text-gray-700">Jane Doe</li>
+                        <li class="font-semibold text-gray-700" id="employee-name-breadcrumb">Jane Doe</li>
                     </ol>
                 </nav>
                 <div class="h-px bg-gray-200 mt-4"></div>
@@ -76,7 +76,7 @@
                             <i class="fa-solid fa-user-circle"></i>
                         </div>
                         <h2 class="text-2xl font-bold text-gray-800" id="employee-card-name">Jane Doe</h2>
-                        <p class="text-sm text-gray-500 mb-4">Employee ID: <span class="font-semibold text-custom-blue">E-001</span></p>
+                        <p class="text-sm text-gray-500 mb-4">Employee ID: <span class="font-semibold text-custom-blue" id="employee-id-span">E-001</span></p>
 
                         <span id="employee-status" class="inline-flex items-center px-4 py-1 text-sm font-bold rounded-full text-white bg-custom-green shadow-md">
                             <i class="fa-solid fa-circle text-xs mr-2"></i> Active
@@ -95,9 +95,9 @@
                     <div class="bg-white rounded-xl shadow-lg p-6">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center"><i class="fa-solid fa-address-card mr-2 text-custom-blue"></i> Contact Details</h3>
                         <div class="space-y-3 text-sm">
-                            <p><i class="fa-solid fa-phone w-5 mr-2 text-gray-500"></i> <span class="text-gray-700 font-medium">07700 900XXX</span></p>
-                            <p><i class="fa-solid fa-envelope w-5 mr-2 text-gray-500"></i> <span class="text-gray-700 font-medium">jane.doe@scrubit.com</span></p>
-                            <p><i class="fa-solid fa-home w-5 mr-2 text-gray-500"></i> <span class="text-gray-700">45 Elm Street, Manchester, M1 1AA</span></p>
+                            <p id="contact-phone"><i class="fa-solid fa-phone w-5 mr-2 text-gray-500"></i> <span class="text-gray-700 font-medium">07700 900XXX</span></p>
+                            <p id="contact-email"><i class="fa-solid fa-envelope w-5 mr-2 text-gray-500"></i> <span class="text-gray-700 font-medium">jane.doe@scrubit.com</span></p>
+                            <p id="contact-address"><i class="fa-solid fa-home w-5 mr-2 text-gray-500"></i> <span class="text-gray-700">45 Elm Street, Manchester, M1 1AA</span></p>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-4 flex items-center border-t pt-4"><i class="fa-solid fa-truck-fast mr-2 text-custom-red"></i> Specialties</h3>
                         <div id="specialties-tags" class="flex flex-wrap gap-2">
@@ -113,19 +113,19 @@
                         
                         <div class="bg-white rounded-xl shadow-lg p-4 text-center border-b-4 border-custom-green">
                             <p class="text-xs font-medium text-gray-500 uppercase">Overall Rating</p>
-                            <div class="text-3xl font-extrabold text-custom-green mt-1">4.8</div>
-                            <p class="text-xs text-gray-700">(45 reviews)</p>
+                            <div class="text-3xl font-extrabold text-custom-green mt-1" id="stat-rating">4.8</div>
+                            <p class="text-xs text-gray-700" id="stat-rating-reviews">(45 reviews)</p>
                         </div>
 
                         <div class="bg-white rounded-xl shadow-lg p-4 text-center border-b-4 border-custom-blue">
                             <p class="text-xs font-medium text-gray-500 uppercase">Total Jobs</p>
-                            <div class="text-3xl font-extrabold text-custom-blue mt-1">125</div>
+                            <div class="text-3xl font-extrabold text-custom-blue mt-1" id="stat-jobs">125</div>
                             <p class="text-xs text-gray-700">Lifetime Total</p>
                         </div>
 
                         <div class="bg-white rounded-xl shadow-lg p-4 text-center border-b-4 border-custom-red">
                             <p class="text-xs font-medium text-gray-500 uppercase">Reliability Rate</p>
-                            <div class="text-3xl font-extrabold text-custom-red mt-1">98%</div>
+                            <div class="text-3xl font-extrabold text-custom-red mt-1" id="stat-reliability">98%</div>
                             <p class="text-xs text-gray-700">Completed vs. Assigned</p>
                         </div>
                     </div>
@@ -150,7 +150,7 @@
                             
                             <div id="content-schedule" class="tab-content active">
                                 <h3 class="text-lg font-bold text-gray-700 mb-4">Next 7 Days Schedule</h3>
-                                <ul class="space-y-4 border-l-2 border-custom-blue pl-4">
+                                <ul id="schedule-list" class="space-y-4 border-l-2 border-custom-blue pl-4">
                                     <li class="relative pb-4">
                                         <div class="absolute -left-3.5 top-0 w-7 h-7 bg-custom-blue rounded-full text-white flex items-center justify-center text-sm"><i class="fa-solid fa-clock"></i></div>
                                         <p class="font-semibold text-gray-800 schedule-item-p pl-1">2025-10-08 at 11:30</p>
@@ -181,9 +181,9 @@
                                                 <th class="px-3 py-2 text-right">Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="bg-white divide-y divide-gray-100 text-sm text-gray-700">
+                                        <tbody id="history-table-body" class="bg-white divide-y divide-gray-100 text-sm text-gray-700">
                                             <tr><td class="px-3 py-2">2025-10-05</td><td class="px-3 py-2">2025-154</td><td class="px-3 py-2">Alice M.</td><td class="px-3 py-2">Deep Clean (4hr)</td><td class="px-3 py-2 text-right"><a href="#" class="text-custom-blue hover:underline">Details</a></td></tr>
-                                            <tr><td class="px-3 py-2">2025-09-30</td><td class="px-3 py-2">2025-149</td><td class="px-3 py-2">Peter V.</td><td class="px-3 py-2">Standard Clean (2hr)</td><td class="px-3 py-2 text-right"><a href="#" class="text-custom-blue hover:underline">Details</a></td></tr>
+                                            <tr><td class="px-3 py-2">2025-09-30</td><td class="px-3 py-2">2025-149</td><td class="px-3 py-2">Peter V.</td><td class="px-3 py-2">Standard Clean (2hr)</td><td class="px-3 py-2">Lisa T.</td><td class="px-3 py-2 text-right"><a href="#" class="text-custom-blue hover:underline">Details</a></td></tr>
                                             <tr><td class="px-3 py-2">2025-09-25</td><td class="px-3 py-2">2025-144</td><td class="px-3 py-2">Lisa T.</td><td class="px-3 py-2">Laundry Service</td><td class="px-3 py-2 text-right"><a href="#" class="text-custom-blue hover:underline">Details</a></td></tr>
                                         </tbody>
                                     </table>
@@ -192,7 +192,7 @@
 
                             <div id="content-payout" class="tab-content hidden">
                                 <h3 class="text-lg font-bold text-gray-700 mb-4">Last 3 Payouts</h3>
-                                <ul class="space-y-3">
+                                <ul id="payout-list" class="space-y-3">
                                     <li class="bg-gray-50 p-3 rounded-lg flex justify-between items-center border border-gray-200">
                                         <div>
                                             <p class="font-semibold text-gray-800">£450.00</p>

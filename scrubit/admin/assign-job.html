@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>Assign Job - Scrub and Clean It Limited</title>
+        <title id="page-title">Assign Job - Scrub and Clean It Limited</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <script src="https://cdn.tailwindcss.com"></script>
@@ -37,11 +37,11 @@
         <div id="nav-placeholder"></div> 
 
         <div id="sidebar-backdrop" 
-         class="fixed inset-0 bg-gray-900 bg-opacity-50 z-10 hidden md:hidden"
-         onclick="
-            document.getElementById('sidebar').classList.add('-translate-x-full'); 
-            this.classList.add('hidden');
-         ">
+           class="fixed inset-0 bg-gray-900 bg-opacity-50 z-10 hidden md:hidden"
+           onclick="
+             document.getElementById('sidebar').classList.add('-translate-x-full'); 
+             this.classList.add('hidden');
+           ">
         </div>
 
         <div class="flex-grow p-4 md:p-8 overflow-y-auto">
@@ -50,7 +50,7 @@
             </button>
             
             <div class="mb-6">
-                <h1 class="text-3xl font-extrabold text-gray-800">Assign Job: 2025-155</h1>
+                <h1 class="text-3xl font-extrabold text-gray-800" id="job-title">Assign Job: 2025-155</h1> 
                 <nav class="text-sm text-gray-500 mt-1" aria-label="breadcrumb">
                     <ol class="flex space-x-2">
                         <li><a href="dashboard.html" class="hover:text-custom-blue">Home</a></li>
@@ -63,32 +63,32 @@
                 <div class="h-px bg-gray-200 mt-4"></div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden md:max-w-4xl mx-auto">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden md:max-w-4xl mx-auto" id="assignment-container">
                 
                 <div class="grid grid-cols-1 md:grid-cols-2">
                     
                     <div class="p-6 border-r border-gray-100 bg-gray-50/50">
                         <h2 class="text-xl font-bold text-custom-blue mb-4 flex items-center">
                             <i class="fa-solid fa-calendar-check mr-2"></i> Booking Details
-                            <span class="ml-auto text-xs font-semibold px-3 py-1 inline-flex rounded-full bg-custom-yellow text-gray-900">
+                            <span class="ml-auto text-xs font-semibold px-3 py-1 inline-flex rounded-full bg-custom-yellow text-gray-900" id="job-status-badge">
                                 Pending Assignment
                             </span>
                         </h2>
                         
-                        <div class="space-y-4 text-sm text-gray-700">
+                        <div class="space-y-4 text-sm text-gray-700" id="job-details-container">
                             <div>
                                 <p class="font-medium text-gray-500 uppercase text-xs mb-1">Client Name</p>
-                                <p class="font-semibold text-lg">Ben K. <span class="text-xs text-gray-500 ml-2">(+44 7700 900XXX)</span></p>
+                                <p class="font-semibold text-lg" id="client-name">Ben K. <span class="text-xs text-gray-500 ml-2">(+44 7700 900XXX)</span></p>
                             </div>
 
                             <div>
                                 <p class="font-medium text-gray-500 uppercase text-xs mb-1">Service Requested</p>
-                                <p class="font-medium text-gray-900">Laundry Service (2 hours)</p>
+                                <p class="font-medium text-gray-900" id="service-requested">Laundry Service (2 hours)</p>
                             </div>
 
                             <div>
                                 <p class="font-medium text-gray-500 uppercase text-xs mb-1">Scheduled Time</p>
-                                <p class="text-gray-900">
+                                <p class="text-gray-900" id="scheduled-time">
                                     <span class="font-bold">Monday, October 6, 2025</span> at 
                                     <span class="font-bold">14:00 - 16:00</span>
                                 </p>
@@ -96,12 +96,12 @@
                             
                             <div>
                                 <p class="font-medium text-gray-500 uppercase text-xs mb-1">Location</p>
-                                <p>Flat 4A, 123 Cleaner St, London, SW1A 0AA</p>
+                                <p id="job-location">Flat 4A, 123 Cleaner St, London, SW1A 0AA</p>
                             </div>
 
                             <div>
                                 <p class="font-medium text-gray-500 uppercase text-xs mb-1">Client Notes</p>
-                                <p class="p-3 bg-white border border-gray-200 rounded-lg italic">
+                                <p class="p-3 bg-white border border-gray-200 rounded-lg italic" id="client-notes">
                                     "Please use eco-friendly detergent only. Key is under the blue doormat."
                                 </p>
                             </div>
@@ -113,19 +113,19 @@
                             <i class="fa-solid fa-user-plus mr-2 text-custom-red"></i> Assign Employee
                         </h2>
 
-                        <form class="space-y-6">
+                        <form class="space-y-6" id="assignment-form">
                             
                             <div>
                                 <label for="employee-select" class="block text-sm font-medium text-gray-700 mb-2">
                                     Select Employee
-                                    <span class="text-xs text-custom-blue ml-2">(12 Staff Available)</span>
+                                    <span class="text-xs text-custom-blue ml-2" id="available-staff-count">(12 Staff Available)</span>
                                 </label>
-                                <select id="employee-select" class="block w-full p-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-custom-blue focus:border-custom-blue">
+                                <select id="employee-select" name="employeeId" class="block w-full p-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-custom-blue focus:border-custom-blue" required>
                                     <option value="" disabled selected>Choose a staff member...</option>
-                                    <option value="JANE_D">Jane D. (Available)</option>
-                                    <option value="MARK_S">Mark S. (Available)</option>
-                                    <option value="SARA_P">Sara P. (Available)</option>
-                                    <option value="JOHN_B" disabled>John B. (Booked)</option>
+                                    <option value="JANE_D">Jane D.</option>
+                                    <option value="MARK_S">Mark S.</option>
+                                    <option value="SARA_P">Sara P.</option>
+                                    <option value="JOHN_B" disabled>John B. (Booked/Unavailable)</option>
                                 </select>
                             </div>
 
@@ -133,16 +133,17 @@
                                 <label for="internal-notes" class="block text-sm font-medium text-gray-700 mb-2">
                                     Internal Assignment Notes (Optional)
                                 </label>
-                                <textarea id="internal-notes" rows="3" class="block w-full p-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-custom-blue focus:border-custom-blue" placeholder="Add specific instructions for the assigned employee (e.g., 'Check vehicle for supplies before leaving')"></textarea>
+                                <textarea id="internal-notes" name="internalNotes" rows="3" class="block w-full p-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-custom-blue focus:border-custom-blue" placeholder="Add specific instructions for the assigned employee (e.g., 'Check vehicle for supplies before leaving')"></textarea>
                             </div>
 
                             <div class="pt-4 border-t border-gray-100">
-                                <button type="submit" class="w-full flex justify-center items-center px-4 py-3 border border-transparent text-lg font-bold rounded-lg shadow-md text-white bg-custom-red hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom-red transition-colors">
+                                <button type="submit" id="submit-assignment-btn" class="w-full flex justify-center items-center px-4 py-3 border border-transparent text-lg font-bold rounded-lg shadow-md text-white bg-custom-red hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom-red transition-colors">
                                     <i class="fa-solid fa-upload mr-2"></i> Confirm Assignment
                                 </button>
                                 <p class="mt-3 text-xs text-center text-gray-500">
                                     *The employee will be notified immediately upon assignment.
                                 </p>
+                                <div id="message-area" class="mt-3 text-center text-sm font-semibold"></div>
                             </div>
 
                         </form>
@@ -154,5 +155,6 @@
         </div>
 
         <script src="js/sidebar.js"></script>
-        </body>
+        <script src="js/assign-job.js"></script> 
+    </body>
 </html>

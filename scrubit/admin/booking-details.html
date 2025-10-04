@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>Booking Details #2025-157 - ScrubIt Admin</title>
+        <title id="page-title">Booking Details #2025-157 - ScrubIt Admin</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <script src="https://cdn.tailwindcss.com"></script>
@@ -32,11 +32,11 @@
         <div id="nav-placeholder"></div> 
 
         <div id="sidebar-backdrop" 
-         class="fixed inset-0 bg-gray-900 bg-opacity-50 z-10 hidden md:hidden"
-         onclick="
-            document.getElementById('sidebar').classList.add('-translate-x-full'); 
-            this.classList.add('hidden');
-         ">
+           class="fixed inset-0 bg-gray-900 bg-opacity-50 z-10 hidden md:hidden"
+           onclick="
+             document.getElementById('sidebar').classList.add('-translate-x-full'); 
+             this.classList.add('hidden');
+           ">
         </div>
 
         <div class="flex-grow p-4 md:p-8 overflow-y-auto">
@@ -45,20 +45,20 @@
             </button>
             
             <div class="mb-6">
-                <h1 class="text-3xl font-extrabold text-gray-800">Booking Details</h1>
+                <h1 class="text-3xl font-extrabold text-gray-800" id="main-header">Booking Details</h1>
                 <nav class="text-sm text-gray-500 mt-1" aria-label="breadcrumb">
                     <ol class="flex space-x-2">
                         <li><a href="dashboard.html" class="hover:text-custom-blue">Home</a></li>
                         <li class="text-gray-400">/</li>
                         <li><a href="bookings-list.html" class="hover:text-custom-blue">Bookings</a></li>
                         <li class="text-gray-400">/</li>
-                        <li class="font-semibold text-gray-700">#<span id="booking-id-breadcrumb"></span></li>
+                        <li class="font-semibold text-gray-700" id="booking-id-breadcrumb-li">#<span id="booking-id-breadcrumb">2025-157</span></li>
                     </ol>
                 </nav>
                 <div class="h-px bg-gray-200 mt-4"></div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-xl mb-6 border-t-4 border-custom-purple">
+            <div class="bg-white p-6 rounded-xl shadow-xl mb-6 border-t-4 border-custom-purple" id="details-container">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
                     <div>
                         <h2 class="text-2xl font-bold text-gray-800">Booking #<span id="booking-id-header">2025-157</span></h2>
@@ -122,9 +122,9 @@
                             </h3>
                             <div class="space-y-3">
                                 <p class="text-lg font-bold" id="client-name">David L. (C-004)</p>
-                                <p class="text-sm text-gray-700"><i class="fa-solid fa-envelope mr-2"></i> david.l@email.com</p>
-                                <p class="text-sm text-gray-700"><i class="fa-solid fa-phone mr-2"></i> (555) 987-6543</p>
-                                <a href="client-profile.html?id=C-004" class="text-custom-blue hover:underline text-sm font-medium mt-2 block">
+                                <p class="text-sm text-gray-700" id="client-email-display"><i class="fa-solid fa-envelope mr-2"></i> david.l@email.com</p>
+                                <p class="text-sm text-gray-700" id="client-phone-display"><i class="fa-solid fa-phone mr-2"></i> (555) 987-6543</p>
+                                <a href="client-profile.html?id=C-004" class="text-custom-blue hover:underline text-sm font-medium mt-2 block" id="client-profile-link">
                                     <i class="fa-solid fa-external-link-alt mr-1"></i> View Client Profile
                                 </a>
                             </div>
@@ -136,11 +136,11 @@
                             </h3>
                             <div class="space-y-3">
                                 <p class="text-lg font-bold" id="employee-name">Jane D. (E-001)</p>
-                                <p class="text-sm text-gray-700"><i class="fa-solid fa-briefcase mr-2"></i> Deep Clean Specialist</p>
+                                <p class="text-sm text-gray-700" id="employee-role-display"><i class="fa-solid fa-briefcase mr-2"></i> Deep Clean Specialist</p>
                                 <button onclick="handleAction('reassign')" class="bg-custom-red text-white px-3 py-1 rounded-md hover:bg-red-700 transition-colors font-semibold mt-2 text-sm">
                                     <i class="fa-solid fa-user-edit mr-1"></i> Reassign Job
                                 </button>
-                                <a href="employee-profile.html?id=E-001" class="text-custom-blue hover:underline text-sm font-medium mt-2 block">
+                                <a href="employee-profile.html?id=E-001" class="text-custom-blue hover:underline text-sm font-medium mt-2 block" id="employee-profile-link">
                                     <i class="fa-solid fa-external-link-alt mr-1"></i> View Employee Profile
                                 </a>
                             </div>

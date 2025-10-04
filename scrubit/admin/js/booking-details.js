@@ -1,6 +1,8 @@
 // --- Placeholder Booking Data (Simulates API/DB Fetch) ---
 const bookingData = {
-    id: '2025-157',
+    // You can change the ID in the URL (e.g., booking-details.html?id=2025-999) 
+    // to see how the script adapts.
+    id: new URLSearchParams(window.location.search).get('id') || '2025-157',
     client: 'David L.',
     clientId: 'C-004',
     employee: 'Jane D.',
@@ -28,13 +30,14 @@ function handleAction(actionType) {
 
 // --- Dynamic Rendering of Booking Data ---
 function renderBookingData() {
+    // Top Titles & Breadcrumb
+    document.getElementById('page-title').textContent = `Booking Details #${bookingData.id} - ScrubIt Admin`;
     document.getElementById('booking-id-breadcrumb').textContent = bookingData.id;
     document.getElementById('booking-id-header').textContent = bookingData.id;
     
     // Status Badge
     const statusBadge = document.getElementById('status-badge');
     statusBadge.textContent = bookingData.status;
-    // Remove all custom color classes to apply the correct one
     statusBadge.classList.forEach(className => {
         if (className.startsWith('bg-custom-')) {
             statusBadge.classList.remove(className);
@@ -50,7 +53,14 @@ function renderBookingData() {
     
     // Client/Employee Info
     document.getElementById('client-name').textContent = `${bookingData.client} (${bookingData.clientId})`;
+    document.getElementById('client-email-display').innerHTML = `<i class="fa-solid fa-envelope mr-2"></i> ${bookingData.clientEmail}`;
+    document.getElementById('client-phone-display').innerHTML = `<i class="fa-solid fa-phone mr-2"></i> ${bookingData.clientPhone}`;
+    
     document.getElementById('employee-name').textContent = `${bookingData.employee} (${bookingData.employeeId})`;
+
+    // Profile Links Update (Important for correct navigation)
+    document.getElementById('client-profile-link').href = `client-profile.html?id=${bookingData.clientId}`;
+    document.getElementById('employee-profile-link').href = `employee-profile.html?id=${bookingData.employeeId}`;
 
     // Financials
     document.getElementById('service-fee').textContent = `$${bookingData.fee.toFixed(2)}`;
@@ -59,25 +69,22 @@ function renderBookingData() {
     document.getElementById('payment-status').textContent = bookingData.paymentStatus;
 }
 
-// --- Custom Navigation Highlight Logic for Detail Pages ---
+// --- Custom Navigation Highlight Logic for Detail Pages (Assumes sidebar.js is loaded) ---
 function highlightBookingsParent() {
+    // This is placeholder logic that depends on IDs being present in your sidebar.html
     const viewAllLink = document.querySelector('a[href="bookings-list.html"]');
     const parentButton = document.getElementById('bookings-parent-nav');
     const parentArrow = document.getElementById('bookings-arrow');
     const parentMenu = document.getElementById('bookings-menu');
 
-    // Active classes for the main parent button
     const activeClasses = ['text-white', 'bg-custom-blue', 'shadow-md', 'font-bold', 'hover:!bg-custom-blue', 'hover:!text-white', 'hover:!shadow-md'];
-    // Active classes for the submenu link
     const submenuActiveClasses = ['text-custom-blue', 'font-bold', 'bg-indigo-50', 'hover:bg-indigo-100'];
 
-    // 1. Highlight the 'View All' link 
     if (viewAllLink) {
         viewAllLink.classList.remove('text-gray-600', 'hover:bg-gray-50'); 
         viewAllLink.classList.add(...submenuActiveClasses);
     }
     
-    // 2. Highlight the 'Bookings' parent button and ensure menu is open
     if (parentButton && parentArrow && parentMenu) {
         parentButton.classList.remove('text-gray-700', 'hover:bg-gray-100'); 
         parentButton.classList.add(...activeClasses);
@@ -94,5 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // 1. Render all booking data into the HTML elements
     renderBookingData();
     
+    // 2. Highlight the correct menu item
     highlightBookingsParent(); 
 });
