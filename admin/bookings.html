@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scrub and clean it Limited</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+    <link rel="stylesheet" href="assets/font/iconsmind-s/css/iconsminds.css" />
+    <link rel="stylesheet" href="assets/font/simple-line-icons/css/simple-line-icons.css" />
+    <link rel="stylesheet" href="assets/css/vendor/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/vendor/bootstrap.rtl.only.min.css" />
+    <link rel="stylesheet" href="assets/css/vendor/fullcalendar.min.css" />
+    <link rel="stylesheet" href="assets/css/vendor/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet" href="assets/css/vendor/datatables.responsive.bootstrap4.min.css" />
+    <link rel="stylesheet" href="assets/css/vendor/select2.min.css" />
+    <link rel="stylesheet" href="assets/css/vendor/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="assets/css/vendor/glide.core.min.css" />
+    <link rel="stylesheet" href="assets/css/vendor/bootstrap-stars.css" />
+    <link rel="stylesheet" href="assets/css/vendor/nouislider.min.css" />
+    <link rel="stylesheet" href="assets/css/vendor/bootstrap-datepicker3.min.css" />
+    <link rel="stylesheet" href="assets/css/vendor/component-custom-switch.min.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+  </head>
+
+  <body id="app-container" class="menu-default show-spinner">
+    <div id="nav">
+      <!-- coming from JS -->
+    </div>
+
+    <main>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <h1>Bookings</h1>
+            <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
+              <ol class="breadcrumb pt-0">
+                <li class="breadcrumb-item" id="today-date"><a href="#">Today</a></li>
+                <li class="breadcrumb-item"><a href="#">Record</a></li>
+              </ol>
+            </nav>
+            <div class="separator mb-5"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 col-lg-12 mb-4">
+            <div class="add-employee" style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+                <button class="btn btn-info">Add Booking</button>
+            </div>
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">Booking List</h5>
+                <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                    <div class="row view-filter">
+                        <div class="col-sm-12">
+                        <div class="float-left"></div>
+                        <div class="float-right"></div>
+                        <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <table class="data-table data-table-standard responsive nowrap dataTable no-footer dtr-inline" data-order='[[ 1, "desc" ]]' id="DataTables_Table_0" role="grid" style="width: 490px">
+                        <thead>
+                        <tr role="row">
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 57px" aria-label="Email: activate to sort column ascending">#ID</th>
+                            <th
+                            class="sorting_desc"
+                            tabindex="0"
+                            aria-controls="DataTables_Table_0"
+                            rowspan="1"
+                            colspan="1"
+                            style="width: 163px"
+                            aria-label="Name: activate to sort column ascending"
+                            aria-sort="descending"
+                            >
+                            CLIENT
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 57px" aria-label="Email: activate to sort column ascending">SERVICE & TIME</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 58px" aria-label="Phone: activate to sort column ascending">EMPLOYEE</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 88px" aria-label="Salary: activate to sort column ascending">AMOUNT</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 88px" aria-label="Salary: activate to sort column ascending">STATUS</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 88px" aria-label="Action: activate to sort column ascending">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Employee rows will be dynamically inserted here -->
+                        </tbody>
+                    </table>
+                    
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+
+    <div class="modal fade" id="addEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEmployeeModalLabel">Add Client</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Add your employee form fields here -->
+                <form>
+                <div class="form-group">
+                    <label for="employeeName">Name</label>
+                    <input type="text" class="form-control" id="employeeName" placeholder="Enter name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" class="form-control" id="phone" placeholder="Enter phone">
+                </div>
+                <div class="form-group">
+                    <label for="salary">Salary</label>
+                    <input type="text" class="form-control" id="salary" placeholder="Enter salary">
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="add-employee-btn" class="btn btn-primary">Save Employee</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                <div class="form-group">
+                    <label for="editEmployeeName">Name</label>
+                    <input type="text" class="form-control" id="editEmployeeName">
+                </div>
+                <div class="form-group">
+                    <label for="editEmployeeEmail">Email</label>
+                    <input type="email" class="form-control" id="editEmployeeEmail">
+                </div>
+                <div class="form-group">
+                    <label for="editEmployeePhone">Phone</label>
+                    <input type="text" class="form-control" id="editEmployeePhone">
+                </div>
+                <div class="form-group">
+                    <label for="editEmployeeSalary">Salary</label>
+                    <input type="text" class="form-control" id="editEmployeeSalary">
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="saveEditEmployeeBtn" class="btn btn-primary">Save Changes</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/vendor/jquery-3.3.1.min.js"></script>
+    <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/vendor/Chart.bundle.min.js"></script>
+    <script src="assets/js/vendor/chartjs-plugin-datalabels.js"></script>
+    <script src="assets/js/vendor/moment.min.js"></script>
+    <script src="assets/js/vendor/fullcalendar.min.js"></script>
+    <script src="assets/js/vendor/datatables.min.js"></script>
+    <script src="assets/js/vendor/perfect-scrollbar.min.js"></script>
+    <script src="assets/js/vendor/progressbar.min.js"></script>
+    <script src="assets/js/vendor/jquery.barrating.min.js"></script>
+    <script src="assets/js/vendor/select2.full.js"></script>
+    <script src="assets/js/vendor/nouislider.min.js"></script>
+    <script src="assets/js/vendor/bootstrap-datepicker.js"></script>
+    <script src="assets/js/vendor/Sortable.js"></script>
+    <script src="assets/js/vendor/mousetrap.min.js"></script>
+    <script src="assets/js/vendor/glide.min.js"></script>
+    <script src="assets/js/dore.script.js"></script>
+
+    <script src="assets/js/my-js/nav.js"></script>
+    <script src="assets/js/scripts.js"></script>
+    <script src="assets/js/my-js/bookings.js"></script>
+
+    <script>
+      jQuery(window).on("load", function () {
+        jQuery("body").removeClass("show-spinner");
+      });
+    </script>
+
+    <script>
+        // Open modal on Add Employee button click
+        document.querySelector('.btn.btn-info').addEventListener('click', function() {
+            $('#addEmployeeModal').modal('show');
+        });
+    </script>
+
+    <script>
+      function formatToday() {
+          const today = new Date();
+          const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+          const months = [
+              "January", "February", "March", "April", "May", "June",
+              "July", "August", "September", "October", "November", "December"
+          ];
+
+          const dayName = days[today.getDay()];
+          const date = today.getDate();
+          const monthName = months[today.getMonth()];
+
+          // Get ordinal suffix
+          function ordinal(n) {
+              if (n > 3 && n < 21) return n + "th";
+              switch (n % 10) {
+                  case 1: return n + "st";
+                  case 2: return n + "nd";
+                  case 3: return n + "rd";
+                  default: return n + "th";
+              }
+          }
+
+          return `${dayName} ${ordinal(date)}, ${monthName}`;
+      }
+
+      document.getElementById("today-date").textContent = formatToday();
+    </script>
+
+  </body>
+</html>

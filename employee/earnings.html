@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Scrub and clean it Limited</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+        <link rel="stylesheet" href="assets/font/iconsmind-s/css/iconsminds.css" />
+        <link rel="stylesheet" href="assets/font/simple-line-icons/css/simple-line-icons.css" />
+        <link rel="stylesheet" href="assets/css/vendor/bootstrap.min.css" />
+        <link rel="stylesheet" href="assets/css/vendor/bootstrap.rtl.only.min.css" />
+        <link rel="stylesheet" href="assets/css/vendor/fullcalendar.min.css" />
+        <link rel="stylesheet" href="assets/css/vendor/dataTables.bootstrap4.min.css" />
+        <link rel="stylesheet" href="assets/css/vendor/datatables.responsive.bootstrap4.min.css" />
+        <link rel="stylesheet" href="assets/css/vendor/select2.min.css" />
+        <link rel="stylesheet" href="assets/css/vendor/perfect-scrollbar.css" />
+        <link rel="stylesheet" href="assets/css/vendor/glide.core.min.css" />
+        <link rel="stylesheet" href="assets/css/vendor/bootstrap-stars.css" />
+        <link rel="stylesheet" href="assets/css/vendor/nouislider.min.css" />
+        <link rel="stylesheet" href="assets/css/vendor/bootstrap-datepicker3.min.css" />
+        <link rel="stylesheet" href="assets/css/vendor/component-custom-switch.min.css" />
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+    </head>
+
+    <body id="app-container" class="menu-default show-spinner">
+        <div id="nav">
+            <!-- coming from JS -->
+        </div>
+
+        <main>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <h1>Dashboard</h1>
+                        <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
+                        <ol class="breadcrumb pt-0">
+                            <li class="breadcrumb-item" id="today-date"><a href="#">Today</a></li>
+                            <li class="breadcrumb-item"><a href="#">Analytics</a></li>
+                        </ol>
+                        </nav>
+                        <div class="separator mb-5"></div>
+                    </div>
+
+                    <div class="row sortable">
+                        <div class="col-12 col-lg-4 mb-4">
+                            <div class="card">
+                                <div class="card-body d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Total Petrol Sales for Today</h6>
+                                    <div style="font-weight: bold;" id="total-petrol-sale">100,000,000</div>
+                                    <!-- <div role="progressbar" class="progress-bar-circle position-relative" data-color="#922c88" data-trailcolor="#d7d7d7" aria-valuemax="100" aria-valuenow="40" data-show-percent="true"><svg viewBox="0 0 100 100" style="display: block; width: 100%;"><path d="M 50,50 m 0,-48 a 48,48 0 1 1 0,96 a 48,48 0 1 1 0,-96" stroke="#d7d7d7" stroke-width="4" fill-opacity="0"></path><path d="M 50,50 m 0,-48 a 48,48 0 1 1 0,96 a 48,48 0 1 1 0,-96" stroke="#922c88" stroke-width="4" fill-opacity="0" style="stroke-dasharray: 301.635px, 301.635px; stroke-dashoffset: 180.981px;"></path></svg><div class="progressbar-text" style="position: absolute; left: 50%; top: 50%; padding: 0px; margin: 0px; transform: translate(-50%, -50%); color: rgb(146, 44, 136);">40%</div></div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-4 mb-4">
+                            <div class="card">
+                                <div class="card-body d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Total Diesel Sales for Today</h6>
+                                    <div style="font-weight: bold;" id="total-diesel-sale">100,000,000</div>
+                                    <!-- <div role="progressbar" class="progress-bar-circle position-relative" data-color="#922c88" data-trailcolor="#d7d7d7" aria-valuemax="100" aria-valuenow="64" data-show-percent="true"><svg viewBox="0 0 100 100" style="display: block; width: 100%;"><path d="M 50,50 m 0,-48 a 48,48 0 1 1 0,96 a 48,48 0 1 1 0,-96" stroke="#d7d7d7" stroke-width="4" fill-opacity="0"></path><path d="M 50,50 m 0,-48 a 48,48 0 1 1 0,96 a 48,48 0 1 1 0,-96" stroke="#922c88" stroke-width="4" fill-opacity="0" style="stroke-dasharray: 301.635px, 301.635px; stroke-dashoffset: 108.589px;"></path></svg><div class="progressbar-text" style="position: absolute; left: 50%; top: 50%; padding: 0px; margin: 0px; transform: translate(-50%, -50%); color: rgb(146, 44, 136);">64%</div></div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-4 mb-4">
+                            <div class="card">
+                                <div class="card-body d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Total Expenses for Today</h6>
+                                    <div style="font-weight: bold;" id="total-expense">100,000,000</div>
+                                    <!-- <div role="progressbar" class="progress-bar-circle position-relative" data-color="#922c88" data-trailcolor="#d7d7d7" aria-valuemax="100" aria-valuenow="32" data-show-percent="true"><svg viewBox="0 0 100 100" style="display: block; width: 100%;"><path d="M 50,50 m 0,-48 a 48,48 0 1 1 0,96 a 48,48 0 1 1 0,-96" stroke="#d7d7d7" stroke-width="4" fill-opacity="0"></path><path d="M 50,50 m 0,-48 a 48,48 0 1 1 0,96 a 48,48 0 1 1 0,-96" stroke="#922c88" stroke-width="4" fill-opacity="0" style="stroke-dasharray: 301.635px, 301.635px; stroke-dashoffset: 205.112px;"></path></svg><div class="progressbar-text" style="position: absolute; left: 50%; top: 50%; padding: 0px; margin: 0px; transform: translate(-50%, -50%); color: rgb(146, 44, 136);">32%</div></div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12 mb-4">
+                            <div class="card dashboard-filled-line-chart">
+                            <div class="card-body">
+                                <div class="float-left float-none-xs">
+                                <div class="d-inline-block">
+                                    <h5 class="d-inline">Petrol Sales</h5>
+                                    <!-- <span class="text-muted text-small d-block">Unique Visitors</span> -->
+                                </div>
+                                </div>
+                                <div class="btn-group float-right float-none-xs mt-2">
+                                <button class="btn btn-outline-primary btn-xs " type="button">This Week</button>
+                                <div class="dropdown-menu"><a class="dropdown-item" href="#">Last Week</a> <a class="dropdown-item" href="#">This Month</a></div>
+                                </div>
+                            </div>
+                            <div class="chart card-body pt-0">
+                                <div style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;" class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div><canvas id="petrolSalesChart" style="display: block; width: 499px; height: 194px;" width="499" height="194" class="chartjs-render-monitor"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mb-4">
+                            <div class="card dashboard-filled-line-chart">
+                            <div class="card-body">
+                                <div class="float-left float-none-xs">
+                                <div class="d-inline-block">
+                                    <h5 class="d-inline">Petrol Sales</h5>
+                                    <!-- <span class="text-muted text-small d-block">Unique Visitors</span> -->
+                                </div>
+                                </div>
+                                <div class="btn-group float-right float-none-xs mt-2">
+                                <button class="btn btn-outline-primary btn-xs " type="button">This Week</button>
+                                <div class="dropdown-menu"><a class="dropdown-item" href="#">Last Week</a> <a class="dropdown-item" href="#">This Month</a></div>
+                                </div>
+                            </div>
+                            <div class="chart card-body pt-0"><div style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;" class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div><canvas id="dieselSalesChart" style="display: block; width: 499px; height: 194px;" width="499" height="194" class="chartjs-render-monitor"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+
+        <script src="assets/js/vendor/jquery-3.3.1.min.js"></script>
+        <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/vendor/Chart.bundle.min.js"></script>
+        <script src="assets/js/vendor/chartjs-plugin-datalabels.js"></script>
+        <script src="assets/js/vendor/moment.min.js"></script>
+        <script src="assets/js/vendor/fullcalendar.min.js"></script>
+        <script src="assets/js/vendor/datatables.min.js"></script>
+        <script src="assets/js/vendor/perfect-scrollbar.min.js"></script>
+        <script src="assets/js/vendor/progressbar.min.js"></script>
+        <script src="assets/js/vendor/jquery.barrating.min.js"></script>
+        <script src="assets/js/vendor/select2.full.js"></script>
+        <script src="assets/js/vendor/nouislider.min.js"></script>
+        <script src="assets/js/vendor/bootstrap-datepicker.js"></script>
+        <script src="assets/js/vendor/Sortable.js"></script>
+        <script src="assets/js/vendor/mousetrap.min.js"></script>
+        <script src="assets/js/vendor/glide.min.js"></script>
+        <script src="assets/js/dore.script.js"></script>
+
+        <script src="assets/js/my-js/nav.js"></script>
+        <script src="assets/js/scripts.js"></script>
+        <script src="assets/js/my-js/dashboard.js"></script>
+
+        <script>
+            jQuery(window).on('load', function() {
+            jQuery('body').removeClass('show-spinner');
+            });
+        </script>
+
+        <script>
+            function formatToday() {
+                const today = new Date();
+                const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                const months = [
+                    "January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+                ];
+
+                const dayName = days[today.getDay()];
+                const date = today.getDate();
+                const monthName = months[today.getMonth()];
+
+                // Get ordinal suffix
+                function ordinal(n) {
+                    if (n > 3 && n < 21) return n + "th";
+                    switch (n % 10) {
+                        case 1: return n + "st";
+                        case 2: return n + "nd";
+                        case 3: return n + "rd";
+                        default: return n + "th";
+                    }
+                }
+
+                return `${dayName} ${ordinal(date)}, ${monthName}`;
+            }
+
+            document.getElementById("today-date").textContent = formatToday();
+        </script>
+
+    </body>
+</html>
+
+
+
