@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Bookings List - Scrub and Clean It Limited</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script> 
+
+        <style>
+            /* Custom Scrollbar for a cleaner look */
+            ::-webkit-scrollbar { width: 8px; }
+            ::-webkit-scrollbar-track { background: #f1f1f1; }
+            ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+            ::-webkit-scrollbar-thumb:hover { background: #555; }
+            
+            /* Ensure the layout respects the full height */
+            html, body {
+                height: 100%;
+                margin: 0;
+                font-family: 'Inter', sans-serif;
+                background-color: #f7f9fc;
+            }
+
+            /* Tailwind custom colors for the template aesthetics */
+            .bg-custom-blue { background-color: #3f51b5; }
+            .bg-custom-green { background-color: #00897b; }
+            .bg-custom-yellow { background-color: #ffb300; }
+            .bg-custom-red { background-color: #e53935; }
+            .bg-custom-purple { background-color: #673ab7; }
+        </style>
+    </head>
+
+    <body class="flex h-screen" id="app-container">
+        <div id="nav-placeholder"></div> 
+
+        <div id="sidebar-backdrop" 
+         class="fixed inset-0 bg-gray-900 bg-opacity-50 z-10 hidden md:hidden"
+         onclick="
+            document.getElementById('sidebar').classList.add('-translate-x-full'); 
+            this.classList.add('hidden');
+         ">
+        </div>
+
+        <div class="flex-grow p-4 md:p-8 overflow-y-auto">
+            <button id="menu-toggle" class="md:hidden p-3 mb-4 bg-white rounded-lg shadow">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            
+            <div class="mb-6">
+                <h1 class="text-3xl font-extrabold text-gray-800">Bookings List</h1>
+                <nav class="text-sm text-gray-500 mt-1" aria-label="breadcrumb">
+                    <ol class="flex space-x-2">
+                        <li><a href="dashboard.html" class="hover:text-custom-blue">Home</a></li>
+                        <li class="text-gray-400">/</li>
+                        <li><a href="#" class="hover:text-custom-blue">Bookings</a></li>
+                        <li class="text-gray-400">/</li>
+                        <li class="font-semibold text-gray-700">View All</li>
+                    </ol>
+                </nav>
+                <div class="h-px bg-gray-200 mt-4"></div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 md:mb-0">
+                        Current and Upcoming Jobs
+                    </h2>
+                    <div class="flex flex-wrap space-x-2 space-y-2 md:space-y-0 items-center">
+                        <select class="p-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-custom-blue">
+                            <option>Filter by Status</option>
+                            <option>Confirmed</option>
+                            <option>Pending Assignment</option>
+                            <option>In Progress</option>
+                            <option>Completed</option>
+                        </select>
+                        
+                        <input type="date" value="2025-10-01" class="p-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-custom-blue"/>
+                        
+                        <button class="flex items-center text-sm px-4 py-2 bg-custom-blue text-white rounded-lg shadow hover:bg-indigo-600 transition-colors">
+                            <i class="fa-solid fa-file-export mr-2"></i> Export
+                        </button>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-medium text-gray-700 mb-4 border-b pb-2">
+                    Booking Details (<span class="font-bold text-custom-blue">148</span> Total Active)
+                </h3>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                                <th class="px-4 py-3">ID</th>
+                                <th class="px-4 py-3">Client</th>
+                                <th class="px-4 py-3">Service</th>
+                                <th class="px-4 py-3">Date/Time</th>
+                                <th class="px-4 py-3">Employee</th>
+                                <th class="px-4 py-3">Status</th>
+                                <th class="px-4 py-3 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="bookings-table-body">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div class="p-4 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">
+                    <span class="mb-2 sm:mb-0">Showing 1 to 6 of 148 active results</span>
+
+                    <div class="space-x-1">
+                        <button class="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50" disabled>&leftarrow; Previous</button>
+                        <span class="px-3 py-1 bg-custom-blue text-white rounded-lg">1</span>
+                        <button class="p-2 rounded-lg hover:bg-gray-100">Next &rightarrow;</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="js/sidebar.js"></script> 
+        <script src="js/bookings-list.js"></script>
+
+    </body>
+</html>

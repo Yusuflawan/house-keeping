@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Booking Details #2025-157 - ScrubIt Admin</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+        <style>
+            /* Custom Scrollbar and layout styles */
+            ::-webkit-scrollbar { width: 8px; }
+            ::-webkit-scrollbar-track { background: #f1f1f1; }
+            ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+            ::-webkit-scrollbar-thumb:hover { background: #555; }
+            html, body {
+                height: 100%;
+                margin: 0;
+                font-family: 'Inter', sans-serif;
+                background-color: #f7f9fc;
+            }
+            .bg-custom-blue { background-color: #3f51b5; }
+            .bg-custom-green { background-color: #00897b; }
+            .bg-custom-yellow { background-color: #ffb300; }
+            .bg-custom-red { background-color: #e53935; }
+            .bg-custom-purple { background-color: #673ab7; }
+        </style>
+    </head>
+
+    <body class="flex h-screen" id="app-container">
+        <div id="nav-placeholder"></div> 
+
+        <div id="sidebar-backdrop" 
+         class="fixed inset-0 bg-gray-900 bg-opacity-50 z-10 hidden md:hidden"
+         onclick="
+            document.getElementById('sidebar').classList.add('-translate-x-full'); 
+            this.classList.add('hidden');
+         ">
+        </div>
+
+        <div class="flex-grow p-4 md:p-8 overflow-y-auto">
+            <button id="menu-toggle" class="md:hidden p-3 mb-4 bg-white rounded-lg shadow">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            
+            <div class="mb-6">
+                <h1 class="text-3xl font-extrabold text-gray-800">Booking Details</h1>
+                <nav class="text-sm text-gray-500 mt-1" aria-label="breadcrumb">
+                    <ol class="flex space-x-2">
+                        <li><a href="dashboard.html" class="hover:text-custom-blue">Home</a></li>
+                        <li class="text-gray-400">/</li>
+                        <li><a href="bookings-list.html" class="hover:text-custom-blue">Bookings</a></li>
+                        <li class="text-gray-400">/</li>
+                        <li class="font-semibold text-gray-700">#<span id="booking-id-breadcrumb"></span></li>
+                    </ol>
+                </nav>
+                <div class="h-px bg-gray-200 mt-4"></div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-xl mb-6 border-t-4 border-custom-purple">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Booking #<span id="booking-id-header">2025-157</span></h2>
+                        <p class="text-gray-500 mt-1 flex items-center">
+                            Status: 
+                            <span id="status-badge" class="ml-2 px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full text-white bg-custom-purple shadow-md">
+                                In Progress
+                            </span>
+                        </p>
+                    </div>
+
+                    <div class="flex flex-wrap space-x-3 space-y-2 md:space-y-0 text-sm mt-4 md:mt-0">
+                        <button onclick="handleAction('reschedule')" class="bg-custom-yellow text-gray-900 p-2 rounded-lg font-medium hover:bg-yellow-500 transition-colors shadow-md">
+                            <i class="fa-solid fa-calendar-alt mr-1"></i> Reschedule
+                        </button>
+                        <button onclick="handleAction('update-status')" class="bg-custom-blue text-white p-2 rounded-lg font-medium hover:bg-indigo-600 transition-colors shadow-md">
+                            <i class="fa-solid fa-check-circle mr-1"></i> Change Status
+                        </button>
+                        <button onclick="handleAction('cancel')" class="bg-gray-200 text-gray-700 p-2 rounded-lg font-medium hover:bg-gray-300 transition-colors shadow-md">
+                            <i class="fa-solid fa-times-circle mr-1"></i> Cancel Booking
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <div class="lg:col-span-2 space-y-6">
+
+                    <div class="bg-white p-6 rounded-xl shadow-xl">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                            <i class="fa-solid fa-broom mr-2 text-custom-blue"></i> Job & Location Details
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Service Type</p>
+                                <p class="text-lg font-semibold" id="service-type">Deep Clean (6hr)</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Scheduled Date & Time</p>
+                                <p class="text-lg font-semibold" id="scheduled-datetime">2025-10-08 at 11:30</p>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <p class="text-sm font-medium text-gray-500">Cleaning Address</p>
+                                <p class="text-lg font-semibold" id="service-address">456 Oak Avenue, Unit 3A, Cityville, CA 90210</p>
+                            </div>
+                            <div class="sm:col-span-2 mt-2">
+                                <p class="text-sm font-medium text-gray-500">Client Instructions / Notes</p>
+                                <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm italic" id="client-notes">
+                                    Please ensure extra attention is paid to the kitchen oven. Keys are under the doormat.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-xl">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                                <i class="fa-solid fa-user-tag mr-2 text-custom-green"></i> Client
+                            </h3>
+                            <div class="space-y-3">
+                                <p class="text-lg font-bold" id="client-name">David L. (C-004)</p>
+                                <p class="text-sm text-gray-700"><i class="fa-solid fa-envelope mr-2"></i> david.l@email.com</p>
+                                <p class="text-sm text-gray-700"><i class="fa-solid fa-phone mr-2"></i> (555) 987-6543</p>
+                                <a href="client-profile.html?id=C-004" class="text-custom-blue hover:underline text-sm font-medium mt-2 block">
+                                    <i class="fa-solid fa-external-link-alt mr-1"></i> View Client Profile
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-xl">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                                <i class="fa-solid fa-user-check mr-2 text-custom-purple"></i> Assigned Employee
+                            </h3>
+                            <div class="space-y-3">
+                                <p class="text-lg font-bold" id="employee-name">Jane D. (E-001)</p>
+                                <p class="text-sm text-gray-700"><i class="fa-solid fa-briefcase mr-2"></i> Deep Clean Specialist</p>
+                                <button onclick="handleAction('reassign')" class="bg-custom-red text-white px-3 py-1 rounded-md hover:bg-red-700 transition-colors font-semibold mt-2 text-sm">
+                                    <i class="fa-solid fa-user-edit mr-1"></i> Reassign Job
+                                </button>
+                                <a href="employee-profile.html?id=E-001" class="text-custom-blue hover:underline text-sm font-medium mt-2 block">
+                                    <i class="fa-solid fa-external-link-alt mr-1"></i> View Employee Profile
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="lg:col-span-1">
+                    <div class="bg-white p-6 rounded-xl shadow-xl border-l-4 border-custom-yellow">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                            <i class="fa-solid fa-dollar-sign mr-2 text-custom-yellow"></i> Financial Summary
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center text-gray-700">
+                                <span class="font-medium">Service Fee:</span>
+                                <span id="service-fee" class="font-semibold">$180.00</span>
+                            </div>
+                            <div class="flex justify-between items-center text-gray-700">
+                                <span class="font-medium">Discount/Promo:</span>
+                                <span id="discount" class="font-semibold text-custom-red">-$10.00</span>
+                            </div>
+                            <div class="h-px bg-gray-200"></div>
+                            <div class="flex justify-between items-center text-lg font-bold">
+                                <span>TOTAL CHARGE:</span>
+                                <span id="total-charge" class="text-custom-green">$170.00</span>
+                            </div>
+                            
+                            <div class="pt-2">
+                                <p class="text-sm font-medium text-gray-500">Payment Status</p>
+                                <span id="payment-status" class="text-lg font-bold text-custom-green">Paid (Card **** 4242)</span>
+                            </div>
+                            <button onclick="handleAction('invoice')" class="w-full bg-gray-200 text-gray-700 p-2 rounded-lg font-medium hover:bg-gray-300 transition-colors mt-4">
+                                <i class="fa-solid fa-receipt mr-1"></i> Send Invoice/Receipt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+        </div>
+
+        <script src="js/sidebar.js"></script>
+        <script src="js/booking-details.js"></script>
+
+    </body>
+</html>
