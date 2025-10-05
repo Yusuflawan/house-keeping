@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Client Sign Up - ScrubIt</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+            :root {
+                --custom-blue: #3f51b5; /* Primary accent (for links/secondary actions) */
+                --custom-green: #00897b; /* Main action / Success color (Consistent with Employee) */
+            }
+            body { font-family: 'Inter', sans-serif; background-color: #f4f5f7; }
+
+            /* Green Theme (Primary Action) */
+            .bg-custom-green { background-color: var(--custom-green); }
+            .text-custom-green { color: var(--custom-green); }
+            .hover\:bg-custom-green:hover { background-color: #00796b; } 
+            .border-custom-green { border-color: var(--custom-green); }
+            .shadow-lg-green { box-shadow: 0 10px 15px -3px rgba(0, 137, 123, 0.2), 0 4px 6px -2px rgba(0, 137, 123, 0.1); }
+
+            /* Step indicator active/complete circle */
+            .step-active {
+                background-color: var(--custom-green);
+                color: white;
+            }
+            .step-complete {
+                background-color: var(--custom-green);
+                color: white;
+            }
+        </style>
+    </head>
+    <body class="min-h-screen flex items-center justify-center p-4">
+        <!-- Main Signup Card -->
+        <div class="w-full max-w-2xl bg-white rounded-xl shadow-2xl p-6 md:p-10 transition-all duration-300">
+            <header class="text-center mb-8">
+                <div class="flex items-center justify-center mb-4">
+                    <i class="fa-solid fa-house-chimney-user text-4xl text-custom-green mr-3"></i>
+                    <h1 class="text-3xl font-extrabold text-gray-800">Client Sign Up</h1>
+                </div>
+                <p class="text-gray-500">Register and set your primary service location in two simple steps.</p>
+            </header>
+
+            <!-- Step Indicator (2 steps only) -->
+            <div class="flex justify-between items-center mb-10 relative">
+                <!-- Progress Line -->
+                <div id="progress-line" class="absolute h-1 bg-gray-200 top-1/2 -translate-y-1/2 left-0 right-0 mx-8 transition-all duration-500 z-0">
+                    <div id="progress-fill" class="h-full bg-custom-green transition-all duration-500" style="width: 0%;"></div>
+                </div>
+
+                <!-- Step Circles -->
+                <div class="flex justify-between w-full relative z-10">
+                    <div id="step-indicator-1" class="w-10 h-10 flex items-center justify-center rounded-full border-4 border-white font-bold transition-colors duration-300 shadow-md step-active">
+                        1
+                    </div>
+                    <div id="step-indicator-2" class="w-10 h-10 flex items-center justify-center rounded-full border-4 border-white bg-gray-300 text-gray-600 font-bold transition-colors duration-300 shadow-md">
+                        2
+                    </div>
+                    <!-- Step 3 indicator removed -->
+                </div>
+            </div>
+
+            <!-- Multi-Step Form -->
+            <form id="signup-form" onsubmit="event.preventDefault(); nextStep();">
+                <!-- Step 1: Account & Security -->
+                <div id="step-1" class="form-step transition-opacity duration-300">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-6 border-l-4 border-custom-green pl-3">1. Account & Security</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="client_name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <input type="text" id="client_name" name="client_name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-custom-green focus:border-custom-green transition duration-150" placeholder="Jane Doe">
+                        </div>
+                        <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                            <div class="flex-1">
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                                <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-custom-green focus:border-custom-green transition duration-150" placeholder="jane.doe@example.com">
+                            </div>
+                            <div class="flex-1">
+                                <label for="confirm_email" class="block text-sm font-medium text-gray-700 mb-1">Confirm Email</label>
+                                <input type="email" id="confirm_email" name="confirm_email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-custom-green focus:border-custom-green transition duration-150" placeholder="jane.doe@example.com">
+                            </div>
+                        </div>
+                        <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                            <div class="flex-1 relative">
+                                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                <input type="password" id="password" name="password" required minlength="8" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-custom-green focus:border-custom-green transition duration-150" placeholder="Min 8 characters">
+                                <button type="button" class="absolute inset-y-0 right-0 top-6 pt-1 flex items-center pr-3 text-gray-500" onclick="togglePasswordVisibility('password', this)">
+                                    <i class="fa-solid fa-eye-slash"></i>
+                                </button>
+                            </div>
+                            <div class="flex-1 relative">
+                                <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                                <input type="password" id="confirm_password" name="confirm_password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-custom-green focus:border-custom-green transition duration-150" placeholder="Repeat your password">
+                                <button type="button" class="absolute inset-y-0 right-0 top-6 pt-1 flex items-center pr-3 text-gray-500" onclick="togglePasswordVisibility('confirm_password', this)">
+                                    <i class="fa-solid fa-eye-slash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Primary Service Location & Contact -->
+                <div id="step-2" class="form-step transition-opacity duration-300 hidden">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-6 border-l-4 border-custom-green pl-3">2. Primary Service Location & Contact</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="address_line1" class="block text-sm font-medium text-gray-700 mb-1">Street Address</label>
+                            <input type="text" id="address_line1" name="address_line1" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-custom-green focus:border-custom-green transition duration-150" placeholder="123 Main St, Apt 4B">
+                        </div>
+                        <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                            <div class="flex-1">
+                                <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City/Town</label>
+                                <input type="text" id="city" name="city" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-custom-green focus:border-custom-green transition duration-150" placeholder="Anytown">
+                            </div>
+                            <div class="flex-1">
+                                <label for="zip_code" class="block text-sm font-medium text-gray-700 mb-1">ZIP/Postal Code</label>
+                                <input type="text" id="zip_code" name="zip_code" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-custom-green focus:border-custom-green transition duration-150" placeholder="12345">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-custom-green focus:border-custom-green transition duration-150" placeholder="(555) 123-4567">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="flex flex-col md:flex-row justify-between items-center mt-8 space-y-4 md:space-y-0">
+                    <button type="button" id="prev-button" onclick="prevStep()" class="flex items-center text-sm px-6 py-3 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 transition-colors hidden">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> Back
+                    </button>
+                    <button type="button" id="next-button" onclick="nextStep()" class="flex-grow md:flex-none md:ml-auto flex items-center justify-center text-sm px-8 py-3 bg-custom-green text-white rounded-lg shadow-lg-green hover:bg-custom-green transition-colors disabled:opacity-50" disabled>
+                        Next Step <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                    <button type="button" id="submit-button" onclick="submitForm()" class="flex-grow md:flex-none md:ml-auto flex items-center justify-center text-sm px-8 py-3 bg-custom-blue text-white rounded-lg shadow-lg hover:bg-custom-blue transition-colors hidden disabled:opacity-50" disabled>
+                        <i class="fa-solid fa-check-circle mr-2"></i> Sign Up
+                    </button>
+                </div>
+
+                <p id="form-message" class="text-center text-sm mt-4 hidden"></p>
+                <p class="text-center text-sm text-gray-500 mt-6">Already a client? <a href="../sign_in.html" class="text-custom-blue hover:underline font-semibold">Log in here</a></p>
+            </form>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="fixed inset-0 bg-white bg-opacity-80 z-50 flex flex-col items-center justify-center hidden transition-opacity duration-300">
+            <div class="animate-spin rounded-full h-12 w-12 border-4 border-custom-green border-t-transparent"></div>
+            <p id="loading-text" class="mt-4 text-gray-700 font-medium">Processing...</p>
+        </div>
+
+        <script src="js/client_signup.js"></script>
+    </body>
+</html>

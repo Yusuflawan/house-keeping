@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>My Profile - ScrubIt Employee</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+        
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+            :root {
+                /* Custom colors matching the previous Admin theme for consistency */
+                --custom-blue: #3f51b5; /* Primary accent */
+                --custom-purple: #673ab7; /* Security accent */
+                --custom-red: #e53935; /* Danger/Logout */
+                --custom-green: #00897b; /* Success/Payment accent */
+            }
+            body { font-family: 'Inter', sans-serif; background-color: #f4f5f7; }
+            .bg-custom-blue { background-color: var(--custom-blue); }
+            .text-custom-blue { color: var(--custom-blue); }
+            .hover\:bg-custom-blue:hover { background-color: #304e9c; } 
+            .bg-custom-purple { background-color: var(--custom-purple); }
+            .hover\:bg-custom-purple:hover { background-color: #5d2da8; }
+            .bg-custom-red { background-color: var(--custom-red); }
+            
+            /* Style for editable fields when focused, only enabled in edit mode via JS */
+            .input-focus:focus { 
+                border-color: var(--custom-blue); 
+                box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.4); 
+            }
+            
+            /* Base style for profile inputs (starts as read-only) */
+            .profile-input {
+                transition: all 0.2s ease-in-out;
+            }
+            /* Styling for read-only state */
+            .profile-input[readonly] {
+                background-color: #f9fafb; /* Lighter background for non-editable state */
+                cursor: default;
+                color: #4b5563; /* Darker text for better contrast */
+            }
+            /* Override cursor for editable fields when not read-only */
+            .profile-input:not([readonly]) {
+                cursor: text;
+                background-color: #ffffff;
+            }
+        </style>
+    </head>
+
+    <body class="flex h-screen" id="app-container">
+        
+        <!-- Placeholder for Employee Navigation (to be loaded via employee-nav.js) -->
+        <div id="nav-placeholder"></div> 
+        
+        <div class="flex-grow flex flex-col overflow-hidden">
+            
+            <header class="p-4 md:p-8 pb-0 bg-white shadow-sm">
+                <h1 class="text-3xl font-extrabold text-gray-800">My Profile</h1>
+                <nav class="text-sm text-gray-500 mt-1 mb-4" aria-label="breadcrumb">
+                    <ol class="flex space-x-2">
+                        <li><a href="employee_dashboard.html" class="hover:text-custom-blue">Home</a></li>
+                        <li class="text-gray-400">/</li>
+                        <li class="font-semibold text-gray-700">My Profile</li>
+                    </ol>
+                </nav>
+                <div class="h-px bg-gray-200 mt-4 mb-6"></div>
+            </header>
+            
+            <div id="main-content" class="flex-grow px-4 md:px-8 overflow-y-auto">
+                
+                <div class="max-w-4xl mx-auto py-8">
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-2xl">
+                        
+                        <!-- Status and Loading Message -->
+                        <div id="status-message" class="hidden p-3 mb-4 rounded-lg font-medium text-center transition-opacity duration-300"></div>
+                        <div id="loading-spinner" class="text-center p-6" style="display:none;">
+                            <i class="fa-solid fa-spinner fa-spin-pulse text-4xl text-custom-blue"></i>
+                            <p class="text-gray-500 mt-2">Loading profile data...</p>
+                        </div>
+
+                        <!-- Profile Header -->
+                        <div class="flex items-center space-x-6 mb-8 border-b pb-6">
+                            <div class="relative w-24 h-24">
+                                <!-- Initial placeholder image for Employee -->
+                                <img id="profile-image" src="https://placehold.co/150x150/00897b/ffffff?text=E" alt="Profile Picture" class="rounded-full object-cover w-full h-full border-4 border-custom-green shadow-lg">
+                                <!-- Upload button is only visible when editing -->
+                                <button type="button" id="upload-button" onclick="document.getElementById('file-upload').click();" class="absolute bottom-0 right-0 p-2 bg-white rounded-full border border-gray-300 shadow-md hover:bg-gray-100 transition-colors hidden">
+                                    <i class="fa-solid fa-camera text-custom-blue text-lg"></i>
+                                </button>
+                                <input type="file" id="file-upload" accept="image/*" class="hidden" onchange="uploadProfilePicture(event)">
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-gray-800" id="profile-name-display">Loading Employee Name...</p>
+                                <p class="text-sm text-gray-500" id="profile-id-display">Employee ID: E-XXX</p>
+                            </div>
+                        </div>
+
+                        <!-- Main Tabbed Content -->
+                        <div class="mt-8">
+                            
+                            <!-- Tabs Navigation -->
+                            <div class="border-b border-gray-200">
+                                <nav class="flex space-x-4" aria-label="Tabs">
+                                    <button type="button" onclick="changeTab('details')" id="tab-details" class="tab-button py-2 px-4 text-sm font-medium text-white rounded-t-lg bg-custom-blue transition-colors">
+                                        Personal Details
+                                    </button>
+                                    <button type="button" onclick="changeTab('payment')" id="tab-payment" class="tab-button py-2 px-4 text-sm font-medium text-gray-500 hover:text-custom-blue transition-colors">
+                                        Payment Account
+                                    </button>
+                                    <button type="button" onclick="changeTab('security')" id="tab-security" class="tab-button py-2 px-4 text-sm font-medium text-gray-500 hover:text-custom-blue transition-colors">
+                                        Security & Session
+                                    </button>
+                                </nav>
+                            </div>
+
+                            <!-- Tab Content Containers -->
+                            <div id="tab-content-details" class="tab-content mt-6">
+                                <!-- Details Form starts read-only -->
+                                <form id="details-form" onsubmit="event.preventDefault(); saveProfile('details');">
+                                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Personal Information</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                        
+                                        <div>
+                                            <label for="employee-id" class="block text-sm font-medium text-gray-700">Employee ID</label>
+                                            <!-- Employee ID is permanently read-only -->
+                                            <input type="text" id="employee-id" name="employee-id" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 bg-gray-100 cursor-not-allowed" readonly value="E-12345">
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="full-name" class="block text-sm font-medium text-gray-700">Full Name <span class="text-red-500">*</span></label>
+                                            <input type="text" id="full-name" name="full-name" required class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3" readonly placeholder="Jane Doe">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-6">
+                                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number <span class="text-red-500">*</span></label>
+                                        <input type="tel" id="phone" name="phone" required class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3" readonly placeholder="(555) 123-4567">
+                                    </div>
+                                    
+                                    <div class="mb-6">
+                                        <label for="address" class="block text-sm font-medium text-gray-700">Residential Address</label>
+                                        <input type="text" id="address" name="address" class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3" readonly placeholder="123 Main St, Anytown, USA">
+                                    </div>
+
+                                    <!-- Action Buttons for Details Tab -->
+                                    <div class="flex justify-end pt-4 border-t">
+                                        <div id="details-actions" class="space-x-4">
+                                            <button type="button" id="edit-details-button" onclick="toggleEditMode('details', true)" class="flex items-center text-sm px-6 py-3 bg-custom-blue text-white rounded-lg shadow-lg hover:bg-custom-blue transition-colors">
+                                                <i class="fa-solid fa-pen-to-square mr-2"></i> Edit Profile
+                                            </button>
+                                            <button type="button" id="cancel-details-button" onclick="toggleEditMode('details', false)" class="hidden text-sm px-6 py-3 border border-gray-300 rounded-lg shadow-lg hover:bg-gray-100 transition-colors">
+                                                Cancel
+                                            </button>
+                                            <button type="submit" id="save-details-button" class="hidden flex items-center text-sm px-6 py-3 bg-custom-blue text-white rounded-lg shadow-lg hover:bg-custom-blue transition-colors">
+                                                <i class="fa-solid fa-floppy-disk mr-2"></i> Save Changes
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <div id="tab-content-payment" class="tab-content mt-6 hidden">
+                                <!-- Payment Form starts read-only -->
+                                <form id="payment-form" onsubmit="event.preventDefault(); saveProfile('payment');">
+                                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Payment Account Information (For Payroll)</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                        
+                                        <div>
+                                            <label for="bank-name" class="block text-sm font-medium text-gray-700">Bank Name <span class="text-red-500">*</span></label>
+                                            <input type="text" id="bank-name" name="bank-name" required class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3" readonly placeholder="First National Bank">
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="account-number" class="block text-sm font-medium text-gray-700">Account Number <span class="text-red-500">*</span></label>
+                                            <input type="text" id="account-number" name="account-number" required class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3" readonly placeholder="1234567890">
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="routing-number" class="block text-sm font-medium text-gray-700">Routing Number <span class="text-red-500">*</span></label>
+                                            <input type="text" id="routing-number" name="routing-number" required class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3" readonly placeholder="098765432">
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="account-type" class="block text-sm font-medium text-gray-700">Account Type <span class="text-red-500">*</span></label>
+                                            <!-- Select elements cannot use the 'readonly' attribute. We disable it and re-enable it on edit. -->
+                                            <select id="account-type" name="account-type" required class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 bg-gray-50" disabled>
+                                                <option value="" disabled selected>Select account type</option>
+                                                <option value="checking">Checking</option>
+                                                <option value="savings">Savings</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Action Buttons for Payment Tab -->
+                                    <div class="flex justify-end pt-4 border-t">
+                                        <div id="payment-actions" class="space-x-4">
+                                            <button type="button" id="edit-payment-button" onclick="toggleEditMode('payment', true)" class="flex items-center text-sm px-6 py-3 bg-custom-blue text-white rounded-lg shadow-lg hover:bg-custom-blue transition-colors">
+                                                <i class="fa-solid fa-pen-to-square mr-2"></i> Edit Payment
+                                            </button>
+                                            <button type="button" id="cancel-payment-button" onclick="toggleEditMode('payment', false)" class="hidden text-sm px-6 py-3 border border-gray-300 rounded-lg shadow-lg hover:bg-gray-100 transition-colors">
+                                                Cancel
+                                            </button>
+                                            <button type="submit" id="save-payment-button" class="hidden flex items-center text-sm px-6 py-3 bg-custom-green text-white rounded-lg shadow-lg hover:bg-teal-600 transition-colors">
+                                                <i class="fa-solid fa-floppy-disk mr-2"></i> Update Payment
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div id="tab-content-security" class="tab-content mt-6 hidden">
+                                <form id="password-form" onsubmit="event.preventDefault(); saveProfile('password');">
+                                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Change Password</h3>
+                                    <!-- Password fields should always be editable as they don't hold persistent "data" -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                        <div>
+                                            <label for="old-password" class="block text-sm font-medium text-gray-700">Current Password <span class="text-red-500">*</span></label>
+                                            <input type="password" id="old-password" name="old-password" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 input-focus">
+                                        </div>
+                                        <div>
+                                            <label for="new-password" class="block text-sm font-medium text-gray-700">New Password <span class="text-red-500">*</span></label>
+                                            <input type="password" id="new-password" name="new-password" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 input-focus">
+                                        </div>
+                                    </div>
+
+                                    <div class="flex justify-end pt-4 border-t">
+                                        <button type="submit" id="change-password-button" class="flex items-center text-sm px-6 py-3 bg-custom-purple text-white rounded-lg shadow-lg hover:bg-custom-purple transition-colors">
+                                            <i class="fa-solid fa-lock mr-2"></i> Change Password
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <div class="mt-8 pt-6 border-t border-gray-200">
+                                    <h4 class="text-lg font-semibold text-gray-700 mb-3">Session Management</h4>
+                                    <p class="text-sm text-gray-500 mb-4">Log out of your current session.</p>
+                                    <button type="button" onclick="logoutEmployee()" class="flex items-center text-sm px-4 py-2 bg-custom-red text-white rounded-lg shadow-md hover:bg-red-600 transition-colors">
+                                        <i class="fa-solid fa-right-from-bracket mr-2"></i> Log Out
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Links to external JavaScript files -->
+        <!-- employee_nav.js is left in case you provide that file later -->
+        <script src="js/employee_nav.js"></script>
+        <script src="js/my_profile.js"></script>
+
+        
+    </body>
+</html>

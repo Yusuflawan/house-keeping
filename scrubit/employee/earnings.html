@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>My Earnings - Scrub and Clean It Limited</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome 6.5.3 for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">    
+    <style>
+        /* Global Styles */
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fc;
+        }
+
+        /* Tailwind custom colors */
+        .text-custom-blue, .hover\:text-custom-blue:hover { color: #3f51b5; }
+        .bg-custom-blue { background-color: #3f51b5; }
+        .bg-custom-green { background-color: #00897b; }
+        .bg-custom-red { background-color: #e53935; }
+        .border-custom-blue { border-color: #3f51b5; }
+        .border-custom-red { border-color: #e53935; }
+        .border-custom-green { border-color: #00897b; }
+        
+        /* ADD !important to the text colors here: */
+        .text-custom-blue { color: #3f51b5 !important; }
+        .text-custom-green { color: #00897b !important; }
+        .text-custom-red { color: #e53935 !important; } 
+
+        /* Ensure content has padding for mobile bottom nav */
+        #main-content {
+            padding-bottom: 5rem; 
+        }
+        @media (min-width: 768px) {
+            #main-content {
+                padding-bottom: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="flex flex-col h-screen">
+    
+    <!-- Placeholder for the Fixed Top Header (Desktop Nav) -->
+    <div id="top-nav-placeholder" class="h-16 hidden md:block border-b"></div>
+    
+    <!-- Main Content Wrapper: Scrollable Area -->
+    <div id="main-content" class="flex-grow p-4 md:p-8 overflow-y-auto">
+        
+        <!-- Page Header -->
+        <div class="mb-6">
+            <h1 class="text-3xl font-extrabold text-gray-800">My Earnings</h1>
+            <p class="text-gray-500 mt-1" id="earnings-summary-period">Viewing summary for the last 30 days.</p>
+            <div class="h-px bg-gray-200 mt-4"></div>
+        </div>
+
+        <!-- 1. Date Range Selector -->
+        <div class="bg-white rounded-xl shadow-lg p-4 mb-6 flex flex-col sm:flex-row items-center justify-between space-y-3 sm:space-y-0 sm:space-x-4">
+            <h2 class="text-lg font-semibold text-gray-700 w-full sm:w-auto">Select Period:</h2>
+            <select id="period-selector" class="w-full sm:w-auto p-2 border border-gray-300 rounded-lg focus:ring-custom-blue focus:border-custom-blue transition-colors">
+                <option value="last_7_days">Last 7 Days</option>
+                <option value="last_30_days" selected>Last 30 Days</option>
+                <option value="current_month">Current Month</option>
+                <option value="last_month">Last Month</option>
+            </select>
+        </div>
+
+        <!-- 2. Earnings Summary Cards (Icons and Color Coding Applied) -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    
+            <div class="bg-white rounded-xl shadow-lg p-4 text-center border-t-4 border-custom-blue">
+                <i class="fa-solid fa-money-bill-transfer text-3xl text-custom-blue mb-2"></i>
+                <h6 class="text-sm text-gray-500">Gross Pay</h6>
+                <div class="text-2xl font-bold text-custom-blue" id="metric-gross-pay">£0.00</div>
+            </div>
+        
+            <div class="bg-white rounded-xl shadow-lg p-4 text-center border-t-4 border-custom-red">
+                <i class="fa-solid fa-circle-minus text-3xl text-custom-red mb-2"></i>
+                <h6 class="text-sm text-gray-500">Deductions/Fines</h6>
+                <div class="text-2xl font-bold text-custom-red" id="metric-deductions">£0.00</div>
+            </div>
+        
+            <div class="bg-white rounded-xl shadow-lg p-4 text-center border-t-4 border-custom-green">
+                <i class="fa-solid fa-sack-dollar text-3xl text-custom-green mb-2"></i>
+                <h6 class="text-sm text-gray-500">Net Pay</h6>
+                <div class="text-2xl font-bold text-custom-green" id="metric-net-pay">£0.00</div>
+            </div>
+        
+            <div class="bg-white rounded-xl shadow-lg p-4 text-center border-t-4 border-gray-400">
+                <i class="fa-solid fa-clock text-3xl text-gray-500 mb-2"></i>
+                <h6 class="text-sm text-gray-500">Total Hours</h6>
+                <div class="text-2xl font-bold text-gray-800" id="metric-total-hours">0.0</div>
+            </div>
+        </div>
+        
+        <!-- 3. Detailed Transactions Table -->
+        <div class="bg-white rounded-xl shadow-lg p-6" id="transactions-section">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-4">Detailed Job Payments</h2>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200" id="transactions-table">
+                    <thead>
+                        <tr class="text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                            <th class="px-4 py-3">Date</th>
+                            <th class="px-4 py-3">Client</th>
+                            <th class="px-4 py-3">Hours</th>
+                            <th class="px-4 py-3 text-right">Gross Pay</th>
+                            <th class="px-4 py-3 text-right">Deduction</th>
+                            <th class="px-4 py-3 text-right">Net Pay</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="transactions-table-body">
+                        <!-- Data rows will be injected here by earnings.js -->
+                        <tr>
+                            <td colspan="6" class="p-6 text-center text-gray-500" id="loading-indicator">
+                                <i class="fa-solid fa-spinner fa-spin mr-2"></i> Loading earnings data...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Placeholder for the Fixed Bottom Navigation (Mobile Only) -->
+    <div id="bottom-nav-placeholder" class="md:hidden"></div>
+
+    <!-- 1. External Navigation Logic -->
+    <script src="js/employee_nav.js"></script>
+    <script>
+        // Call the external navigation function right after it loads to inject the nav and highlight the active link.
+        loadEmployeeNav('earnings');
+    </script>
+    
+    <!-- 2. Page Specific Logic -->
+    <script src="js/earnings.js"></script>
+    
+</body>
+</html>

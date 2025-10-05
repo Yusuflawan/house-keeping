@@ -321,4 +321,26 @@ function renderCharts(charts) {
 
 
 // Start the dashboard logic when the page is fully loaded
-window.onload = initDashboard;
+// ... (All existing functions like renderCharts, initDashboard, etc. remain above) ...
+
+// Start the dashboard logic and the shared components when the page is fully loaded
+window.onload = function () {
+    
+    // 1. Load the shared Sidebar/Nav component 
+    if (typeof loadNav === 'function') {
+        loadNav(); 
+    } else {
+        console.warn('loadNav() function not found. Sidebar will not load.');
+    }
+    
+    // 2. Load the shared User Menu component (Injects HTML and adds listeners)
+    // NOTE: This assumes the loadUserMenu() function is defined and accessible
+    if (typeof loadUserMenu === 'function') {
+        loadUserMenu(); 
+    } else {
+         console.warn('loadUserMenu() function not found. User menu will not be displayed.');
+    }
+    
+    // 3. Initialize the core page logic
+    initDashboard();
+};

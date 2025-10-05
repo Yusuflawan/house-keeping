@@ -1,0 +1,50 @@
+<!-- 
+    This file contains both desktop (top) and mobile (bottom) navigation structures.
+    The JavaScript will select the appropriate ID and inject it into the right placeholder.
+-->
+
+<!-- This is shared profile icon (always top-right) -->
+<div id="shared-profile-icon" class="fixed top-4 right-4 z-50">
+    <a href="my_profile.html" id="mobile-profile-toggle"
+       class="cursor-pointer flex items-center space-x-2 p-1 bg-white rounded-full shadow hover:shadow-lg transition-shadow">
+        <img id="header-profile-img-mobile"
+             src="https://placehold.co/40x40/3f51b5/ffffff?text=EM"
+             alt="Employee"
+             class="w-10 h-10 rounded-full object-cover border-2 border-custom-blue">
+    </a>
+</div>
+
+<!-- 1. Desktop Top Navigation (Hidden on Mobile) -->
+<nav id="desktop-nav-content" 
+     class="h-16 bg-white flex items-center justify-between pl-8 pr-24 relative z-30 w-full">
+    <div class="text-lg font-bold text-custom-blue">
+        Scrub & Clean It | Employee Portal
+    </div>
+
+    <div class="flex items-center space-x-6">
+        <a id="nav-desktop-dashboard" href="employee_dashboard.html" class="text-gray-700 hover:text-custom-blue font-medium transition-colors">Dashboard</a>
+        <a id="nav-desktop-myjobs" href="my_jobs.html" class="text-gray-700 hover:text-custom-blue font-medium transition-colors">My Jobs</a>
+        <a id="nav-desktop-earnings" href="earnings.html" class="text-gray-700 hover:text-custom-blue font-medium transition-colors">Earnings</a>
+    </div>
+</nav>
+
+
+<!-- 2. Mobile Bottom Navigation (Hidden on Desktop) -->
+<nav id="mobile-nav-content" class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t shadow-2xl z-40 flex justify-around items-center w-full">
+    
+    <a id="nav-mobile-dashboard" href="employee_dashboard.html" class="flex flex-col items-center text-custom-blue">
+        <i class="fa-solid fa-chart-line text-xl"></i>
+        <span class="text-xs mt-1 font-semibold">Dashboard</span>
+    </a>
+    
+    <a id="nav-mobile-myjobs" href="my_jobs.html" class="flex flex-col items-center text-gray-500 hover:text-custom-blue">
+        <i class="fa-solid fa-briefcase text-xl"></i>
+        <span class="text-xs mt-1">My Jobs</span>
+    </a>
+    
+    <a id="nav-mobile-earnings" href="earnings.html" class="flex flex-col items-center text-gray-500 hover:text-custom-blue">
+        <i class="fa-solid fa-sack-dollar text-xl"></i>
+        <span class="text-xs mt-1">Earnings</span>
+    </a>
+    
+</nav>
