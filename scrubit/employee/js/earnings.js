@@ -45,7 +45,6 @@ const formatCurrency = (amount) => {
  * @param {object} data - The summary object for the selected period.
  */
 const renderSummary = (data) => {
-    document.getElementById('metric-gross-pay').textContent = formatCurrency(data.grossPay);
     document.getElementById('metric-deductions').textContent = formatCurrency(data.deductions);
     document.getElementById('metric-net-pay').textContent = formatCurrency(data.netPay);
     document.getElementById('metric-total-hours').textContent = data.totalHours.toFixed(1);
@@ -74,7 +73,6 @@ const renderTransactions = (transactions) => {
             <td class="px-4 py-3 text-sm text-gray-500">${tx.date}</td>
             <td class="px-4 py-3 text-sm text-gray-900">${tx.client}</td>
             <td class="px-4 py-3 text-sm text-gray-700">${tx.hours.toFixed(1)}</td>
-            <td class="px-4 py-3 text-sm text-gray-700 text-right">${formatCurrency(tx.gross)}</td>
             <td class="px-4 py-3 text-sm text-custom-red text-right">${formatCurrency(tx.deduction)}</td>
             <td class="px-4 py-3 text-sm ${netPayClass} text-right">${formatCurrency(tx.net)}</td>
         `;

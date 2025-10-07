@@ -1,0 +1,53 @@
+<!-- 
+    This file contains both desktop (top) and mobile (bottom) navigation structures.
+    The JavaScript will select the appropriate ID and inject it into the right placeholder.
+-->
+
+<!-- This is shared profile icon (always top-right) -->
+<!-- Shared Profile Icon (Fixed Top-Right on All Screens) -->
+<div id="shared-profile-icon"
+     class="fixed top-4 right-4 z-[100] transition-transform duration-300 hover:scale-105">
+    <a href="my_profile.html"
+       class="cursor-pointer flex items-center space-x-2 p-1 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow border border-gray-100">
+        <img id="header-profile-img-mobile"
+             src="https://placehold.co/40x40/3f51b5/ffffff?text=EM"
+             alt="Client"
+             class="w-10 h-10 rounded-full object-cover border-2 border-custom-blue">
+    </a>
+</div>
+
+
+<!-- 1. Desktop Top Navigation (Hidden on Mobile) -->
+<nav id="desktop-nav-content" 
+     class="h-16 bg-white flex items-center justify-between pl-8 pr-24 relative z-30 w-full">
+    <div class="text-lg font-bold text-custom-blue">
+        Scrub It & Clean It S Ltd
+    </div>
+
+    <div class="flex items-center space-x-6">
+        <a id="nav-desktop-dashboard" href="client_dashboard.html" class="text-gray-700 hover:text-custom-blue font-medium transition-colors">Dashboard</a>
+        <a id="nav-desktop-book_now" href="book_now.html" class="text-gray-700 hover:text-custom-blue font-medium transition-colors">Book Now</a>
+        <a id="nav-desktop-mybookings" href="my_bookings.html" class="text-gray-700 hover:text-custom-blue font-medium transition-colors">My Bookings</a>
+    </div>
+</nav>
+
+
+<!-- 2. Mobile Bottom Navigation (Hidden on Desktop) -->
+<nav id="mobile-nav-content" class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t shadow-2xl z-40 flex justify-around items-center w-full">
+    
+    <a id="nav-mobile-dashboard" href="client_dashboard.html" class="flex flex-col items-center text-custom-blue">
+        <i class="fa-solid fa-chart-line text-xl"></i>
+        <span class="text-xs mt-1 font-semibold">Dashboard</span>
+    </a>
+
+    <a id="nav-mobile-book_now" href="book_now.html" class="flex flex-col items-center text-gray-500 hover:text-custom-blue">
+        <i class="fa-solid fa-calendar-check text-xl"></i>
+        <span class="text-xs mt-1">Book Now</span>
+    </a>
+    
+    <a id="nav-mobile-mybookings" href="my_bookings.html" class="flex flex-col items-center text-gray-500 hover:text-custom-blue">
+        <i class="fa-solid fa-briefcase text-xl"></i>
+        <span class="text-xs mt-1">My Bookings</span>
+    </a>
+    
+</nav>

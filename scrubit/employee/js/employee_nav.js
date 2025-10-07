@@ -1,10 +1,7 @@
 /**
- * Injects the appropriate navigation (Top or Bottom) based on the screen size
- * and handles the responsive switching.
- * * Note: Since we are using a single HTML file (employee_nav.html) to hold both navs,
- * we inject the content and then hide/show the parts using Tailwind classes and media queries.
+ * Handles injecting navigation for the Employee pages.
+ * Adds a fixed desktop nav, fixed mobile top bar, and bottom nav.
  */
-
 async function loadEmployeeNav() {
     const topNavPlaceholder = document.getElementById('top-nav-placeholder');
     const bottomNavPlaceholder = document.getElementById('bottom-nav-placeholder');
@@ -13,44 +10,60 @@ async function loadEmployeeNav() {
         console.error('Navigation placeholders (top-nav-placeholder or bottom-nav-placeholder) not found.');
         return;
     }
-    
+
     try {
-        // 1. Fetch the combined HTML snippet
         const response = await fetch('employee_nav.html');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
         const navHtml = await response.text();
-        
-        // 2. Create a temporary container to extract the two distinct NAV elements
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = navHtml;
 
         const desktopNav = tempDiv.querySelector('#desktop-nav-content');
         const mobileNav = tempDiv.querySelector('#mobile-nav-content');
+        const sharedProfile = tempDiv.querySelector('#shared-profile-icon');
 
         if (desktopNav && mobileNav) {
-            // 3. Inject the desktop nav into its placeholder (it is visible on md screens and up)
+            // Inject Desktop Navigation
             topNavPlaceholder.innerHTML = desktopNav.outerHTML;
-            topNavPlaceholder.classList.remove('h-16'); // Remove placeholder height class
+            topNavPlaceholder.classList.remove('h-16');
 
-            // 4. Inject the mobile nav into its placeholder (it is visible only on mobile screens)
+            // Inject Mobile Bottom Navigation
             bottomNavPlaceholder.innerHTML = mobileNav.outerHTML;
 
-            // 5. Inject the shared profile icon (top right, visible on all screen sizes)
-            const sharedProfile = tempDiv.querySelector('#shared-profile-icon');
+            // --- Desktop Profile Icon ---
             if (sharedProfile) {
-                document.body.appendChild(sharedProfile); // append to body so it's global
+                // Make sure it’s visible only on desktop
+                sharedProfile.classList.remove('hidden');
+                sharedProfile.classList.add('hidden', 'md:block', 'fixed', 'top-4', 'right-6', 'z-50');
+                document.body.appendChild(sharedProfile);
             }
 
+            // --- Mobile Top Bar ---
+            const mobileTopBar = document.createElement('div');
+            mobileTopBar.className =
+                'fixed top-0 left-0 right-0 h-14 bg-white shadow-md z-40 flex items-center justify-between px-4 md:hidden';
+            mobileTopBar.innerHTML = `
+                <span class="text-base font-bold text-custom-blue truncate">Scrub It & Clean It Ltd</span>
+                <a href="my_profile.html" class="cursor-pointer flex items-center space-x-2">
+                    <img src="https://placehold.co/36x36/3f51b5/ffffff?text=EM"
+                         alt="Employee"
+                         class="w-9 h-9 rounded-full object-cover border-2 border-custom-blue">
+                </a>
+            `;
+            document.body.appendChild(mobileTopBar);
 
-            // Optional: Highlight the current page (Dashboard in this case)
+            // --- Adjust main content padding to account for fixed navs ---
+            const mainContent = document.getElementById('main-content');
+            if (mainContent) {
+                mainContent.classList.add('pt-20', 'pb-20', 'md:pt-24', 'md:pb-8');
+            }
+
+            // Highlight current page
             highlightCurrentPage();
-
         } else {
             console.error('Could not find desktop-nav-content or mobile-nav-content inside employee_nav.html');
         }
-
     } catch (error) {
         console.error('Error loading employee navigation:', error);
     }
@@ -60,11 +73,8 @@ async function loadEmployeeNav() {
  * Highlights the current page link in both navigation bars.
  */
 function highlightCurrentPage() {
-    const currentPath = window.location.pathname.split('/').pop() || 'employee_dashboard.html'; // Default to dashboard
+    const currentPath = window.location.pathname.split('/').pop() || 'employee_dashboard.html';
 
-    // List of navigation link IDs for each page
-    // NOTE: Removed 'profile.html' and 'job_details.html' from mobile nav links 
-    // to reflect user's request for profile via icon and job details via Dashboard card.
     const navLinks = [
         { path: 'employee_dashboard.html', ids: ['nav-desktop-dashboard', 'nav-mobile-dashboard'] },
         { path: 'my_jobs.html', ids: ['nav-desktop-myjobs', 'nav-mobile-myjobs'] },
@@ -76,19 +86,18 @@ function highlightCurrentPage() {
             link.ids.forEach(id => {
                 const element = document.getElementById(id);
                 if (element) {
-                    // Desktop styles: change text color to blue
-                    element.classList.add('text-custom-blue', 'font-bold');
-                    element.classList.remove('text-gray-700');
-
-                    // Mobile styles: ensure the icon is blue and bold
-                    const icon = element.querySelector('i');
-                    if (icon) {
-                        icon.classList.add('text-custom-blue');
-                        icon.classList.remove('text-gray-500');
+                    if (id.includes('desktop')) {
+                        element.classList.add('text-custom-blue', 'font-bold', 'border-b-2', 'border-custom-blue', 'pb-1');
+                        element.classList.remove('text-gray-700');
                     }
-                    const text = element.querySelector('span');
-                    if (text) {
-                        text.classList.add('font-semibold');
+                    if (id.includes('mobile')) {
+                        const icon = element.querySelector('i');
+                        if (icon) {
+                            icon.classList.add('text-custom-blue');
+                            icon.classList.remove('text-gray-500');
+                        }
+                        const text = element.querySelector('span');
+                        if (text) text.classList.add('font-semibold');
                     }
                 }
             });

@@ -70,32 +70,28 @@
         </div>
 
         <!-- 2. Earnings Summary Cards (Icons and Color Coding Applied) -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-    
-            <div class="bg-white rounded-xl shadow-lg p-4 text-center border-t-4 border-custom-blue">
-                <i class="fa-solid fa-money-bill-transfer text-3xl text-custom-blue mb-2"></i>
-                <h6 class="text-sm text-gray-500">Gross Pay</h6>
-                <div class="text-2xl font-bold text-custom-blue" id="metric-gross-pay">£0.00</div>
-            </div>
-        
-            <div class="bg-white rounded-xl shadow-lg p-4 text-center border-t-4 border-custom-red">
-                <i class="fa-solid fa-circle-minus text-3xl text-custom-red mb-2"></i>
-                <h6 class="text-sm text-gray-500">Deductions/Fines</h6>
-                <div class="text-2xl font-bold text-custom-red" id="metric-deductions">£0.00</div>
-            </div>
-        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+
             <div class="bg-white rounded-xl shadow-lg p-4 text-center border-t-4 border-custom-green">
                 <i class="fa-solid fa-sack-dollar text-3xl text-custom-green mb-2"></i>
                 <h6 class="text-sm text-gray-500">Net Pay</h6>
                 <div class="text-2xl font-bold text-custom-green" id="metric-net-pay">£0.00</div>
             </div>
-        
-            <div class="bg-white rounded-xl shadow-lg p-4 text-center border-t-4 border-gray-400">
-                <i class="fa-solid fa-clock text-3xl text-gray-500 mb-2"></i>
+
+            <div class="bg-white rounded-xl shadow-lg p-4 text-center border-t-4 border-custom-blue">
+                <i class="fa-solid fa-clock text-3xl text-custom-blue mb-2"></i>
                 <h6 class="text-sm text-gray-500">Total Hours</h6>
-                <div class="text-2xl font-bold text-gray-800" id="metric-total-hours">0.0</div>
+                <div class="text-2xl font-bold text-custom-blue" id="metric-total-hours">0.0</div>
             </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-4 text-center border-t-4 border-custom-red">
+                <i class="fa-solid fa-circle-minus text-3xl text-custom-red mb-2"></i>
+                <h6 class="text-sm text-gray-500">Deductions / Fines</h6>
+                <div class="text-2xl font-bold text-custom-red" id="metric-deductions">£0.00</div>
+            </div>
+
         </div>
+
         
         <!-- 3. Detailed Transactions Table -->
         <div class="bg-white rounded-xl shadow-lg p-6" id="transactions-section">
@@ -108,8 +104,7 @@
                             <th class="px-4 py-3">Date</th>
                             <th class="px-4 py-3">Client</th>
                             <th class="px-4 py-3">Hours</th>
-                            <th class="px-4 py-3 text-right">Gross Pay</th>
-                            <th class="px-4 py-3 text-right">Deduction</th>
+                            <th class="px-4 py-3 text-right">Fine</th>
                             <th class="px-4 py-3 text-right">Net Pay</th>
                         </tr>
                     </thead>

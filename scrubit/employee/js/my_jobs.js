@@ -91,22 +91,28 @@ const renderCurrentJob = (job) => {
             </button>
         `;
     } else if (isJobActive) {
-        // --- Ready to Clock In State (Next Job) ---
+        // --- Active Job State ---
         contentHTML = `
             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-left mb-4">
                 <p class="text-gray-700 font-semibold text-lg mb-1">${job.clientName}</p>
-                <p class="text-sm text-gray-600 mb-2"><i class="fa-solid fa-location-dot mr-1"></i> ${job.address}</p>
+                <p class="text-sm text-gray-600 mb-2">
+                    <i class="fa-solid fa-location-dot mr-1"></i> ${job.address}
+                </p>
                 <div class="flex justify-between text-sm text-gray-500">
                     <span><i class="fa-regular fa-calendar mr-1"></i> Start: ${new Date(job.startTime).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' })}</span>
                     <span><i class="fa-solid fa-hourglass-half mr-1"></i> Est: ${job.estimatedDuration}</span>
                 </div>
             </div>
+    
             <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
-                <a id="get-directions-btn" href="${createDirectionsLink(job.address)}" target="_blank" class="flex-1 py-3 px-4 rounded-xl bg-gray-600 hover:bg-gray-700 text-white font-bold transition-colors shadow-md text-center">
-                    <i class="fa-solid fa-road mr-2"></i> Get Directions
-                </a>
+                <!-- Clock In Button -->
                 <button id="clock-in-btn" class="flex-1 py-3 px-4 rounded-xl bg-custom-blue hover:bg-indigo-700 text-white font-bold transition-colors shadow-md">
-                    <i class="fa-solid fa-clock-o mr-2"></i> Clock In
+                    <i class="fa-solid fa-clock mr-2"></i> Clock In
+                </button>
+
+                <!-- Cancel Button -->
+                <button id="cancel-job-btn" class="flex-1 py-3 px-4 rounded-xl bg-custom-red hover:bg-red-700 text-white font-bold transition-colors shadow-md">
+                    <i class="fa-solid fa-xmark mr-2"></i> Cancel
                 </button>
             </div>
         `;

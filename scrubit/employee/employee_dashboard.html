@@ -38,7 +38,7 @@
         
         <!-- Main Content Wrapper: Scrollable Area -->
         <!-- On mobile, the content needs padding at the bottom equal to the height of the bottom nav (h-16) -->
-        <div id="main-content" class="flex-grow p-4 md:p-8 overflow-y-auto pb-20 md:pb-8">
+        <div id="main-content" class="flex-grow p-4 md:p-8 overflow-y-auto pt-20 pb-20 md:pb-8">
             
             <!-- Dashboard Title and Welcome Message -->
             <div class="mb-6">
@@ -95,40 +95,39 @@
                 <!-- Separated Action Buttons (Get Directions and Start Job) -->
                 <div class="grid grid-cols-2 gap-4 mt-4" id="current-job-action-buttons">
                     <!-- Button 1: Get Directions (Opens Map/Navigation) -->
-                    <button id="action-button-directions" class="w-full inline-block text-center py-3 bg-gray-100 text-custom-blue border border-custom-blue rounded-lg font-bold shadow-sm hover:bg-gray-200 transition-colors">
-                        <i class="fa-solid fa-route mr-2"></i> Directions
+                    <button id="action-button-start" class="w-full inline-block text-center py-3 bg-custom-blue text-white rounded-lg font-bold shadow-md hover:bg-indigo-600 transition-colors">
+                        <i class="fa-solid fa-play-circle mr-2"></i> Start Job
                     </button>
 
                     <!-- Button 2: Start Job (Changes Status to 'In Progress') -->
-                    <button id="action-button-start" class="w-full inline-block text-center py-3 bg-custom-blue text-white rounded-lg font-bold shadow-md hover:bg-indigo-600 transition-colors">
-                        <i class="fa-solid fa-play-circle mr-2"></i> Start Job
+                    <button id="action-button-cancel" class="w-full inline-block text-center py-3 bg-custom-red text-white border border-custom-blue rounded-lg font-bold shadow-sm hover:bg-red-700 transition-colors">
+                        <i class="fa-solid fa-xmark mr-2"></i> Cancel
                     </button>
                 </div>
             </div>
 
-            <!-- 3. Upcoming Jobs Table (Dashboard Specific) -->
-            <div class="bg-white rounded-xl shadow-lg p-6" id="upcoming-jobs-section">
+            <!-- 3. Available Jobs Table (Dashboard Specific) -->
+            <div class="bg-white rounded-xl shadow-lg p-6" id="available-jobs-section">
                 <div class="flex justify-between items-center mb-4 border-b pb-4">
-                    <h2 class="text-xl font-semibold text-gray-800">Upcoming Jobs (Next 7 Days)</h2>
-                    <a href="my-jobs.html" class="text-sm text-custom-blue hover:text-indigo-600 font-medium">View All Jobs</a>
+                    <h2 class="text-xl font-semibold text-gray-800">Available Jobs (Next 7 Days)</h2>
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200" id="upcoming-jobs-table">
+                    <table class="min-w-full divide-y divide-gray-200" id="available-jobs-table">
                         <thead>
                             <tr class="text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
                                 <th class="px-4 py-3">Client</th>
                                 <th class="px-4 py-3">Date & Time</th>
-                                <th class="px-4 py-3">Status</th>
+                                <th class="px-4 py-3">Service Type</th>
                                 <th class="px-4 py-3 text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200" id="upcoming-jobs-table-body">
+                        <tbody class="bg-white divide-y divide-gray-200" id="avaiable-jobs-table-body">
                             <!-- Placeholder Data -->
                             <tr>
                                 <td class="px-4 py-3 text-sm text-gray-900">John Smith</td>
                                 <td class="px-4 py-3 text-sm text-gray-500">Tomorrow, 9:00 AM</td>
-                                <td class="px-4 py-3"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Confirmed</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Deep Cleaning</td>
                                 <td class="px-4 py-3 text-right">
                                     <a href="job-details.html" class="text-custom-blue hover:text-indigo-600 text-sm font-medium">Details</a>
                                 </td>
@@ -136,7 +135,7 @@
                             <tr>
                                 <td class="px-4 py-3 text-sm text-gray-900">Jane Doe</td>
                                 <td class="px-4 py-3 text-sm text-gray-500">Thurs, 2:00 PM</td>
-                                <td class="px-4 py-3"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Assigned</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-900">End of Tenancy Cleaning</td>
                                 <td class="px-4 py-3 text-right">
                                     <a href="job-details.html" class="text-custom-blue hover:text-indigo-600 text-sm font-medium">Details</a>
                                 </td>
