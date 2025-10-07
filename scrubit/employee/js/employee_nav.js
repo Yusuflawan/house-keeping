@@ -21,7 +21,6 @@ async function loadEmployeeNav() {
 
         const desktopNav = tempDiv.querySelector('#desktop-nav-content');
         const mobileNav = tempDiv.querySelector('#mobile-nav-content');
-        const sharedProfile = tempDiv.querySelector('#shared-profile-icon');
 
         if (desktopNav && mobileNav) {
             // Inject Desktop Navigation
@@ -31,27 +30,27 @@ async function loadEmployeeNav() {
             // Inject Mobile Bottom Navigation
             bottomNavPlaceholder.innerHTML = mobileNav.outerHTML;
 
-            // --- Desktop Profile Icon ---
-            if (sharedProfile) {
-                // Make sure it’s visible only on desktop
-                sharedProfile.classList.remove('hidden');
-                sharedProfile.classList.add('hidden', 'md:block', 'fixed', 'top-4', 'right-6', 'z-50');
-                document.body.appendChild(sharedProfile);
-            }
-
             // --- Mobile Top Bar ---
             const mobileTopBar = document.createElement('div');
             mobileTopBar.className =
                 'fixed top-0 left-0 right-0 h-14 bg-white shadow-md z-40 flex items-center justify-between px-4 md:hidden';
             mobileTopBar.innerHTML = `
                 <span class="text-base font-bold text-custom-blue truncate">Scrub It & Clean It Ltd</span>
-                <a href="my_profile.html" class="cursor-pointer flex items-center space-x-2">
+                <div id="mobile-profile-wrapper" class="relative">
                     <img src="https://placehold.co/36x36/3f51b5/ffffff?text=EM"
                          alt="Employee"
-                         class="w-9 h-9 rounded-full object-cover border-2 border-custom-blue">
-                </a>
+                         class="cursor-pointer w-9 h-9 rounded-full object-cover border-2 border-custom-blue">
+                    <div id="mobile-dropdown" 
+                         class="hidden absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-md z-50 transition-all duration-200 opacity-0">
+                        <a href="my_profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                        <button id="mobile-logout-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+                    </div>
+                </div>
             `;
             document.body.appendChild(mobileTopBar);
+
+            // --- Add Dropdown Logic for Desktop & Mobile ---
+            setupProfileDropdown();
 
             // --- Adjust main content padding to account for fixed navs ---
             const mainContent = document.getElementById('main-content');
@@ -70,10 +69,64 @@ async function loadEmployeeNav() {
 }
 
 /**
+ * Handles dropdown toggle for both desktop and mobile profile icons.
+ */
+function setupProfileDropdown() {
+    // --- Desktop ---
+    const desktopProfile = document.querySelector('#desktop-nav-content img');
+    if (desktopProfile) {
+        const dropdown = document.createElement('div');
+        dropdown.id = 'desktop-dropdown';
+        dropdown.className = 'hidden absolute right-8 top-16 w-40 bg-white border rounded-lg shadow-md z-50 transition-all duration-200 opacity-0';
+        dropdown.innerHTML = `
+            <a href="my_profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+            <button id="desktop-logout-btn" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+        `;
+        document.body.appendChild(dropdown);
+
+        desktopProfile.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('hidden');
+            dropdown.classList.toggle('opacity-100');
+        });
+
+        document.addEventListener('click', () => {
+            dropdown.classList.add('hidden');
+            dropdown.classList.remove('opacity-100');
+        });
+    }
+
+    // --- Mobile ---
+    const mobileProfileWrapper = document.getElementById('mobile-profile-wrapper');
+    const mobileDropdown = document.getElementById('mobile-dropdown');
+    if (mobileProfileWrapper && mobileDropdown) {
+        const profileImg = mobileProfileWrapper.querySelector('img');
+        profileImg.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mobileDropdown.classList.toggle('hidden');
+            mobileDropdown.classList.toggle('opacity-100');
+        });
+
+        document.addEventListener('click', () => {
+            mobileDropdown.classList.add('hidden');
+            mobileDropdown.classList.remove('opacity-100');
+        });
+    }
+
+    // --- Logout Buttons ---
+    document.addEventListener('click', (e) => {
+        if (e.target.id === 'desktop-logout-btn' || e.target.id === 'mobile-logout-btn') {
+            window.location.href = '../sign_in.html';
+        }
+    });
+}
+
+/**
  * Highlights the current page link in both navigation bars.
  */
 function highlightCurrentPage() {
-    const currentPath = window.location.pathname.split('/').pop() || 'employee_dashboard.html';
+    // Remove the default fallback to 'employee_dashboard.html'
+    const currentPath = window.location.pathname.split('/').pop();
 
     const navLinks = [
         { path: 'employee_dashboard.html', ids: ['nav-desktop-dashboard', 'nav-mobile-dashboard'] },
@@ -87,7 +140,13 @@ function highlightCurrentPage() {
                 const element = document.getElementById(id);
                 if (element) {
                     if (id.includes('desktop')) {
-                        element.classList.add('text-custom-blue', 'font-bold', 'border-b-2', 'border-custom-blue', 'pb-1');
+                        element.classList.add(
+                            'text-custom-blue',
+                            'font-bold',
+                            'border-b-2',
+                            'border-custom-blue',
+                            'pb-1'
+                        );
                         element.classList.remove('text-gray-700');
                     }
                     if (id.includes('mobile')) {
@@ -104,3 +163,4 @@ function highlightCurrentPage() {
         }
     });
 }
+

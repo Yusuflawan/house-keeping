@@ -1,10 +1,3 @@
-/**
- * Injects the appropriate navigation (Top or Bottom) based on the screen size
- * and handles the responsive switching.
- * * Note: Since we are using a single HTML file (employee_nav.html) to hold both navs,
- * we inject the content and then hide/show the parts using Tailwind classes and media queries.
- */
-
 async function loadClientNav() {
     const topNavPlaceholder = document.getElementById('top-nav-placeholder');
     const bottomNavPlaceholder = document.getElementById('bottom-nav-placeholder');
@@ -13,59 +6,45 @@ async function loadClientNav() {
         console.error('Navigation placeholders (top-nav-placeholder or bottom-nav-placeholder) not found.');
         return;
     }
-    
+
     try {
-        // 1. Fetch the combined HTML snippet
         const response = await fetch('client_nav.html');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const navHtml = await response.text();
-        
-        // 2. Create a temporary container to extract the two distinct NAV elements
+
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = navHtml;
 
         const desktopNav = tempDiv.querySelector('#desktop-nav-content');
         const mobileNav = tempDiv.querySelector('#mobile-nav-content');
+        const mobileTopBar = tempDiv.querySelector('#mobile-top-bar');
 
-        if (desktopNav && mobileNav) {
-            // 3. Inject the desktop nav into its placeholder (it is visible on md screens and up)
+        if (desktopNav && mobileNav && mobileTopBar) {
+            // Inject desktop and mobile navs
             topNavPlaceholder.innerHTML = desktopNav.outerHTML;
-            topNavPlaceholder.classList.remove('h-16'); // Remove placeholder height class
-
-            // 4. Inject the mobile nav into its placeholder (it is visible only on mobile screens)
             bottomNavPlaceholder.innerHTML = mobileNav.outerHTML;
+            document.body.appendChild(mobileTopBar);
 
-            // 5. Inject the shared profile icon (top right, visible on all screen sizes)
-            const sharedProfile = tempDiv.querySelector('#shared-profile-icon');
-            if (sharedProfile) {
-                document.body.appendChild(sharedProfile); // append to body so it's global
-            }
+            // Adjust content spacing
+            const mainContent = document.getElementById('main-content');
+            if (mainContent) mainContent.classList.add('pt-20', 'pb-20', 'md:pt-24', 'md:pb-8');
 
-
-            // Optional: Highlight the current page (Dashboard in this case)
             highlightCurrentPage();
-
+            setupProfileDropdowns();
         } else {
-            console.error('Could not find desktop-nav-content or mobile-nav-content inside client_nav.html');
+            console.error('Could not find navigation sections inside client_nav.html');
         }
-
     } catch (error) {
         console.error('Error loading client navigation:', error);
     }
 }
 
-/**
- * Highlights the current page link in both navigation bars.
- */
 function highlightCurrentPage() {
     const currentPath = window.location.pathname.split('/').pop() || 'client_dashboard.html';
-
     const navLinks = [
         { path: 'client_dashboard.html', ids: ['nav-desktop-dashboard', 'nav-mobile-dashboard'] },
-        { path: 'my_bookings.html', ids: ['nav-desktop-mybookings', 'nav-mobile-mybookings'] },
         { path: 'book_now.html', ids: ['nav-desktop-book_now', 'nav-mobile-book_now'] },
+        { path: 'my_bookings.html', ids: ['nav-desktop-mybookings', 'nav-mobile-mybookings'] },
     ];
 
     navLinks.forEach(link => {
@@ -73,32 +52,15 @@ function highlightCurrentPage() {
             link.ids.forEach(id => {
                 const element = document.getElementById(id);
                 if (element) {
-                    // Desktop styling
-                    if (id.startsWith('nav-desktop')) {
-                        element.classList.add(
-                            'text-custom-blue',
-                            'font-bold',
-                            'border-b-2',
-                            'border-custom-blue',
-                            'pb-1'
-                        );
+                    if (id.includes('desktop')) {
+                        element.classList.add('text-custom-blue', 'font-bold', 'border-b-2', 'border-custom-blue', 'pb-1');
                         element.classList.remove('text-gray-700');
                     }
-
-                    // Mobile styling
-                    if (id.startsWith('nav-mobile')) {
+                    if (id.includes('mobile')) {
                         const icon = element.querySelector('i');
+                        if (icon) icon.classList.add('text-custom-blue');
                         const text = element.querySelector('span');
-                        if (icon) {
-                            icon.classList.add('text-custom-blue');
-                            icon.classList.remove('text-gray-500');
-                        }
-                        if (text) {
-                            text.classList.add('font-semibold', 'text-custom-blue');
-                        }
-
-                        // Add a subtle top border to indicate active nav on mobile
-                        element.classList.add('border-t-2', 'border-custom-blue', 'pt-1');
+                        if (text) text.classList.add('font-semibold');
                     }
                 }
             });
@@ -106,3 +68,40 @@ function highlightCurrentPage() {
     });
 }
 
+function setupProfileDropdowns() {
+    // Desktop Dropdown Toggle
+    const desktopBtn = document.querySelector('#client-profile-container button');
+    const desktopDropdown = document.getElementById('client-profile-dropdown');
+    const mobileBtn = document.querySelector('#client-profile-container-mobile button');
+    const mobileDropdown = document.getElementById('client-profile-dropdown-mobile');
+
+    if (desktopBtn && desktopDropdown) {
+        desktopBtn.addEventListener('click', () => {
+            desktopDropdown.classList.toggle('hidden');
+        });
+        document.addEventListener('click', (e) => {
+            if (!desktopBtn.contains(e.target) && !desktopDropdown.contains(e.target)) {
+                desktopDropdown.classList.add('hidden');
+            }
+        });
+    }
+
+    if (mobileBtn && mobileDropdown) {
+        mobileBtn.addEventListener('click', () => {
+            mobileDropdown.classList.toggle('hidden');
+        });
+        document.addEventListener('click', (e) => {
+            if (!mobileBtn.contains(e.target) && !mobileDropdown.contains(e.target)) {
+                mobileDropdown.classList.add('hidden');
+            }
+        });
+    }
+
+    // Logout links
+    document.querySelectorAll('#logout-link, #logout-link-mobile').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'sign_in.html';
+        });
+    });
+}

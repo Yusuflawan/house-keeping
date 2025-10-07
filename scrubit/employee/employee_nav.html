@@ -9,18 +9,27 @@
         Scrub It & Clean It S Ltd | Employee Portal
     </div>
 
-    <div class="flex items-center space-x-6">
+    <div class="flex items-center space-x-6 relative">
         <a id="nav-desktop-dashboard" href="employee_dashboard.html" class="text-gray-700 hover:text-custom-blue font-medium transition-colors">Dashboard</a>
         <a id="nav-desktop-myjobs" href="my_jobs.html" class="text-gray-700 hover:text-custom-blue font-medium transition-colors">My Jobs</a>
         <a id="nav-desktop-earnings" href="earnings.html" class="text-gray-700 hover:text-custom-blue font-medium transition-colors">Earnings</a>
 
         <!-- Profile Icon (Desktop) -->
-        <a href="my_profile.html" 
-           class="cursor-pointer flex items-center space-x-2 p-1 bg-white rounded-full shadow hover:shadow-lg transition-shadow">
-            <img src="https://placehold.co/40x40/3f51b5/ffffff?text=EM"
-                 alt="Employee"
-                 class="w-10 h-10 rounded-full object-cover border-2 border-custom-blue">
-        </a>
+        <div id="desktop-profile-container" class="relative">
+            <button id="desktop-profile-btn"
+                class="cursor-pointer flex items-center space-x-2 p-1 bg-white rounded-full shadow hover:shadow-lg transition-shadow focus:outline-none">
+                <img src="https://placehold.co/40x40/3f51b5/ffffff?text=EM"
+                     alt="Employee"
+                     class="w-10 h-10 rounded-full object-cover border-2 border-custom-blue">
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div id="desktop-profile-dropdown"
+                class="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg hidden transition-all duration-200">
+                <a href="my_profile.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+                <button id="logout-btn-desktop" class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">Logout</button>
+            </div>
+        </div>
     </div>
 </nav>
 
@@ -29,22 +38,33 @@
      class="fixed top-0 left-0 right-0 h-16 bg-white shadow z-40 flex items-center justify-between px-4 md:hidden">
     
     <div class="text-base font-bold text-custom-blue truncate">
-        Scrub It & Clean It Ltd
+        Scrub It & Clean It S Ltd
     </div>
 
-    <a href="my_profile.html" class="cursor-pointer flex items-center space-x-2 p-1 bg-white rounded-full shadow hover:shadow-lg transition-shadow">
-        <img src="https://placehold.co/40x40/3f51b5/ffffff?text=EM"
-             alt="Employee"
-             class="w-10 h-10 rounded-full object-cover border-2 border-custom-blue">
-    </a>
+    <!-- Mobile Profile -->
+    <div id="mobile-profile-container" class="relative">
+        <button id="mobile-profile-btn"
+            class="cursor-pointer flex items-center space-x-2 p-1 bg-white rounded-full shadow hover:shadow-lg transition-shadow">
+            <img src="https://placehold.co/40x40/3f51b5/ffffff?text=EM"
+                 alt="Employee"
+                 class="w-10 h-10 rounded-full object-cover border-2 border-custom-blue">
+        </button>
+
+        <!-- Dropdown Menu (Mobile) -->
+        <div id="mobile-profile-dropdown"
+            class="absolute right-0 mt-2 w-36 bg-white border rounded-lg shadow-lg hidden transition-all duration-200">
+            <a href="my_profile.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+            <button id="logout-btn-mobile" class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">Logout</button>
+        </div>
+    </div>
 </nav>
 
 <!-- 3. Mobile Bottom Navigation (Hidden on Desktop) -->
 <nav id="mobile-nav-content" class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t shadow-2xl z-40 flex justify-around items-center w-full md:hidden">
     
-    <a id="nav-mobile-dashboard" href="employee_dashboard.html" class="flex flex-col items-center text-custom-blue">
+    <a id="nav-mobile-dashboard" href="employee_dashboard.html" class="flex flex-col items-center text-gray-500 hover:text-custom-blue">
         <i class="fa-solid fa-chart-line text-xl"></i>
-        <span class="text-xs mt-1 font-semibold">Dashboard</span>
+        <span class="text-xs mt-1">Dashboard</span>
     </a>
     
     <a id="nav-mobile-myjobs" href="my_jobs.html" class="flex flex-col items-center text-gray-500 hover:text-custom-blue">

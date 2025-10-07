@@ -6,8 +6,8 @@ const mockJobData = {
     currentJob: {
         id: 'JOB-456',
         clientName: 'The Tech Hub Office',
-        address: '101 Silicon Valley Road, Santa Clara, CA', // Full address for map link
-        startTime: '2025-10-06T09:00:00', // Today at 9:00 AM (Ensure this time is slightly in the past or future to make it active/next)
+        address: '101 Innovation Drive, Cambridge, CB2 0AE', // Full address for map link
+        startTime: '2025-10-07T09:00:00', // Today at 9:00 AM (Ensure this time is slightly in the past or future to make it active/next)
         estimatedDuration: '4 hours',
         rate: 15.00,
         status: 'Scheduled', // Could be 'ClockedIn', 'Scheduled', 'Complete'
