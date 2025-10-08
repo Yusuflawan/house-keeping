@@ -28,6 +28,7 @@
             .bg-custom-blue { background-color: #3f51b5; }
             .bg-custom-green { background-color: #00897b; }
             .bg-custom-red { background-color: #e53935; }
+            .border-custom-blue { border-color: #3f51b5; }
         </style>
     </head>
 
@@ -79,32 +80,54 @@
                 </div>
             </div>
 
-            <!-- 2. The Crucial Middle: Current Job Action Card -->
-            <div id="current-job-card" class="bg-white rounded-xl shadow-lg p-6 mb-8 border-l-8 border-custom-blue">
+            <!-- Unified Current / Next Job Card -->
+            <div id="current-job-card" class="bg-white rounded-xl shadow-lg p-6 mb-8 border-t-4 border-custom-blue">
+                <!-- Header -->
                 <div class="flex justify-between items-start mb-3">
-                    <h2 class="text-xl font-semibold text-gray-800">Your Next Job</h2>
-                    <span id="job-status-tag" class="text-sm font-medium bg-indigo-100 text-custom-blue px-3 py-1 rounded-full">Confirmed</span>
+                    <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                        <i class="fa-solid fa-hourglass-start text-custom-blue mr-2"></i>
+                        Current / Next Job
+                    </h2>
+                    <span id="job-status-tag" class="text-sm font-medium bg-indigo-100 text-custom-blue px-3 py-1 rounded-full">
+                        Confirmed
+                    </span>
                 </div>
-                
+
+                <!-- Job Details -->
                 <div id="current-job-details" class="space-y-2 mb-4">
                     <p class="text-lg font-bold text-gray-700" id="job-client-name">Client Placeholder Name</p>
-                    <p class="text-gray-500 flex items-center"><i class="fa-solid fa-location-dot w-4 mr-2 text-custom-blue"></i> <span id="job-address">123 Example St, City, PO1 1EX</span></p>
-                    <p class="text-gray-500 flex items-center"><i class="fa-solid fa-calendar-day w-4 mr-2 text-custom-blue"></i> <span id="job-time">Today, 10:00 AM - 12:00 PM</span></p>
+                    <p class="text-gray-500 flex items-center">
+                        <i class="fa-solid fa-location-dot w-4 mr-2 text-custom-blue"></i>
+                        <span id="job-address">123 Example St, City, PO1 1EX</span>
+                    </p>
+                    <p class="text-gray-500 flex items-center">
+                        <i class="fa-solid fa-calendar-day w-4 mr-2 text-custom-blue"></i>
+                        <span id="job-time">Today, 10:00 AM – 12:00 PM</span>
+                    </p>
+                    <p class="text-gray-500 flex items-center">
+                        <i class="fa-solid fa-clock w-4 mr-2 text-custom-blue"></i>
+                        <span id="job-estimated-time">Est. Duration: 2 hours</span>
+                    </p>
                 </div>
 
-                <!-- Separated Action Buttons (Get Directions and Start Job) -->
+                <!-- Action Buttons -->
                 <div class="grid grid-cols-2 gap-4 mt-4" id="current-job-action-buttons">
-                    <!-- Button 1: Get Directions (Opens Map/Navigation) -->
-                    <button id="action-button-start" class="w-full inline-block text-center py-3 bg-custom-blue text-white rounded-lg font-bold shadow-md hover:bg-indigo-600 transition-colors">
-                        <i class="fa-solid fa-play-circle mr-2"></i> Start Job
+                    <button id="action-button-clockin" class="w-full inline-block text-center py-3 bg-custom-blue text-white rounded-lg font-bold shadow-md hover:bg-indigo-600 transition-colors">
+                        <i class="fa-solid fa-clock mr-2"></i> Clock In
                     </button>
 
-                    <!-- Button 2: Start Job (Changes Status to 'In Progress') -->
                     <button id="action-button-cancel" class="w-full inline-block text-center py-3 bg-custom-red text-white border border-custom-blue rounded-lg font-bold shadow-sm hover:bg-red-700 transition-colors">
                         <i class="fa-solid fa-xmark mr-2"></i> Cancel
                     </button>
                 </div>
+
+                <!-- Placeholder (when no job available) -->
+                <div id="job-placeholder" class="hidden text-center p-4">
+                    <i class="fa-solid fa-spinner fa-spin text-2xl text-gray-500"></i>
+                    <p class="text-gray-500 mt-2">No active job at the moment.</p>
+                </div>
             </div>
+
 
             <!-- 3. Available Jobs Table (Dashboard Specific) -->
             <div class="bg-white rounded-xl shadow-lg p-6" id="available-jobs-section">
@@ -152,7 +175,7 @@
 
         <script src="js/employee_nav.js"></script>
         <!-- Logic for the dashboard features will go into employee_dashboard.js later -->
-        <!-- <script src="js/employee_dashboard.js"></script> -->
+        <script src="js/employee_dashboard.js"></script>
 
         <script>
             // Call the injection function on load

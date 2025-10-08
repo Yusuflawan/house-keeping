@@ -132,13 +132,15 @@ const renderCurrentJob = (job) => {
 };
 
 /**
- * Attaches event listeners for Clock In/Out buttons.
+ * Attaches event listeners for Clock In/Out/Cancel buttons.
  * @param {object} job - The current job data.
  */
 const attachClockingListeners = (job) => {
     const clockInBtn = document.getElementById('clock-in-btn');
     const clockOutBtn = document.getElementById('clock-out-btn');
+    const cancelBtn = document.getElementById('cancel-job-btn');
 
+    // --- Clock In ---
     if (clockInBtn) {
         clockInBtn.addEventListener('click', () => {
             isClockedIn = true;
@@ -149,32 +151,76 @@ const attachClockingListeners = (job) => {
         });
     }
 
+    // --- Clock Out ---
     if (clockOutBtn) {
         clockOutBtn.addEventListener('click', () => {
             isClockedIn = false;
             if (durationTimer) clearInterval(durationTimer);
 
-            // Calculate final metrics
             const finalDurationHours = ((new Date().getTime() - clockInTimestamp.getTime()) / (1000 * 60 * 60));
             const finalGrossPay = finalDurationHours * job.rate;
 
-            // Update job status to 'Complete' in mock data
-            mockJobData.currentJob.status = 'Complete'; 
-            
-            // Show a success message
-            document.getElementById('job-status-container').innerHTML = `
-                <div class="p-6 bg-custom-green text-white rounded-xl shadow-lg text-center">
+            mockJobData.currentJob.status = 'Complete';
+
+            // Green Summary Display
+            const container = document.getElementById('job-status-container');
+            container.innerHTML = `
+                <div class="p-6 bg-custom-green text-white rounded-xl shadow-lg text-center opacity-100 transition-opacity duration-700" id="job-summary-card">
                     <i class="fa-solid fa-trophy text-4xl mb-3"></i>
                     <p class="font-bold text-xl mb-1">Job Complete!</p>
                     <p class="text-sm">Worked for: ${finalDurationHours.toFixed(2)} hours</p>
                     <p class="text-sm">Gross Pay: ${formatCurrency(finalGrossPay)}</p>
                 </div>
             `;
-            // Re-render the rest of the page to reflect the change
-            loadJobData();
+
+            // Fade out and show next job or caught up message
+            setTimeout(() => {
+                const card = document.getElementById('job-summary-card');
+                if (card) card.classList.add('opacity-0');
+            }, 3000);
+
+            setTimeout(() => {
+                if (mockJobData.upcomingJobs.length > 0) {
+                    mockJobData.currentJob = mockJobData.upcomingJobs.shift();
+                }
+                loadJobData();
+            }, 4000);
+        });
+    }
+
+    // --- Cancel Job ---
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            if (confirm("Are you sure you want to cancel this job?")) {
+                mockJobData.currentJob.status = 'Cancelled';
+                const container = document.getElementById('job-status-container');
+
+                // Red Summary Display
+                container.innerHTML = `
+                    <div class="p-6 bg-custom-red text-white rounded-xl shadow-lg text-center opacity-100 transition-opacity duration-700" id="job-summary-card">
+                        <i class="fa-solid fa-ban text-4xl mb-3"></i>
+                        <p class="font-bold text-xl mb-1">Job Cancelled</p>
+                        <p class="text-sm">We'll notify you when another job is available.</p>
+                    </div>
+                `;
+
+                // Fade out and show next job or caught up message
+                setTimeout(() => {
+                    const card = document.getElementById('job-summary-card');
+                    if (card) card.classList.add('opacity-0');
+                }, 3000);
+
+                setTimeout(() => {
+                    if (mockJobData.upcomingJobs.length > 0) {
+                        mockJobData.currentJob = mockJobData.upcomingJobs.shift();
+                    }
+                    loadJobData();
+                }, 4000);
+            }
         });
     }
 };
+
 
 /**
  * Updates the clocked-in duration display every minute.
