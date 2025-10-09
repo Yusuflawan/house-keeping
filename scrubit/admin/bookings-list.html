@@ -61,23 +61,37 @@
                     <h2 class="text-xl font-semibold text-gray-800 mb-4 md:mb-0">
                         Current and Upcoming Jobs
                     </h2>
-                    <div class="flex flex-wrap space-x-2 space-y-2 md:space-y-0 items-center">
-                        <select id="status-filter" class="p-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-custom-blue">
+                    
+                    <div class="flex flex-wrap gap-3 items-center">
+                        <!-- Status Filter -->
+                        <select id="status-filter" class="p-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-custom-blue focus:ring-2 focus:ring-custom-blue">
                             <option value="">Filter by Status</option>
                             <option value="Confirmed">Confirmed</option>
                             <option value="Pending Assignment">Pending Assignment</option>
                             <option value="In Progress">In Progress</option>
                             <option value="Completed">Completed</option>
                             <option value="Cancelled">Cancelled</option>
+                            <option value="Awaiting Payment Confirmation">Awaiting Payment Confirmation</option>
                         </select>
-                        
-                        <input id="date-filter" type="date" value="2025-10-01" class="p-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-custom-blue"/>
-                        
-                        <button id="export-button" class="flex items-center text-sm px-4 py-2 bg-custom-blue text-white rounded-lg shadow hover:bg-indigo-600 transition-colors" onclick="handleExport()">
-                            <i class="fa-solid fa-file-export mr-2"></i> Export
+                
+                        <!-- Date Filter -->
+                        <input 
+                            id="date-filter" 
+                            type="date" 
+                            value="2025-10-01" 
+                            class="p-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-custom-blue focus:ring-2 focus:ring-custom-blue"
+                        />
+                
+                        <!-- Reset Filters Button -->
+                        <button 
+                            id="reset-filters" 
+                            class="flex items-center text-sm px-4 py-2 bg-custom-blue text-white rounded-lg shadow hover:bg-gray-300 transition-colors">
+                            <i class="fa-solid fa-rotate-left mr-2"></i> Reset Filters
                         </button>
                     </div>
                 </div>
+                
+                
 
                 <h3 class="text-lg font-medium text-gray-700 mb-4">
                     Booking Details (<span class="font-bold text-custom-blue" id="total-bookings-count">148</span> Total Active)

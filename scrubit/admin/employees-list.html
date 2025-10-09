@@ -56,18 +56,16 @@
 
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-xl shadow-lg border-t-4 border-custom-red mb-6">
                 <h2 class="text-xl font-semibold text-gray-800 mb-3 sm:mb-0">Active Staff Roster</h2>
-                <div class="flex space-x-3 w-full sm:w-auto">
+                <div class="flex gap-3 w-full sm:w-auto">
                     <select id="status-filter" class="p-2 border border-gray-300 rounded-lg text-sm focus:ring-custom-blue focus:border-custom-blue">
-                        <option value="">Filter by Status</option>
-                        <option value="Active">Active</option>
-                        <option value="On Leave">On Leave</option>
-                        <option value="Suspended">Suspended</option>
+                        <option value="all">All Staff</option>
+                        <option value="active">Active</option>
+                        <option value="on leave">On Leave</option>
+                        <option value="suspended">Suspended</option>
                     </select>
-                    <button id="add-employee-button" class="bg-custom-blue text-white p-2 rounded-lg text-sm font-medium hover:bg-indigo-600 transition-colors shadow-md flex items-center">
-                        <i class="fa-solid fa-user-plus sm:mr-2"></i> <span class="hidden sm:inline">Add New Employee</span>
-                    </button>
                 </div>
             </div>
+            
 
             <div class="bg-white rounded-xl shadow-xl overflow-x-auto">
                 <div class="p-6">

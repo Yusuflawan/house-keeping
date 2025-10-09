@@ -1,46 +1,50 @@
-// Placeholder data for Clients
+// --- Placeholder data for Clients ---
 const clientsData = [
-    { id: 'C-001', name: 'Alice Johnson', bookings: 12, clientStatus: 'Regular', accountStatus: 'Active', statusClass: 'bg-custom-green', lastBooking: '2025-10-01' },
-    { id: 'C-002', name: 'Robert Lee', bookings: 5, clientStatus: 'New', accountStatus: 'Pending', statusClass: 'bg-custom-yellow', lastBooking: '2025-09-15' },
-    { id: 'C-003', name: 'Maria Garcia', bookings: 25, clientStatus: 'VIP', accountStatus: 'Active', statusClass: 'bg-custom-blue', lastBooking: '2025-10-02' },
-    { id: 'C-004', name: 'David Jones', bookings: 1, clientStatus: 'Dormant', accountStatus: 'Suspended', statusClass: 'bg-custom-red', lastBooking: '2024-03-20' },
+    { id: 'C-001', name: 'Alice Johnson', bookings: 12, accountStatus: 'Active', lastBooking: '2025-10-01' },
+    { id: 'C-002', name: 'Robert Lee', bookings: 5, accountStatus: 'Active', lastBooking: '2025-09-15' },
+    { id: 'C-003', name: 'Maria Garcia', bookings: 25, accountStatus: 'Active', lastBooking: '2025-10-02' },
+    { id: 'C-004', name: 'David Jones', bookings: 1, accountStatus: 'Suspended', lastBooking: '2024-03-20' },
 ];
 
-/**
- * Action handler (Placeholder for viewing profile or managing status).
- * This function needs to be globally accessible as it's called via inline 'onclick' in the table rows.
- */
-window.handleClientAction = function(clientId, action) {
+// --- Action handler (View Profile etc.) ---
+window.handleClientAction = function (clientId, action) {
     if (action === 'View Profile') {
-        // In a real application, this would navigate to the profile page
         window.location.href = `client-profile.html?id=${clientId}`;
     } else {
         alert(`Action: ${action} for Client ID ${clientId}.`);
     }
 };
 
-// --- Rendering Logic (Dynamic content insertion) ---
-function renderClientsTable() {
+// --- Rendering Logic ---
+function renderClientsTable(data = clientsData) {
     const tableBody = document.getElementById('clients-table-body');
+    const totalCountHeader = document.getElementById('client-count-header');
     if (!tableBody) return;
 
-    // Clear table body before rendering
-    tableBody.innerHTML = ''; 
+    tableBody.innerHTML = '';
 
-    clientsData.forEach(client => {
+    data.forEach(client => {
         const row = document.createElement('tr');
         row.className = 'hover:bg-gray-50 transition-colors';
-        
-        // Handle yellow status text color (for Pending, Dormant etc.)
-        const statusTextColor = client.statusClass === 'bg-custom-yellow' ? 'text-gray-900' : 'text-white';
-        
+
+        // Determine badge color dynamically based on accountStatus
+        let statusClass = '';
+        if (client.accountStatus.toLowerCase() === 'active') {
+            statusClass = 'bg-custom-green text-white';
+        } else if (client.accountStatus.toLowerCase() === 'suspended') {
+            statusClass = 'bg-custom-red text-white';
+        } else {
+            statusClass = 'bg-gray-400 text-white';
+        }
+
         row.innerHTML = `
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${client.name} <span class="text-xs text-gray-500">(${client.id})</span></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                ${client.name} <span class="text-xs text-gray-500">(${client.id})</span>
+            </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${client.bookings}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${client.clientStatus}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${client.lastBooking}</td>
             <td class="px-6 py-4 whitespace-nowrap text-center">
-                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusTextColor} ${client.statusClass} shadow-md">
+                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass} shadow-md">
                     ${client.accountStatus}
                 </span>
             </td>
@@ -53,9 +57,31 @@ function renderClientsTable() {
         `;
         tableBody.appendChild(row);
     });
+
+    if (totalCountHeader) totalCountHeader.textContent = data.length;
+}
+
+// --- Filtering Logic ---
+function setupClientFilter() {
+    const filter = document.getElementById('status-filter');
+    if (!filter) return;
+
+    filter.addEventListener('change', () => {
+        const value = filter.value.trim().toLowerCase();
+        let filtered = clientsData;
+
+        if (value && value !== 'all') {
+            filtered = clientsData.filter(client =>
+                client.accountStatus.toLowerCase() === value
+            );
+        }
+
+        renderClientsTable(filtered);
+    });
 }
 
 // --- Execute on Page Load ---
 window.onload = function () {
     renderClientsTable();
+    setupClientFilter();
 };

@@ -63,9 +63,6 @@
                 <button id="payouts-tab" onclick="switchView('payouts')" class="flex-1 px-4 py-2 text-sm font-semibold rounded-lg transition-colors">
                     <i class="fa-solid fa-money-bill-transfer mr-2"></i> Employee Payouts
                 </button>
-                <button id="export-data-button" onclick="handleAction('export-data')" class="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
-                    <i class="fa-solid fa-file-export mr-1"></i> Export Data
-                </button>
             </div>
 
             <div class="bg-white p-6 rounded-xl shadow-lg mb-6 flex flex-col md:flex-row justify-between items-start md:items-center">
@@ -77,9 +74,7 @@
                         <option>All Statuses</option>
                         <option value="Paid">Paid</option>
                         <option value="Pending">Pending</option>
-                        <option value="Overdue">Overdue</option>
                         <option value="Refunded">Refunded</option>
-                        <option value="Failed">Failed</option>
                     </select>
                     <input type="month" value="2025-09" id="month-filter" class="p-2 border border-gray-300 rounded-lg text-sm" />
                 </div>

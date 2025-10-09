@@ -69,13 +69,33 @@ async function fetchData(endpoint) {
 
     if (endpoint === 'bookings?limit=4') {
         return [
-            { id: '10256', client: 'Alice Johnson', service: 'Deep Kitchen Clean', time: "Today, 10:00 - 14:00", employee: "Liam O'Connell", amount: 125.00, status: 'Completed' },
-            { id: '10257', client: 'Mark Davies', service: 'Regular House Clean (4hrs)', time: "Tomorrow, 09:00 - 13:00", employee: 'Unassigned', amount: 85.00, status: 'Pending' },
-            { id: '10258', client: 'Sarah Kim', service: 'End of Tenancy (3 Bed)', time: "2025-10-15, 08:00", employee: 'Maria Rodriguez', amount: 280.00, status: 'Confirmed' },
-            { id: '10259', client: 'David Chen', service: 'Carpet Cleaning (Living Room)', time: "2025-10-02, 16:00 - 18:00", employee: "Liam O'Connell", amount: 55.00, status: 'No Show' },
-            { id: '10260', client: 'Jessica Lee', service: 'Office Weekly Clean', time: "Next Monday, 07:00 - 09:00", employee: 'Team Alpha', amount: 180.00, status: 'Paid' }
+            // Completed
+            { id: '10001', client: { name: 'Alice Johnson', id: 'C001' }, service: 'Deep Kitchen Clean', time: "Today, 10:00 - 14:00", employee: { name: "Liam O'Connell", id: 'E010' }, amount: 125.00, status: 'Completed' },
+    
+            // Pending (Awaiting Assignment)
+            { id: '10002', client: { name: 'Mark Davies', id: 'C002' }, service: 'Regular House Clean (4hrs)', time: "Tomorrow, 09:00 - 13:00", employee: null, amount: 85.00, status: 'Pending' },
+    
+            // Assigned (Paid but not yet done)
+            { id: '10003', client: { name: 'Sarah Kim', id: 'C003' }, service: 'End of Tenancy (3 Bed)', time: "2025-10-15, 08:00", employee: { name: 'Maria Rodriguez', id: 'E008' }, amount: 280.00, status: 'Assigned' },
+    
+            
+            // Cancelled by client
+            { id: '10004', client: { name: 'David Chen', id: 'C004' }, service: 'Carpet Cleaning', time: "2025-10-02, 16:00 - 18:00", employee: { name: "Liam O'Connell", id: 'E010' }, amount: 55.00, status: 'Cancelled (Client)' },
+    
+            // Cancelled by employee
+            { id: '10005', client: { name: 'Jessica Lee', id: 'C005' }, service: 'Office Weekly Clean', time: "Next Monday, 07:00 - 09:00", employee: { name: 'Team Alpha', id: 'E009' }, amount: 180.00, status: 'Cancelled (Employee)' },
+    
+            // Requests (awaiting admin approval)
+            { id: '10006', client: { name: 'Tom Harris', id: 'C006' }, service: 'Emergency Deep Clean', time: "Today, 15:00 - 18:00", employee: null, amount: 90.00, status: 'Request' },
+    
+            // Awaiting Payment Confirmation
+            { id: '10007', client: { name: 'Amelia Brown', id: 'C007' }, service: 'After-party Clean', time: "Tomorrow, 10:00 - 12:00", employee: { name: 'Ethan Clark', id: 'E011' }, amount: 120.00, status: 'Awaiting Payment Confirmation' },
+            
+            // In Progress (currently being cleaned)
+            { id: '10008', client: { name: 'Emma Thompson', id: 'C008' }, service: 'Move-out Cleaning', time: "Today, 12:00 - 16:00", employee: { name: 'John Doe', id: 'E012' }, amount: 150.00, status: 'In Progress' }
         ];
     }
+    
     
     return {};
 }
@@ -111,25 +131,36 @@ function renderMetrics(metrics) {
  */
 function createStatusBadge(status) {
     let colorClass;
+
     switch (status) {
         case 'Completed':
-            colorClass = 'bg-custom-green text-white';
+            colorClass = 'bg-green-500/10 text-green-700 border border-green-300';
             break;
-        case 'Confirmed':
-            colorClass = 'bg-custom-blue text-white';
+        case 'In Progress':
+            colorClass = 'bg-indigo-500/10 text-indigo-700 border border-indigo-300';
+            break;
+        case 'Assigned':
+            colorClass = 'bg-blue-500/10 text-blue-700 border border-blue-300';
             break;
         case 'Pending':
-            colorClass = 'bg-custom-yellow text-gray-900';
+        case 'Pending Assignment':
+            colorClass = 'bg-yellow-500/10 text-yellow-700 border border-yellow-300';
             break;
-        case 'No Show':
-            colorClass = 'bg-gray-500 text-white';
+        case 'Awaiting Payment Confirmation':
+            colorClass = 'bg-amber-500/10 text-amber-700 border border-amber-300';
             break;
-        case 'Paid':
-            colorClass = 'bg-green-500/10 text-green-700';
+        case 'Request':
+            colorClass = 'bg-gray-500/10 text-gray-700 border border-gray-300';
+            break;
+        case 'Cancelled (Client)':
+        case 'Cancelled (Employee)':
+        case 'Cancelled':
+            colorClass = 'bg-red-500/10 text-red-700 border border-red-300';
             break;
         default:
             colorClass = 'bg-gray-100 text-gray-800';
     }
+
     return `
         <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${colorClass}">
             ${status}
@@ -137,54 +168,109 @@ function createStatusBadge(status) {
     `;
 }
 
-/**
- * Renders the list of recent bookings in the table.
- * @param {Array<object>} bookings The array of booking objects from the API.
- */
+
 function renderRecentBookings(bookings) {
     const tableBody = document.getElementById('recent-bookings-table-body');
     const paginationSummary = document.getElementById('pagination-summary');
     if (!tableBody) return;
 
-    // Clear existing static content
+    // Handle Filter Dropdown (new)
+    const filterSelect = document.getElementById('booking-filter');
+    let filteredBookings = bookings;
+
+    if (filterSelect && filterSelect.value !== 'all') {
+        filteredBookings = bookings.filter(b => b.status.toLowerCase().includes(filterSelect.value.toLowerCase()));
+    }
+
     tableBody.innerHTML = '';
-    
     const formatter = new Intl.NumberFormat('en-GB', {
         style: 'currency',
         currency: 'GBP',
     });
 
-    bookings.forEach(booking => {
+    filteredBookings.forEach(booking => {
         const row = document.createElement('tr');
         row.className = 'hover:bg-gray-50 transition-colors';
-        
+
+        // Determine if payment confirmation is needed
+        const showConfirmButton = booking.status === 'Awaiting Payment Confirmation';
+
         row.innerHTML = `
             <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">#${booking.id}</td>
+
+            <!-- Client Name Clickable -->
             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
-                <div class="font-semibold">${booking.client}</div>
+                <a href="client-profile.html?id=${booking.client.id}" 
+                   class="text-custom-blue hover:underline font-semibold">
+                    ${booking.client.name}
+                </a>
             </td>
+
+            <!-- Service Info -->
             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
                 <div class="font-medium">${booking.service}</div>
                 <div class="text-xs text-gray-500">${booking.time}</div>
             </td>
-            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 font-medium">${booking.employee}</td>
+
+            <!-- Employee Name Clickable or Unassigned -->
+            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 font-medium">
+                ${booking.employee 
+                    ? `<a href="employee-profile.html?id=${booking.employee.id}" class="text-gray-800 hover:text-custom-blue">${booking.employee.name}</a>`
+                    : '<span class="text-gray-400 italic">Unassigned</span>'}
+            </td>
+
+            <!-- Amount -->
             <td class="px-4 py-3 whitespace-nowrap text-sm font-semibold text-gray-900">${formatter.format(booking.amount)}</td>
+
+            <!-- Status -->
             <td class="px-4 py-3 whitespace-nowrap">
                 ${createStatusBadge(booking.status)}
             </td>
+
+            <!-- Actions -->
             <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
-                <a href="booking-details.html?id=${booking.id}" class="text-custom-blue hover:text-indigo-600 mr-2" title="View Details"><i class="fa-solid fa-eye"></i></a>
-                <a href="#" class="text-custom-red hover:text-red-700" onclick="handleDeleteBooking('${booking.id}')" title="Delete Booking"><i class="fa-solid fa-trash"></i></a>
+                <a href="#" 
+                   onclick="openBookingDetails('${booking.id}', '${booking.status}')" 
+                   class="text-custom-blue hover:text-indigo-600 mr-2" 
+                   title="View Details">
+                   <i class="fa-solid fa-eye"></i>
+                </a>
+                ${showConfirmButton ? `
+                    <button onclick="confirmPayment('${booking.id}')"
+                        class="text-green-600 hover:text-green-800 font-semibold">
+                        Confirm Payment
+                    </button>` 
+                : ''}
             </td>
         `;
         tableBody.appendChild(row);
     });
 
-    // Update Pagination Summary (using mock data for context)
     if (paginationSummary) {
-        paginationSummary.textContent = `Showing 1 to ${bookings.length} of 256 bookings`;
+        paginationSummary.textContent = `Showing 1 to ${filteredBookings.length} of ${bookings.length} bookings`;
     }
 }
+
+// --- Real-Time Filter Logic (Simplified: Status Only) ---
+function setupBookingFilter(bookingsData) {
+    const filterSelect = document.getElementById('booking-filter');
+    if (!filterSelect) return;
+
+    function applyFilter() {
+        const filterValue = filterSelect.value.trim().toLowerCase();
+
+        let filtered = bookingsData;
+        if (filterValue) {
+            filtered = bookingsData.filter(b => b.status.toLowerCase().includes(filterValue));
+        }
+
+        renderRecentBookings(filtered);
+    }
+
+    filterSelect.addEventListener('change', applyFilter);
+}
+
+
 
 // Function to handle a booking deletion (placeholder for API call)
 function handleDeleteBooking(bookingId) {
@@ -196,6 +282,20 @@ function handleDeleteBooking(bookingId) {
         // initDashboard(); 
     }
 }
+
+function openBookingDetails(bookingId, status) {
+    const encodedStatus = encodeURIComponent(status);
+    window.location.href = `admin_booking_details.html?id=${bookingId}&status=${encodedStatus}`;
+}
+
+function confirmPayment(bookingId) {
+    const confirmed = confirm(`Confirm payment has been received for booking #${bookingId}?`);
+    if (confirmed) {
+        alert(`✅ Payment for booking #${bookingId} confirmed.`);
+        // In a real app: PATCH request to API here
+    }
+}
+
 
 /**
  * Initializes and fetches all dashboard data asynchronously.
@@ -224,12 +324,23 @@ async function initDashboard() {
         // 5. Render Recent Bookings Table
         renderRecentBookings(bookings);
 
+        setupBookingFilter(bookings);
+
     } catch (error) {
         console.error("Failed to load dashboard data:", error);
         // You would typically show a user-friendly error message here
         // document.getElementById('app-container').innerHTML = '<div class="text-red-600">Failed to load dashboard data. Please try again.</div>';
     }
 }
+
+// Enable real-time filtering
+const filterSelect = document.getElementById('booking-filter');
+if (filterSelect) {
+    filterSelect.addEventListener('change', () => {
+        renderRecentBookings(bookings);
+    });
+}
+
 
 /**
  * Renders the Chart.js visualizations.
@@ -333,13 +444,6 @@ window.onload = function () {
         console.warn('loadNav() function not found. Sidebar will not load.');
     }
     
-    // 2. Load the shared User Menu component (Injects HTML and adds listeners)
-    // NOTE: This assumes the loadUserMenu() function is defined and accessible
-    if (typeof loadUserMenu === 'function') {
-        loadUserMenu(); 
-    } else {
-         console.warn('loadUserMenu() function not found. User menu will not be displayed.');
-    }
     
     // 3. Initialize the core page logic
     initDashboard();

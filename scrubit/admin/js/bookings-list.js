@@ -1,134 +1,164 @@
-// Placeholder data for Bookings
+// --- Mock Booking Data ---
 const bookingsData = [
-    { id: '2025-154', client: 'Alice M.', clientId: 'C-001', service: 'Deep Clean (4hr)', date: '2025-10-05', time: '10:00', employee: 'Jane D.', employeeId: 'E-001', status: 'Completed', statusClass: 'bg-custom-green', action: 'View Payout' },
-    { id: '2025-155', client: 'Ben K.', clientId: 'C-002', service: 'Laundry Service', date: '2025-10-06', time: '14:00', employee: 'Unassigned', employeeId: null, status: 'Pending Assignment', statusClass: 'bg-custom-yellow', action: 'Assign Job' },
-    { id: '2025-156', client: 'Ciara P.', clientId: 'C-003', service: 'Office Cleaning', date: '2025-10-07', time: '09:00', employee: 'Mark S.', employeeId: 'E-002', status: 'Confirmed', statusClass: 'bg-custom-blue', action: 'Reassign Job' },
-    { id: '2025-157', client: 'David L.', clientId: 'C-004', service: 'Deep Clean (6hr)', date: '2025-10-08', time: '11:30', employee: 'Jane D.', employeeId: 'E-001', status: 'In Progress', statusClass: 'bg-custom-purple', action: 'View Details' },
-    { id: '2025-158', client: 'Emily R.', clientId: 'C-005', service: 'Standard Clean (2hr)', date: '2025-10-09', time: '16:00', employee: 'Sara P.', employeeId: 'E-003', status: 'Confirmed', statusClass: 'bg-custom-blue', action: 'Reassign Job' },
-    { id: '2025-159', client: 'Frank G.', clientId: 'C-006', service: 'Window Cleaning', date: '2025-10-10', time: '13:00', employee: 'Unassigned', employeeId: null, status: 'Pending Assignment', statusClass: 'bg-custom-yellow', action: 'Assign Job' },
-    { id: '2025-160', client: 'Grace H.', clientId: 'C-007', service: 'Move-out Clean', date: '2025-10-11', time: '08:00', employee: 'Mark S.', employeeId: 'E-002', status: 'Confirmed', statusClass: 'bg-custom-blue', action: 'Reassign Job' },
+    { id: '2025-154', client: 'Alice M.', clientId: 'C-001', service: 'Deep Clean (4hr)', date: '2025-10-05', time: '10:00', employee: 'Jane D.', employeeId: 'E-001', status: 'Completed' },
+    { id: '2025-155', client: 'Ben K.', clientId: 'C-002', service: 'Laundry Service', date: '2025-10-06', time: '14:00', employee: 'Unassigned', employeeId: null, status: 'Pending Assignment' },
+    { id: '2025-156', client: 'Ciara P.', clientId: 'C-003', service: 'Office Cleaning', date: '2025-10-07', time: '09:00', employee: 'Mark S.', employeeId: 'E-002', status: 'Confirmed' },
+    { id: '2025-157', client: 'David L.', clientId: 'C-004', service: 'Deep Clean (6hr)', date: '2025-10-08', time: '11:30', employee: 'Jane D.', employeeId: 'E-001', status: 'In Progress' },
+    { id: '2025-158', client: 'Emily R.', clientId: 'C-005', service: 'Standard Clean (2hr)', date: '2025-10-09', time: '16:00', employee: 'Sara P.', employeeId: 'E-003', status: 'Awaiting Payment Confirmation' },
+    { id: '2025-159', client: 'Frank G.', clientId: 'C-006', service: 'Window Cleaning', date: '2025-10-10', time: '13:00', employee: 'Mark S.', employeeId: 'E-002', status: 'Cancelled' },
 ];
 
-const TOTAL_ACTIVE_BOOKINGS = 148; // Static placeholder for the overall count
+// --- Total Bookings Count (mock placeholder) ---
+const TOTAL_ACTIVE_BOOKINGS = 148;
 
-// --- Action Handlers ---
-
-// Action handler (Placeholder for assigning, reassigning, or viewing details)
-window.handleBookingAction = function(bookingId, action) {
-    // If the action is "View Details" or "View Payout", we simulate navigation
-    if (action.includes('View')) {
-        window.location.href = `booking-details.html?id=${bookingId}`;
-    } else {
-        alert(`Action: ${action} for Booking ID ${bookingId}. This would typically open a modal for confirmation or assignment.`);
+// --- Status Badge Color Generator (matches the new unified system) ---
+function createStatusBadge(status) {
+    let colorClass;
+    switch (status) {
+        case 'Completed':
+            colorClass = 'bg-green-500/10 text-green-700 border border-green-300';
+            break;
+        case 'In Progress':
+            colorClass = 'bg-indigo-500/10 text-indigo-700 border border-indigo-300';
+            break;
+        case 'Confirmed':
+            colorClass = 'bg-blue-500/10 text-blue-700 border border-blue-300';
+            break;
+        case 'Pending Assignment':
+            colorClass = 'bg-yellow-500/10 text-yellow-700 border border-yellow-300';
+            break;
+        case 'Awaiting Payment Confirmation':
+            colorClass = 'bg-amber-500/10 text-amber-700 border border-amber-300';
+            break;
+        case 'Cancelled':
+            colorClass = 'bg-red-500/10 text-red-700 border border-red-300';
+            break;
+        default:
+            colorClass = 'bg-gray-100 text-gray-700 border border-gray-300';
     }
+    return `<span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${colorClass}">${status}</span>`;
 }
 
-// Handler for the Export Button
-window.handleExport = function() {
-    alert("Exporting current booking list (Filtered results would be exported in a real application).");
-}
+// --- Action Handler ---
+window.handleBookingAction = function (bookingId, status, action) {
+    if (action === 'View Details') {
+        window.location.href = `booking-details.html?id=${bookingId}&status=${encodeURIComponent(status)}`;
+    } else if (action === 'Confirm Payment') {
+        alert(`Payment for booking ${bookingId} has been confirmed.`);
+    }
+};
 
+// --- Export Handler ---
+window.handleExport = function () {
+    alert("Exporting current booking list (filtered results would be exported in a real app).");
+};
 
-// --- Dynamic Rendering ---
-
-/**
- * Renders the booking table rows based on the data.
- */
-function renderBookingsTable(data = bookingsData) {
+// --- Rendering Function ---
+function renderBookingsTable(filteredData = bookingsData) {
     const tableBody = document.getElementById('bookings-table-body');
     const totalCountSpan = document.getElementById('total-bookings-count');
     const paginationSummary = document.getElementById('pagination-summary');
 
-    if (!tableBody || !totalCountSpan || !paginationSummary) return;
-    
-    tableBody.innerHTML = ''; // Clear existing rows
+    tableBody.innerHTML = '';
 
-    data.forEach(booking => {
+    filteredData.forEach(booking => {
         const row = document.createElement('tr');
-        row.className = 'hover:bg-gray-50 transition-colors cursor-pointer'; 
-        // Add direct navigation to details page for the whole row (optional improvement)
-        row.onclick = () => window.location.href = `booking-details.html?id=${booking.id}`;
+        row.className = 'hover:bg-gray-50 transition-colors cursor-pointer';
+        row.onclick = () => window.location.href = `booking-details.html?id=${booking.id}&status=${encodeURIComponent(booking.status)}`;
 
-        // Check for yellow status to adjust text color for better visibility on yellow background
-        const statusTextColor = booking.statusClass === 'bg-custom-yellow' ? 'text-gray-900' : 'text-white';
-        
-        // Determine action button styling
-        let actionButtonClass = 'text-custom-blue hover:text-indigo-600 font-semibold';
-        if (booking.action.includes('Assign') || booking.action.includes('Reassign')) {
-            actionButtonClass = 'bg-custom-red text-white px-3 py-1 rounded-md hover:bg-red-700 transition-colors font-semibold';
+        const clientHTML = `<a href="client-profile.html?id=${booking.clientId}" class="text-custom-blue hover:underline" onclick="event.stopPropagation()">${booking.client}</a>`;
+        const employeeHTML = booking.employee === 'Unassigned'
+            ? `<span class="text-gray-500">Unassigned</span>`
+            : `<a href="employee-profile.html?id=${booking.employeeId}" class="text-custom-blue hover:underline" onclick="event.stopPropagation()">${booking.employee}</a>`;
+
+        // Determine available actions
+        let actionsHTML = `
+            <button onclick="event.stopPropagation(); handleBookingAction('${booking.id}', '${booking.status}', 'View Details')" class="text-custom-blue hover:text-indigo-600 font-semibold">View Details</button>
+        `;
+
+        if (booking.status === 'Awaiting Payment Confirmation') {
+            actionsHTML += `
+                <button onclick="event.stopPropagation(); handleBookingAction('${booking.id}', '${booking.status}', 'Confirm Payment')" class="ml-3 bg-custom-green text-white px-3 py-1 rounded-md hover:bg-green-700 transition-colors font-semibold">Confirm Payment</button>
+            `;
         }
 
-        // Employee link logic
-        const employeeCellContent = booking.employee.includes('Unassigned') 
-            ? `<span class="text-gray-500">${booking.employee}</span>`
-            : `<a href="employee-profile.html?id=${booking.employeeId}" class="text-custom-blue hover:underline" onclick="event.stopPropagation()">${booking.employee}</a>`; // stopPropagation prevents row click
-
-        // Client link logic
-        const clientCellContent = `<a href="client-profile.html?id=${booking.clientId}" class="text-custom-blue hover:underline" onclick="event.stopPropagation()">${booking.client}</a>`;
-
-        // The innerHTML for the row
         row.innerHTML = `
-            <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">${booking.id}</td>
-            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 font-semibold">
-                ${clientCellContent}
-            </td>
-            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">${booking.service}</td>
-            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">${booking.date}<div class="text-xs text-gray-500">${booking.time}</div></td>
-            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 font-medium">
-                ${employeeCellContent}
-            </td>
-            <td class="px-4 py-3 whitespace-nowrap">
-                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${booking.statusClass} ${statusTextColor}">
-                    ${booking.status}
-                </span>
-            </td>
-            <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
-                <button onclick="event.stopPropagation(); handleBookingAction('${booking.id}', '${booking.action}')" class="${actionButtonClass}">
-                    ${booking.action}
-                </button>
-            </td>
+            <td class="px-4 py-3 text-sm font-medium text-gray-900">${booking.id}</td>
+            <td class="px-4 py-3 text-sm text-gray-700 font-semibold">${clientHTML}</td>
+            <td class="px-4 py-3 text-sm text-gray-700">${booking.service}</td>
+            <td class="px-4 py-3 text-sm text-gray-700">${booking.date}<div class="text-xs text-gray-500">${booking.time}</div></td>
+            <td class="px-4 py-3 text-sm text-gray-700 font-medium">${employeeHTML}</td>
+            <td class="px-4 py-3">${createStatusBadge(booking.status)}</td>
+            <td class="px-4 py-3 text-right text-sm font-medium">${actionsHTML}</td>
         `;
+
         tableBody.appendChild(row);
     });
 
-    // Update summary counts (using static placeholder and dynamic count for display)
     totalCountSpan.textContent = TOTAL_ACTIVE_BOOKINGS;
-    paginationSummary.textContent = `Showing 1 to ${data.length} of ${TOTAL_ACTIVE_BOOKINGS} active results`;
+    paginationSummary.textContent = `Showing 1 to ${filteredData.length} of ${TOTAL_ACTIVE_BOOKINGS} active results`;
 }
 
-// --- Navigation Highlight ---
+// --- Real-Time Filter Logic ---
+function setupFilters() {
+    const statusFilter = document.getElementById('status-filter');
+    const dateFilter = document.getElementById('date-filter');
 
-function highlightBookingsList() {
-    // This assumes your sidebar.js has a function to handle highlights
-    if (typeof highlightActiveNav === 'function') {
-        highlightActiveNav('bookings-list.html');
+    function applyFilters() {
+        const statusValue = statusFilter.value.trim();
+        const dateValue = dateFilter.value;
+
+        let filtered = bookingsData;
+
+        if (statusValue) {
+            filtered = filtered.filter(b => b.status.toLowerCase() === statusValue.toLowerCase());
+        }
+
+        if (dateValue) {
+            filtered = filtered.filter(b => b.date === dateValue);
+        }
+
+        renderBookingsTable(filtered);
     }
+
+    statusFilter.addEventListener('change', applyFilters);
+    dateFilter.addEventListener('change', applyFilters);
+}
+
+// --- Highlight Sidebar Item ---
+function highlightBookingsList() {
+    if (typeof highlightActiveNav === 'function') highlightActiveNav('bookings-list.html');
 
     const parentButton = document.getElementById('bookings-parent-nav');
     const parentMenu = document.getElementById('bookings-menu');
     const bookingsListLink = document.querySelector('a[href="bookings-list.html"]');
 
-    const activeClasses = ['text-white', 'bg-custom-blue', 'shadow-md', 'font-bold', 'hover:!bg-custom-blue', 'hover:!text-white', 'hover:!shadow-md'];
-    const submenuActiveClasses = ['text-custom-blue', 'font-bold', 'bg-indigo-50', 'hover:bg-indigo-100'];
-
     if (parentButton && parentMenu) {
-        parentButton.classList.remove('text-gray-700', 'hover:bg-gray-100'); 
-        parentButton.classList.add(...activeClasses);
+        parentButton.classList.add('text-white', 'bg-custom-blue', 'shadow-md', 'font-bold');
         parentMenu.classList.remove('hidden');
     }
 
     if (bookingsListLink) {
-        bookingsListLink.classList.remove('text-gray-600', 'hover:bg-gray-50'); 
-        bookingsListLink.classList.add(...submenuActiveClasses);
+        bookingsListLink.classList.add('text-custom-blue', 'font-bold', 'bg-indigo-50');
     }
 }
 
-
-// --- Execute page-specific logic once the DOM is ready ---
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. Render all booking data into the HTML elements
+// --- Initialize on DOM Ready ---
+document.addEventListener('DOMContentLoaded', () => {
     renderBookingsTable();
-    
-    // 2. Highlight the correct menu item (assuming the highlight function is loaded with sidebar.js)
-    highlightBookingsList(); 
+    setupFilters();
+    highlightBookingsList();
 });
+
+document.getElementById('reset-filters').addEventListener('click', () => {
+    const statusSelect = document.getElementById('status-filter');
+    const dateInput = document.getElementById('date-filter');
+
+    // Reset both filters
+    statusSelect.value = '';
+    dateInput.value = '';
+
+    // Re-render all bookings
+    renderBookingsTable(bookingsData);
+});
+

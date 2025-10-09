@@ -10,7 +10,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
     
     <style>
-        /* Global Styles */
         html, body {
             height: 100%;
             margin: 0;
@@ -18,31 +17,21 @@
             background-color: #f7f9fc;
         }
 
-        /* Tailwind custom colors */
         .text-custom-blue, .hover\:text-custom-blue:hover { color: #3f51b5; }
         .bg-custom-blue { background-color: #3f51b5; }
         .bg-custom-green { background-color: #00897b; }
         .bg-custom-red { background-color: #e53935; }
         .border-custom-blue { border-color: #3f51b5; }
 
-        /* Ensure content has padding for mobile bottom nav */
-        #main-content {
-            padding-bottom: 5rem; 
-        }
-        @media (min-width: 768px) {
-            #main-content {
-                padding-bottom: 2rem;
-            }
-        }
+        #main-content { padding-bottom: 5rem; }
+        @media (min-width: 768px) { #main-content { padding-bottom: 2rem; } }
     </style>
 </head>
 
 <body class="flex flex-col h-screen">
     
-    <!-- Placeholder for the Fixed Top Header (Desktop Nav) -->
     <div id="top-nav-placeholder" class="h-16 hidden md:block border-b"></div>
     
-    <!-- Main Content Wrapper: Scrollable Area -->
     <div id="main-content" class="flex-grow p-4 md:p-8 overflow-y-auto">
         
         <!-- Page Header -->
@@ -52,24 +41,22 @@
             <div class="h-px bg-gray-200 mt-4"></div>
         </div>
 
-        <!-- 1. Current Job / Clocking Section -->
-        <!-- This card is always visible and handles the active job -->
+        <!-- 1. Current Job Section -->
         <div id="current-job-card" class="bg-white rounded-xl shadow-lg p-6 mb-8 border-t-4 border-custom-blue">
             <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
                 <i class="fa-solid fa-hourglass-start text-custom-blue mr-2"></i> Current / Next Job
             </h2>
             
-            <!-- Content will be injected here by my_jobs.js (Clock In/Out, Directions) -->
             <div id="job-status-container" class="text-center p-4">
                 <i class="fa-solid fa-spinner fa-spin text-2xl text-gray-500"></i>
                 <p class="text-gray-500 mt-2">Loading job status...</p>
             </div>
         </div>
 
-        <!-- 2. Tabbed Job Lists (Upcoming and Completed) -->
+        <!-- 2. Tabbed Job Lists -->
         <div class="bg-white rounded-xl shadow-lg p-6">
             
-            <!-- Tabs Navigation -->
+            <!-- Tabs -->
             <div class="flex border-b border-gray-200 mb-4" id="job-tabs-nav">
                 <button id="tab-upcoming" class="tab-button flex-1 py-3 px-1 text-center font-semibold border-b-2 border-custom-blue text-custom-blue transition-colors">
                     <i class="fa-solid fa-calendar-alt mr-1"></i> Upcoming Jobs
@@ -79,38 +66,41 @@
                 </button>
             </div>
 
-            <!-- Tabs Content -->
+            <!-- Upcoming Jobs Table -->
             <div id="tab-content-upcoming" class="tab-content">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200" id="upcoming-jobs-table">
-                        <!-- Table header for Upcoming Jobs -->
                         <thead>
                             <tr class="text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
                                 <th class="px-4 py-3">Client</th>
+                                <th class="px-4 py-3">Service Type</th>
                                 <th class="px-4 py-3">Date/Time</th>
                                 <th class="px-4 py-3 text-right">Est. Duration</th>
+                                <th class="px-4 py-3 text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200" id="upcoming-jobs-table-body">
-                            <tr><td colspan="3" class="p-6 text-center text-gray-500">No data loaded.</td></tr>
+                            <tr><td colspan="5" class="p-6 text-center text-gray-500">No data loaded.</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
+            <!-- Completed Jobs Table -->
             <div id="tab-content-completed" class="tab-content hidden">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200" id="completed-jobs-table">
-                        <!-- Table header for Completed Jobs -->
                         <thead>
                             <tr class="text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
                                 <th class="px-4 py-3">Client</th>
+                                <th class="px-4 py-3">Service Type</th>
                                 <th class="px-4 py-3">Completed On</th>
                                 <th class="px-4 py-3 text-right">Pay</th>
+                                <th class="px-4 py-3 text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200" id="completed-jobs-table-body">
-                            <tr><td colspan="3" class="p-6 text-center text-gray-500">No data loaded.</td></tr>
+                            <tr><td colspan="5" class="p-6 text-center text-gray-500">No data loaded.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -120,18 +110,11 @@
 
     </div>
 
-    <!-- Placeholder for the Fixed Bottom Navigation (Mobile Only) -->
     <div id="bottom-nav-placeholder" class="md:hidden"></div>
 
-    <!-- External Navigation Logic (Assumed to be loaded) -->
     <script src="js/employee_nav.js"></script>
-    <script>
-        // Initialize the navigation and highlight the active link
-        loadEmployeeNav('myjobs');
-    </script>
-    
-    <!-- Page Specific Logic -->
+    <script>loadEmployeeNav('myjobs');</script>
     <script src="js/my_jobs.js"></script>
-    
+
 </body>
 </html>

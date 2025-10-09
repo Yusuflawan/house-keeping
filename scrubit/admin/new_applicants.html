@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>New Applicants - Scrub and Clean It Limited</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #f1f1f1; }
+      ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+      html, body {
+        height: 100%;
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background-color: #f7f9fc;
+      }
+
+      .bg-custom-blue { background-color: #3f51b5; }
+      .bg-custom-green { background-color: #00897b; }
+      .bg-custom-yellow { background-color: #ffb300; }
+      .bg-custom-red { background-color: #e53935; }
+      .bg-custom-purple { background-color: #673ab7; }
+    </style>
+  </head>
+
+  <body class="flex h-screen" id="app-container">
+    <!-- Sidebar -->
+    <div id="nav-placeholder"></div>
+
+    <!-- Main Content -->
+    <div class="flex-grow p-4 md:p-8 overflow-y-auto">
+      <button
+        id="menu-toggle"
+        class="md:hidden p-3 mb-4 bg-white rounded-lg shadow"
+      >
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <!-- Header + Breadcrumb -->
+      <div class="mb-6">
+        <h1 class="text-3xl font-extrabold text-gray-800">New Applicants</h1>
+        <nav class="text-sm text-gray-500 mt-1" aria-label="breadcrumb">
+          <ol class="flex space-x-2">
+            <li>
+              <a href="dashboard.html" class="hover:text-custom-blue">Home</a>
+            </li>
+            <li class="text-gray-400">/</li>
+            <li><a href="#" class="hover:text-custom-blue">Users</a></li>
+            <li class="text-gray-400">/</li>
+            <li class="font-semibold text-gray-700">New Applicants</li>
+          </ol>
+        </nav>
+        <div class="h-px bg-gray-200 mt-4"></div>
+      </div>
+
+      <!-- Top Bar (Filters or Summary) -->
+      <div
+        class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-xl shadow-lg border-t-4 border-custom-blue mb-6"
+      >
+        <h2 class="text-xl font-semibold text-gray-800 mb-3 sm:mb-0">
+          Employee Applications
+        </h2>
+
+        <div class="flex gap-3 w-full sm:w-auto">
+          <select
+            id="area-filter"
+            class="p-2 border border-gray-300 rounded-lg text-sm focus:ring-custom-blue focus:border-custom-blue"
+          >
+            <option value="all">All Areas</option>
+            <option value="ng1">NG1</option>
+            <option value="ng2">NG2</option>
+            <option value="ng3">NG3</option>
+            <option value="ng4">NG4</option>
+            <option value="ng5">NG5</option>
+        </select>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="bg-white rounded-xl shadow-xl overflow-x-auto">
+        <div class="p-6">
+          <h3
+            class="text-lg font-medium text-gray-700 mb-4 border-b pb-2"
+          >
+            Applicants (<span id="applicant-count-header">0</span> Total)
+          </h3>
+
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Applicant ID
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Name
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Email
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Phone
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Postcode / Area
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Availability
+                </th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200" id="applicants-table-body">
+              <!-- Filled dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          class="p-4 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600"
+        >
+          <span class="mb-2 sm:mb-0"
+            >Showing <span id="pagination-start-index">1</span> to
+            <span id="pagination-end-index">0</span> of
+            <span id="applicant-total-count-footer">0</span> total applicants</span
+          >
+          <div class="space-x-1">
+            <button
+              id="pagination-prev"
+              class="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50"
+              disabled
+            >
+              &leftarrow; Previous
+            </button>
+            <span id="pagination-pages" class="space-x-1">
+              <span class="px-3 py-1 bg-custom-blue text-white rounded-lg">1</span>
+            </span>
+            <button
+              id="pagination-next"
+              class="p-2 rounded-lg hover:bg-gray-100"
+            >
+              Next &rightarrow;
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/sidebar.js"></script>
+    <script src="js/new_applicants.js"></script>
+  </body>
+</html>

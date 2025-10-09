@@ -19,9 +19,9 @@ const employeeData = {
         status: "Scheduled",
         clockInTime: null
     },
-    upcomingJobs: [
-        { id: "JOB-457", clientName: "Dr. Evans Clinic", date: "2025-10-09", time: "14:00", duration: "2.5 hrs", address: "45 Hospital Blvd, Suite 200, CA" },
-        { id: "JOB-458", clientName: "Maple Street Residence", date: "2025-10-10", time: "08:00", duration: "3 hrs", address: "12 Maple St, San Jose, CA" }
+     availableJobs: [
+        { id: "JOB-457", clientName: "Dr. Evans Clinic", serviceType: "Deep Cleaning", date: "2025-10-09", time: "14:00", duration: "2.5 hrs", address: "45 Hospital Blvd, Suite 200, CA" },
+        { id: "JOB-458", clientName: "Maple Street Residence", serviceType: "End of Tenancy Cleaning", date: "2025-10-10", time: "08:00", duration: "3 hrs", address: "12 Maple St, San Jose, CA" }
     ]
 };
 
@@ -45,8 +45,8 @@ const renderDashboardMetrics = () => {
 // --- Render “Caught Up” or Next Job ---
 const showNextOrCaughtUp = () => {
     const container = document.getElementById("current-job-card");
-    if (employeeData.upcomingJobs.length > 0) {
-        const nextJob = employeeData.upcomingJobs.shift(); // remove first from queue
+    if (employeeData. availableJobs.length > 0) {
+        const nextJob = employeeData. availableJobs.shift(); // remove first from queue
         const jobObj = {
             ...nextJob,
             startTime: `${nextJob.date}T${nextJob.time}:00`,
@@ -203,35 +203,51 @@ const startTimer = (job) => {
     }, 60000);
 };
 
-// --- Render Upcoming Jobs List ---
-const renderUpcomingJobs = () => {
+// ✅ --- Render Upcoming Jobs List (Updated) ---
+const renderAvailableJobs = () => {
     const tbody = document.getElementById("avaiable-jobs-table-body");
     tbody.innerHTML = "";
 
-    if (employeeData.upcomingJobs.length === 0) {
+    if (employeeData. availableJobs.length === 0) {
         tbody.innerHTML = `
-            <tr><td colspan="4" class="p-6 text-center text-gray-500">
-            <i class="fa-solid fa-circle-check mr-2"></i> No upcoming jobs scheduled.</td></tr>`;
+            <tr><td colspan="5" class="p-6 text-center text-gray-500">
+            <i class="fa-solid fa-circle-check mr-2"></i> No available jobs right now.</td></tr>`;
         return;
     }
 
-    employeeData.upcomingJobs.forEach(job => {
+    employeeData. availableJobs.forEach(job => {
         const row = document.createElement("tr");
         row.className = "hover:bg-gray-50 transition-colors";
-        const dateStr = `${job.date} at ${job.time}`;
+
+        const dateTimeStr = `${new Date(job.date + 'T' + job.time).toLocaleString()}`;
+
         row.innerHTML = `
             <td class="px-4 py-3 text-sm font-medium text-gray-900">${job.clientName}</td>
-            <td class="px-4 py-3 text-sm text-gray-600">${dateStr}</td>
+            <td class="px-4 py-3 text-sm text-gray-600">${job.serviceType}</td>
+            <td class="px-4 py-3 text-sm text-gray-600">${dateTimeStr}</td>
             <td class="px-4 py-3 text-sm text-gray-600">${job.duration}</td>
-            <td class="px-4 py-3 text-sm text-right text-custom-blue underline cursor-pointer">View</td>
+            <td class="px-4 py-3 text-sm text-right">
+                <a href="#" data-id="${job.id}" class="view-job-link text-custom-blue hover:text-indigo-600 font-medium">View Details</a>
+            </td>
         `;
         tbody.appendChild(row);
     });
+
+    // Attach click handlers for all “View Details” links
+    document.querySelectorAll(".view-job-link").forEach(link => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const jobId = e.target.getAttribute("data-id");
+            window.location.href = `employee_booking_details.html?id=${jobId}&status=Available`;
+        });
+    });
 };
+
+
 
 // --- Main Initialization ---
 window.addEventListener("DOMContentLoaded", () => {
     renderDashboardMetrics();
     renderCurrentJob(employeeData.currentJob);
-    renderUpcomingJobs();
+    renderAvailableJobs();
 });

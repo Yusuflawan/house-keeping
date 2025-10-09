@@ -15,14 +15,14 @@ const mockJobData = {
         notes: "Remember to use the specialized anti-static spray on the server racks."
     },
     upcomingJobs: [
-        { id: 'JOB-457', clientName: 'Dr. Evans Clinic', date: '2025-10-07', time: '14:00', duration: '2.5 hrs', address: '45 Hospital Blvd, Suite 200, CA' },
-        { id: 'JOB-458', clientName: 'Maple Street Residence', date: '2025-10-08', time: '08:00', duration: '3 hrs', address: '12 Maple St, San Jose, CA' },
-        { id: 'JOB-459', clientName: 'The Old Theatre', date: '2025-10-09', time: '18:00', duration: '5 hrs', address: '99 Grand Ave, Oakland, CA' },
+        { id: 'JOB-457', clientName: 'Dr. Evans Clinic', serviceType: 'Medical Cleaning', date: '2025-10-07', time: '14:00', duration: '2.5 hrs', address: '45 Hospital Blvd, Suite 200, CA' },
+        { id: 'JOB-458', clientName: 'Maple Street Residence', serviceType: 'Residential Cleaning', date: '2025-10-08', time: '08:00', duration: '3 hrs', address: '12 Maple St, San Jose, CA' },
+        { id: 'JOB-459', clientName: 'The Old Theatre', serviceType: 'Deep Cleaning', date: '2025-10-09', time: '18:00', duration: '5 hrs', address: '99 Grand Ave, Oakland, CA' },
     ],
     completedJobs: [
-        { id: 'JOB-454', clientName: 'Central Bank Branch', date: '2025-10-04', duration: '6.0 hrs', grossPay: 85.00 },
-        { id: 'JOB-455', clientName: 'Greenwood School', date: '2025-10-03', duration: '5.2 hrs', grossPay: 70.00 },
-        { id: 'JOB-453', clientName: 'Highland Park Lofts', date: '2025-10-02', duration: '3.5 hrs', grossPay: 52.50 },
+        { id: 'JOB-454', clientName: 'Central Bank Branch', serviceType: 'Commercial Cleaning', date: '2025-10-04', duration: '6.0 hrs', grossPay: 85.00 },
+        { id: 'JOB-455', clientName: 'Greenwood School', serviceType: 'School Cleaning', date: '2025-10-03', duration: '5.2 hrs', grossPay: 70.00 },
+        { id: 'JOB-453', clientName: 'Highland Park Lofts', serviceType: 'Apartment Cleaning', date: '2025-10-02', duration: '3.5 hrs', grossPay: 52.50 },
     ]
 };
 
@@ -239,16 +239,13 @@ const startDurationTimer = (job) => {
     }, 60000); // Update every minute
 }
 
-/**
- * Renders the list of upcoming jobs in a table.
- * @param {Array<object>} upcomingJobs - The list of scheduled jobs.
- */
+/** Renders the list of upcoming jobs with service type & action */
 const renderUpcomingJobs = (upcomingJobs) => {
     const tbody = document.getElementById('upcoming-jobs-table-body');
-    tbody.innerHTML = ''; 
+    tbody.innerHTML = '';
 
     if (upcomingJobs.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" class="p-6 text-center text-gray-500"><i class="fa-solid fa-circle-check mr-2"></i> No upcoming jobs scheduled.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-gray-500"><i class="fa-solid fa-circle-check mr-2"></i> No upcoming jobs scheduled.</td></tr>`;
         return;
     }
 
@@ -259,25 +256,26 @@ const renderUpcomingJobs = (upcomingJobs) => {
 
         row.innerHTML = `
             <td class="px-4 py-3 text-sm font-medium text-gray-900">${job.clientName}</td>
-            <td class="px-4 py-3 text-sm text-gray-500">
-                ${jobDate.toLocaleDateString('en-GB')} at ${job.time}
-            </td>
+            <td class="px-4 py-3 text-sm text-gray-600">${job.serviceType}</td>
+            <td class="px-4 py-3 text-sm text-gray-500">${jobDate.toLocaleDateString('en-GB')} at ${job.time}</td>
             <td class="px-4 py-3 text-sm text-gray-700 text-right">${job.duration}</td>
+            <td class="px-4 py-3 text-center">
+                <button class="text-custom-blue hover:underline font-semibold" onclick="viewJobDetails('${job.id}')">
+                    <i class="fa-solid fa-eye mr-1"></i> View Details
+                </button>
+            </td>
         `;
         tbody.appendChild(row);
     });
 };
 
-/**
- * Renders the list of completed jobs in a table.
- * @param {Array<object>} completedJobs - The list of finished jobs.
- */
+/** Renders completed jobs with service type & action */
 const renderCompletedJobs = (completedJobs) => {
     const tbody = document.getElementById('completed-jobs-table-body');
-    tbody.innerHTML = ''; 
+    tbody.innerHTML = '';
 
     if (completedJobs.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" class="p-6 text-center text-gray-500"><i class="fa-solid fa-list-check mr-2"></i> No completed jobs found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-gray-500"><i class="fa-solid fa-list-check mr-2"></i> No completed jobs found.</td></tr>`;
         return;
     }
 
@@ -287,12 +285,33 @@ const renderCompletedJobs = (completedJobs) => {
 
         row.innerHTML = `
             <td class="px-4 py-3 text-sm font-medium text-gray-900">${job.clientName}</td>
+            <td class="px-4 py-3 text-sm text-gray-600">${job.serviceType}</td>
             <td class="px-4 py-3 text-sm text-gray-500">${job.date}</td>
             <td class="px-4 py-3 text-lg font-bold text-custom-green text-right">${formatCurrency(job.grossPay)}</td>
+            <td class="px-4 py-3 text-center">
+                <button class="text-custom-blue hover:underline font-semibold" onclick="viewJobDetails('${job.id}')">
+                    <i class="fa-solid fa-eye mr-1"></i> View Details
+                </button>
+            </td>
         `;
         tbody.appendChild(row);
     });
 };
+
+/** Action handler for viewing job details */
+function viewJobDetails(jobId) {
+    // Determine if the job is in upcoming or completed list
+    const isUpcoming = mockJobData.upcomingJobs.some(job => job.id === jobId);
+    const isCompleted = mockJobData.completedJobs.some(job => job.id === jobId);
+
+    let status = 'unknown';
+    if (isUpcoming) status = 'Upcoming';
+    else if (isCompleted) status = 'Completed';
+
+    // Redirect to the job details page with both ID and status
+    window.location.href = `employee_booking_details.html?jobId=${jobId}&status=${status}`;
+}
+
 
 /**
  * Handles the tab switching logic.
