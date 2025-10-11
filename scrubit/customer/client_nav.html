@@ -1,0 +1,77 @@
+<!-- ======================================== -->
+<!-- Shared Navigation for Client Interface -->
+<!-- ======================================== -->
+
+<!-- 1. Desktop Top Navigation (Hidden on Mobile) -->
+<nav id="desktop-nav-content" 
+     class="fixed top-0 left-0 right-0 h-16 bg-white flex items-center justify-between pl-8 pr-8 shadow z-30 w-full hidden md:flex">
+    <div class="text-lg font-bold text-custom-blue">
+        Scrub It & Clean It S Ltd | Client Portal
+    </div>
+
+    <div class="flex items-center space-x-6">
+        <a id="nav-desktop-dashboard" href="client_dashboard.html" class="text-gray-700 hover:text-custom-blue font-medium transition-colors">Dashboard</a>
+        <a id="nav-desktop-book_now" href="book_now.html" class="text-gray-700 hover:text-custom-blue font-medium transition-colors">Book Now</a>
+        <a id="nav-desktop-mybookings" href="my_bookings.html" class="text-gray-700 hover:text-custom-blue font-medium transition-colors">My Bookings</a>
+
+        <!-- Profile Icon (Desktop) -->
+        <div id="client-profile-container" class="relative group">
+            <button class="cursor-pointer flex items-center space-x-2 p-1 bg-white rounded-full shadow hover:shadow-lg transition-shadow">
+                <img src="https://placehold.co/40x40/3f51b5/ffffff?text=CL"
+                     alt="Client"
+                     class="w-10 h-10 rounded-full object-cover border-2 border-custom-blue">
+            </button>
+
+            <!-- Dropdown (Appears on click or hover) -->
+            <div id="client-profile-dropdown"
+                 class="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-lg border border-gray-200 hidden group-hover:block">
+                <a href="client_profile.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+                <a id="logout-link" href="#" class="block px-4 py-2 text-red-600 hover:bg-gray-100">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- 2. Mobile Top Bar (Hidden on Desktop) -->
+<nav id="mobile-top-bar" 
+     class="fixed top-0 left-0 right-0 h-16 bg-white shadow z-40 flex items-center justify-between px-4 md:hidden">
+    
+    <div class="text-base font-bold text-custom-blue truncate">
+        Scrub It & Clean It Ltd
+    </div>
+
+    <div id="client-profile-container-mobile" class="relative">
+        <button class="cursor-pointer flex items-center space-x-2 p-1 bg-white rounded-full shadow hover:shadow-lg transition-shadow">
+            <img src="https://placehold.co/40x40/3f51b5/ffffff?text=CL"
+                 alt="Client"
+                 class="w-10 h-10 rounded-full object-cover border-2 border-custom-blue">
+        </button>
+
+        <!-- Dropdown for Mobile -->
+        <div id="client-profile-dropdown-mobile"
+             class="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-lg border border-gray-200 hidden">
+            <a href="client_profile.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+            <a id="logout-link-mobile" href="#" class="block px-4 py-2 text-red-600 hover:bg-gray-100">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<!-- 3. Mobile Bottom Navigation (Hidden on Desktop) -->
+<nav id="mobile-nav-content" 
+     class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t shadow-2xl z-40 flex justify-around items-center w-full md:hidden">
+    
+    <a id="nav-mobile-dashboard" href="client_dashboard.html" class="flex flex-col items-center text-gray-500 hover:text-custom-blue">
+        <i class="fa-solid fa-chart-line text-xl"></i>
+        <span class="text-xs mt-1 font-semibold">Dashboard</span>
+    </a>
+
+    <a id="nav-mobile-book_now" href="book_now.html" class="flex flex-col items-center text-gray-500 hover:text-custom-blue">
+        <i class="fa-solid fa-calendar-check text-xl"></i>
+        <span class="text-xs mt-1">Book Now</span>
+    </a>
+    
+    <a id="nav-mobile-mybookings" href="my_bookings.html" class="flex flex-col items-center text-gray-500 hover:text-custom-blue">
+        <i class="fa-solid fa-briefcase text-xl"></i>
+        <span class="text-xs mt-1">My Bookings</span>
+    </a>
+</nav>

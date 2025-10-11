@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>View Booking - ScrubIt Client</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        :root {
+            --custom-blue: #3f51b5; /* Primary accent */
+            --custom-green: #00897b; /* Success/Main action */
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #f4f5f7; }
+        .bg-custom-green { background-color: var(--custom-green); }
+        .text-custom-green { color: var(--custom-green); }
+        .hover\:bg-custom-green:hover { background-color: #00796b; } 
+        .bg-custom-blue { background-color: var(--custom-blue); }
+        .text-custom-blue { color: var(--custom-blue); }
+        .hover\:bg-custom-blue:hover { background-color: #3040a0; }
+
+        /* Loading Overlay - copied from original */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    
+    <div id="loading-overlay" style="display: none;">
+        <i class="fa-solid fa-spinner fa-spin-pulse text-4xl text-custom-green mb-3"></i>
+        <p class="text-lg font-medium text-gray-700">Loading Booking Details...</p>
+    </div>
+
+    <!-- Placeholder for the Fixed Top Header (Desktop Nav & User Icon) -->
+    <div id="top-nav-placeholder" class="h-16 hidden md:block border-b"></div>
+
+    <main class="flex-grow p-4 pt-20 pb-20 md:p-8">
+        <div class="max-w-5xl mx-auto">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-8">Booking #<span id="booking-id">...</span> Details</h1>
+            
+            <div id="booking-card" class="bg-white p-6 md:p-10 rounded-xl shadow-2xl space-y-8 flex flex-col lg:flex-row lg:space-x-8 lg:space-y-0">
+                
+                <div class="lg:w-2/3 space-y-8">
+
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b border-gray-100">
+                        <span id="booking-status-badge" class="px-4 py-1 text-sm font-semibold rounded-full mb-3 md:mb-0">Loading...</span>
+                        <div class="text-right">
+                            <p class="text-lg font-bold text-gray-700">Service Scheduled:</p>
+                            <p class="text-2xl font-extrabold text-custom-green" id="summary-datetime">Loading Date</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-700 mb-4 flex items-center"><i class="fa-solid fa-house-user mr-2 text-custom-green"></i> Service & Location</h2>
+                        <dl class="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                            <div class="col-span-2 md:col-span-1">
+                                <dt class="font-semibold text-gray-500">Service Type:</dt>
+                                <dd class="text-gray-800 font-medium" id="detail-service-type">...</dd>
+                            </div>
+                            <div class="col-span-2 md:col-span-1">
+                                <dt class="font-semibold text-gray-500">Property Size:</dt>
+                                <dd class="text-gray-800 font-medium" id="detail-property-size">...</dd>
+                            </div>
+                            <div class="col-span-2 md:col-span-1">
+                                <dt class="font-semibold text-gray-500">Duration:</dt>
+                                <dd class="text-gray-800 font-medium" id="detail-duration">...</dd>
+                            </div>
+                            <div class="col-span-2 md:col-span-1">
+                                <dt class="font-semibold text-gray-500">Total Price:</dt>
+                                <dd class="text-custom-blue text-lg font-extrabold" id="detail-price">...</dd>
+                            </div>
+                            <div class="col-span-2 pt-2 border-t mt-2">
+                                <dt class="font-semibold text-gray-500">Address:</dt>
+                                <dd class="text-gray-800" id="detail-address-full">...</dd>
+                            </div>
+                        </dl>
+                    </div>
+
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-700 mb-4 flex items-center"><i class="fa-solid fa-key mr-2 text-custom-green"></i> Logistics & Instructions</h2>
+                        <dl class="space-y-3 text-sm">
+                            <div>
+                                <dt class="font-semibold text-gray-500">Products Provided By:</dt>
+                                <dd class="text-gray-800 font-medium" id="detail-products">...</dd>
+                            </div>
+                            <div>
+                                <dt class="font-semibold text-gray-500">Access Method:</dt>
+                                <dd class="text-gray-800 font-medium" id="detail-access-method">...</dd>
+                                <p class="text-xs text-gray-600 mt-1 p-2 bg-gray-50 rounded" id="detail-access-details">No specific details provided.</p>
+                            </div>
+                            <div>
+                                <dt class="font-semibold text-gray-500">Cleaning Add-ons:</dt>
+                                <dd class="text-gray-800 font-medium italic" id="detail-extras">None selected.</dd>
+                            </div>
+                            <div>
+                                <dt class="font-semibold text-gray-500">Additional Notes:</dt>
+                                <dd class="text-gray-800 italic p-3 bg-gray-50 rounded" id="detail-additional-info">No additional notes.</dd>
+                            </div>
+                        </dl>
+                    </div>
+
+                    <div id="rating-container" class="bg-blue-50 p-4 rounded-xl border border-blue-200 h-fit hidden">
+                        <h3 class="text-lg font-bold text-custom-blue mb-3">Client Feedback</h3>
+                        <div class="flex items-center space-x-2 mb-2">
+                            <i class="fa-solid fa-star text-yellow-400"></i>
+                            <span id="client-rating" class="text-lg font-semibold text-gray-800">5.0</span>
+                            <span class="text-sm text-gray-500">/5</span>
+                        </div>
+                        <p id="client-review" class="text-sm text-gray-700 italic">"Great job! The place was spotless
+                            and done on time."</p>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 h-fit">
+                    <h3 class="text-lg font-bold text-custom-blue mb-3">Your Assigned Team</h3>
+                
+                    <div id="cleaner-info-container" class="flex items-start space-x-3" style="display: none;">
+                        
+                        <img id="cleaner-photo" src="" alt="Cleaner Profile" class="w-16 h-16 rounded-full object-cover flex-shrink-0">
+                        
+                        <div class="flex-grow min-w-0"> 
+                            
+                            <div class="flex items-baseline space-x-2 flex-wrap mb-1">
+                                <p id="cleaner-name" class="text-lg font-bold text-gray-800">Cleaner Name</p>
+                                <div class="text-sm text-yellow-500 font-medium whitespace-nowrap">
+                                    ⭐ <span id="cleaner-rating">4.9</span> 
+                                    <span class="text-gray-500">(<span id="cleaner-bookings">120</span>)</span>
+                                </div>
+                            </div>
+                            
+                            <p class="text-xs text-blue-700 mt-1" id="cleaner-email">bookings@scrubit.com</p>
+                            <p class="text-sm font-semibold text-gray-700" id="cleaner-phone">07700 900XXX</p>
+                        </div>
+                    </div>
+                    
+                    <div id="cleaner-unassigned-container" class="text-center p-4">
+                        <i class="fa-solid fa-hourglass-start text-3xl text-gray-400 mb-2"></i>
+                        <p class="text-sm text-gray-600 font-medium">Team assignment is pending.</p>
+                        <p class="text-xs text-gray-500 mt-1">We'll notify you once a cleaner is confirmed.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="js/booking_details.js"></script>
+
+    <div id="bottom-nav-placeholder" class="md:hidden"></div>
+    
+    <script src="js/client_nav.js"></script>
+
+    <script>
+        // Call the injection function on load
+        window.onload = loadClientNav;
+    </script>
+
+    <!-- Confirmation Modal -->
+<div id="confirmation-modal"
+class="hidden fixed inset-0 bg-black bg-opacity-40 items-center justify-center z-50">
+<div class="bg-white rounded-xl shadow-xl p-6 w-11/12 max-w-sm text-center">
+  <p id="modal-message" class="mb-4 text-gray-800 font-medium"></p>
+  <div class="flex justify-center gap-3">
+    <button id="modal-confirm-btn"
+      class="px-4 py-2 bg-green-600 text-white rounded-lg">Confirm</button>
+    <button onclick="closeModal()"
+      class="px-4 py-2 bg-gray-300 rounded-lg">Cancel</button>
+  </div>
+</div>
+</div>
+
+<!-- Success Toast -->
+<div id="success-toast"
+class="hidden fixed bottom-5 right-5 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg opacity-0 transition-opacity duration-500">
+Action completed successfully.
+</div>
+
+</body>
+</html>

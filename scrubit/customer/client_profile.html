@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>My Profile - ScrubIt Client Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+        
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+            :root {
+                /* Custom colors matching the previous theme */
+                --custom-blue: #3f51b5; /* Primary accent (for links/main buttons) */
+                --custom-green: #00897b; /* Client Success/Action accent */
+                --custom-purple: #673ab7; 
+                --custom-red: #e53935; 
+            }
+            body { font-family: 'Inter', sans-serif; background-color: #f4f5f7; }
+            .bg-custom-blue { background-color: var(--custom-blue); }
+            .text-custom-blue { color: var(--custom-blue); }
+            .hover\:bg-custom-blue:hover { background-color: #304e9c; } 
+            .bg-custom-green { background-color: var(--custom-green); }
+            .text-custom-green { color: var(--custom-green); }
+            
+            /* Style for editable fields when focused, only enabled in edit mode via JS */
+            .input-focus:focus { 
+                border-color: var(--custom-blue); 
+                box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.4); 
+            }
+            
+            /* Base style for profile inputs (starts as read-only) */
+            .profile-input {
+                transition: all 0.2s ease-in-out;
+            }
+            /* Styling for read-only state */
+            .profile-input[readonly] {
+                background-color: #f9fafb; 
+                cursor: default;
+                color: #4b5563; 
+            }
+            /* Override cursor for editable fields when not read-only */
+            .profile-input:not([readonly]) {
+                cursor: text;
+                background-color: #ffffff;
+            }
+        </style>
+    </head>
+
+    <body class="flex h-screen" id="app-container">
+        
+        <div id="nav-placeholder"></div> 
+        
+        <div class="flex-grow flex flex-col overflow-hidden">
+            
+            <header class="p-4 md:p-8 pb-0 bg-white shadow-sm">
+                <h1 class="text-3xl font-extrabold text-gray-800">My Profile</h1>
+                <nav class="text-sm text-gray-500 mt-1 mb-4" aria-label="breadcrumb">
+                    <ol class="flex space-x-2">
+                        <li><a href="client_dashboard.html" class="hover:text-custom-blue">Home</a></li>
+                        <li class="text-gray-400">/</li>
+                        <li class="font-semibold text-gray-700">My Profile</li>
+                    </ol>
+                </nav>
+                <div class="h-px bg-gray-200 mt-4 mb-6"></div>
+            </header>
+            
+            <div id="main-content" class="flex-grow px-4 md:px-8 overflow-y-auto">
+                
+                <div class="max-w-4xl mx-auto py-8">
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-2xl">
+                        
+                        <div id="status-message" class="hidden p-3 mb-4 rounded-lg font-medium text-center transition-opacity duration-300"></div>
+                        <div id="loading-spinner" class="text-center p-6" style="display:none;">
+                            <i class="fa-solid fa-spinner fa-spin-pulse text-4xl text-custom-green"></i>
+                            <p class="text-gray-500 mt-2">Loading profile data...</p>
+                        </div>
+
+                        <div class="flex items-center space-x-6 mb-8 border-b pb-6">
+                            <div class="relative w-24 h-24">
+                                <img id="profile-image" src="https://placehold.co/150x150/3f51b5/ffffff?text=C" alt="Profile Picture" class="rounded-full object-cover w-full h-full border-4 border-custom-green shadow-lg">
+                                <button type="button" id="upload-button" onclick="document.getElementById('file-upload').click();" class="absolute bottom-0 right-0 p-2 bg-white rounded-full border border-gray-300 shadow-md hover:bg-gray-100 transition-colors hidden">
+                                    <i class="fa-solid fa-camera text-custom-blue text-lg"></i>
+                                </button>
+                                <input type="file" id="file-upload" accept="image/*" class="hidden" onchange="uploadProfilePicture(event)">
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-gray-800" id="profile-name-display">Loading Client Name...</p>
+                                <p class="text-sm text-gray-500" id="profile-id-display">Client ID: C-XXX</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-8">
+                            
+                            <div class="border-b border-gray-200">
+                                <nav class="flex space-x-4" aria-label="Tabs">
+                                    <button type="button" onclick="changeTab('details')" id="tab-details" class="tab-button py-2 px-4 text-sm font-medium text-white rounded-t-lg bg-custom-blue transition-colors">
+                                        Personal Details
+                                    </button>
+                                    <button type="button" onclick="changeTab('payment')" id="tab-payment" class="tab-button py-2 px-4 text-sm font-medium text-gray-500 hover:text-custom-blue transition-colors">
+                                        Payment Methods
+                                    </button>
+                                    <button type="button" onclick="changeTab('security')" id="tab-security" class="tab-button py-2 px-4 text-sm font-medium text-gray-500 hover:text-custom-blue transition-colors">
+                                        Security & Session
+                                    </button>
+                                </nav>
+                            </div>
+
+                            <div id="tab-content-details" class="tab-content mt-6">
+                                <form id="details-form" onsubmit="event.preventDefault(); saveProfile('details');">
+                                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Account Information</h3>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                        <div>
+                                            <label for="client-id" class="block text-sm font-medium text-gray-700">Client ID</label>
+                                            <input type="text" id="client-id" name="client-id" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 bg-gray-100 cursor-not-allowed" readonly value="C-12345">
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="full-name" class="block text-sm font-medium text-gray-700">Full Name <span class="text-red-500">*</span></label>
+                                            <input type="text" id="full-name" name="full-name" required class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3" readonly placeholder="Jane Doe">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-6">
+                                        <label for="email" class="block text-sm font-medium text-gray-700">Email Address <span class="text-red-500">*</span></label>
+                                        <input type="email" id="email" name="email" required class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3" readonly placeholder="jane.doe@example.com">
+                                    </div>
+
+                                    <div class="mb-6">
+                                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number <span class="text-red-500">*</span></label>
+                                        <input type="tel" id="phone" name="phone" required class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3" readonly placeholder="(555) 123-4567">
+                                    </div>
+                                    
+                                    <h3 class="text-lg font-semibold text-gray-700 mb-4 mt-8 pt-4 border-t">Primary Service Address</h3>
+                                    
+                                    <div class="mb-6">
+                                        <label for="address" class="block text-sm font-medium text-gray-700">Street Address</label>
+                                        <input type="text" id="address" name="address" class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3" readonly placeholder="123 Main St">
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                        <div>
+                                            <label for="postal-code" class="block text-sm font-medium text-gray-700">Postal Code</label>
+                                            <input type="text" id="postal-code" name="postal-code" class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3" readonly placeholder="10001">
+                                        </div>
+
+                                        <div>
+                                            <label for="town" class="block text-sm font-medium text-gray-700">Town / City</label>
+                                            <input type="text" id="town" name="town" class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3" readonly placeholder="New York">
+                                        </div>
+                                    </div>
+
+                                    <div class="flex justify-end pt-4 border-t">
+                                        <div id="details-actions" class="space-x-4">
+                                            <button type="button" id="edit-details-button" onclick="toggleEditMode('details', true)" class="flex items-center text-sm px-6 py-3 bg-custom-blue text-white rounded-lg shadow-lg hover:bg-custom-blue transition-colors">
+                                                <i class="fa-solid fa-pen-to-square mr-2"></i> Edit Profile
+                                            </button>
+                                            <button type="button" id="cancel-details-button" onclick="toggleEditMode('details', false)" class="hidden text-sm px-6 py-3 border border-gray-300 rounded-lg shadow-lg hover:bg-gray-100 transition-colors">
+                                                Cancel
+                                            </button>
+                                            <button type="submit" id="save-details-button" class="hidden flex items-center text-sm px-6 py-3 bg-custom-blue text-white rounded-lg shadow-lg hover:bg-custom-blue transition-colors">
+                                                <i class="fa-solid fa-floppy-disk mr-2"></i> Save Changes
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            
+                            <div id="tab-content-payment" class="tab-content mt-6 hidden">
+                                <form id="payment-form" onsubmit="event.preventDefault(); saveProfile('payment');">
+                                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Primary Payment Method</h3>
+                                    <p class="text-sm text-gray-600 mb-6">This card will be charged after your service is completed.</p>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                        
+                                        <div>
+                                            <label for="card-type" class="block text-sm font-medium text-gray-700">Card Type</label>
+                                            <input type="text" id="card-type" name="card-type" class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 bg-gray-100 cursor-not-allowed" readonly placeholder="Visa">
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="last-four" class="block text-sm font-medium text-gray-700">Card Number</label>
+                                            <input type="text" id="last-four" name="last-four" class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 bg-gray-100 cursor-not-allowed" readonly placeholder="**** **** **** 1234">
+                                        </div>
+                                        
+                                        <div class="md:col-span-2">
+                                            <label for="card-name" class="block text-sm font-medium text-gray-700">Name on Card <span class="text-red-500">*</span></label>
+                                            <input type="text" id="card-name" name="card-name" required class="profile-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3" readonly placeholder="JANE DOE">
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-blue-50 p-3 rounded-lg flex items-start text-sm text-custom-blue mb-6">
+                                        <i class="fa-solid fa-lock text-lg mr-3 mt-1"></i>
+                                        <p>To securely **change your payment card**, you will be directed to our secure payment portal after clicking **Update Card**.</p>
+                                    </div>
+
+                                    <div class="flex justify-end pt-4 border-t">
+                                        <div id="payment-actions" class="space-x-4">
+                                            <button type="button" id="edit-payment-button" onclick="alert('Redirecting to secure payment portal to add/update card.')" class="flex items-center text-sm px-6 py-3 bg-custom-green text-white rounded-lg shadow-lg hover:bg-teal-600 transition-colors">
+                                                <i class="fa-solid fa-credit-card mr-2"></i> Update Payment Card
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div id="tab-content-security" class="tab-content mt-6 hidden">
+                                <form id="password-form" onsubmit="event.preventDefault(); saveProfile('password');">
+                                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Change Password</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                        <div>
+                                            <label for="old-password" class="block text-sm font-medium text-gray-700">Current Password <span class="text-red-500">*</span></label>
+                                            <input type="password" id="old-password" name="old-password" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 input-focus">
+                                        </div>
+                                        <div>
+                                            <label for="new-password" class="block text-sm font-medium text-gray-700">New Password <span class="text-red-500">*</span></label>
+                                            <input type="password" id="new-password" name="new-password" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 input-focus">
+                                        </div>
+                                    </div>
+
+                                    <div class="flex justify-end pt-4 border-t">
+                                        <button type="submit" id="change-password-button" class="flex items-center text-sm px-6 py-3 bg-custom-blue text-white rounded-lg shadow-lg hover:bg-custom-blue transition-colors">
+                                            <i class="fa-solid fa-lock mr-2"></i> Change Password
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <div class="mt-8 pt-6 border-t border-gray-200">
+                                    <h4 class="text-lg font-semibold text-gray-700 mb-3">Session Management</h4>
+                                    <p class="text-sm text-gray-500 mb-4">Log out of your current session across all devices.</p>
+                                    <button type="button" onclick="logoutClient()" class="flex items-center text-sm px-4 py-2 bg-custom-red text-white rounded-lg shadow-md hover:bg-red-600 transition-colors">
+                                        <i class="fa-solid fa-right-from-bracket mr-2"></i> Log Out
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="js/client_profile.js"></script>
+
+        
+    </body>
+</html>

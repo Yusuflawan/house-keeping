@@ -38,7 +38,7 @@ document.getElementById("nav").innerHTML = `<nav class="navbar fixed-top">
           </button>
           <div class="dropdown-menu dropdown-menu-right mt-3">
             <a class="dropdown-item" href="#">Account</a>
-            <a class="dropdown-item" href="#">Logout</a>
+            <a class="dropdown-item" href="../index.html">Logout</a>
           </div>
         </div>
       </div>

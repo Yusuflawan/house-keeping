@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Invoice Details - ScrubIt Admin</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+        <style>
+            /* Custom Scrollbar and layout styles (keep these here for global page styling) */
+            ::-webkit-scrollbar { width: 8px; }
+            ::-webkit-scrollbar-track { background: #f1f1f1; }
+            ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+            ::-webkit-scrollbar-thumb:hover { background: #555; }
+            html, body {
+                height: 100%;
+                margin: 0;
+                font-family: 'Inter', sans-serif;
+                background-color: #f7f9fc;
+            }
+            .bg-custom-blue { background-color: #3f51b5; }
+            .text-custom-blue { color: #3f51b5; }
+            .border-custom-blue { border-color: #3f51b5; }
+            .bg-custom-green { background-color: #00897b; }
+            .text-custom-green { color: #00897b; }
+            .bg-custom-yellow { background-color: #ffb300; }
+            .bg-custom-red { background-color: #e53935; }
+        </style>
+    </head>
+
+    <body class="flex h-screen" id="app-container">
+        <div id="nav-placeholder"></div> 
+        
+        <div class="flex-grow p-4 md:p-8 overflow-y-auto">
+            <button id="menu-toggle" class="md:hidden p-3 mb-4 bg-white rounded-lg shadow">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            
+            <div class="mb-6">
+                <h1 class="text-3xl font-extrabold text-gray-800">Invoice: <span id="invoice-id-display" class="text-custom-blue">...</span></h1>
+                <nav class="text-sm text-gray-500 mt-1" aria-label="breadcrumb">
+                    <ol class="flex space-x-2">
+                        <li><a href="dashboard.html" class="hover:text-custom-blue">Home</a></li>
+                        <li class="text-gray-400">/</li>
+                        <li><a href="financials-list.html" class="hover:text-custom-blue">Financials</a></li>
+                        <li class="text-gray-400">/</li>
+                        <li class="font-semibold text-gray-700">Details</li>
+                    </ol>
+                </nav>
+                <div class="h-px bg-gray-200 mt-4"></div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg mb-8 flex flex-col md:flex-row justify-between items-start md:items-center border-l-4 border-custom-blue">
+                <div class="flex items-center space-x-6 mb-4 md:mb-0">
+                    <div class="text-gray-500">Status:</div>
+                    <span id="invoice-status-badge" class="px-4 py-2 inline-flex text-lg leading-6 font-bold rounded-full text-white shadow-md">
+                        Loading...
+                    </span>
+                </div>
+                
+                <div class="flex flex-col items-start md:items-end mb-4 md:mb-0">
+                    <div class="text-xl text-gray-500">Total Charged:</div>
+                    <div id="invoice-total-amount" class="text-4xl font-extrabold text-gray-900">$0.00</div>
+                </div>
+
+                <div id="action-buttons" class="flex space-x-3 mt-4 md:mt-0">
+                    <button onclick="handleAction('print')" class="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                        <i class="fa-solid fa-print mr-1"></i> Print
+                    </button>
+                    <button onclick="handleAction('send-receipt')" class="px-4 py-2 text-sm bg-custom-blue text-white rounded-lg hover:bg-indigo-600 transition-colors">
+                        <i class="fa-solid fa-envelope mr-1"></i> Send Receipt
+                    </button>
+                    <button onclick="handleAction('refund')" id="refund-button" class="px-4 py-2 text-sm bg-custom-red text-white rounded-lg hover:bg-red-700 transition-colors">
+                        <i class="fa-solid fa-undo mr-1"></i> Issue Refund
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Client & Booking Context</h3>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="space-y-3">
+                            <div class="font-medium text-gray-500">Client:</div>
+                            <div class="font-medium text-gray-500">Booking Reference:</div>
+                            <div class="font-medium text-gray-500">Payment Due:</div>
+                        </div>
+                        <div class="space-y-3">
+                            <div id="client-name" class="font-semibold text-gray-900">...</div>
+                            <div id="booking-ref" class="font-semibold text-gray-900">...</div>
+                            <div id="due-date" class="font-semibold text-gray-900">...</div>
+                        </div>
+                    </div>
+                    <div class="mt-6 border-t pt-4">
+                        <p class="font-medium text-gray-500 mb-2">Payment Method:</p>
+                        <p id="payment-method" class="text-lg font-bold text-custom-green">...</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Activity Log</h3>
+                    <ul id="activity-log" class="space-y-3 text-sm">
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Service Line Items</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                                <th class="px-4 py-3 w-1/2">Description</th>
+                                <th class="px-4 py-3 text-center">Qty</th>
+                                <th class="px-4 py-3 text-right">Unit Price</th>
+                                <th class="px-4 py-3 text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="line-items-body">
+                        </tbody>
+                        <tfoot class="bg-gray-50 divide-y divide-gray-200">
+                            <tr>
+                                <td colspan="3" class="px-4 py-2 text-right font-medium text-gray-700">Subtotal:</td>
+                                <td id="subtotal" class="px-4 py-2 text-right font-semibold text-gray-900">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="px-4 py-2 text-right font-medium text-gray-700">Tax (7.5%):</td>
+                                <td id="tax-amount" class="px-4 py-2 text-right font-semibold text-gray-900">$0.00</td>
+                            </tr>
+                            <tr class="border-t border-gray-400">
+                                <td colspan="3" class="px-4 py-3 text-right font-extrabold text-xl text-gray-800">TOTAL:</td>
+                                <td id="final-total" class="px-4 py-3 text-right font-extrabold text-xl text-custom-blue">$0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+
+        <script src="js/sidebar.js"></script> 
+        <script src="js/invoice-details.js"></script>
+    </body>
+</html>

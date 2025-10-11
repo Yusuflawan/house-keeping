@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title id="page-title">Bookings List - Scrub and Clean It Limited</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+
+        <style>
+            /* Custom Scrollbar for a cleaner look */
+            ::-webkit-scrollbar { width: 8px; }
+            ::-webkit-scrollbar-track { background: #f1f1f1; }
+            ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+            ::-webkit-scrollbar-thumb:hover { background: #555; }
+            
+            /* Ensure the layout respects the full height */
+            html, body {
+                height: 100%;
+                margin: 0;
+                font-family: 'Inter', sans-serif;
+                background-color: #f7f9fc;
+            }
+
+            /* Tailwind custom colors for the template aesthetics */
+            .bg-custom-blue { background-color: #3f51b5; }
+            .bg-custom-green { background-color: #00897b; }
+            .bg-custom-yellow { background-color: #ffb300; }
+            .bg-custom-red { background-color: #e53935; }
+            .bg-custom-purple { background-color: #673ab7; }
+        </style>
+    </head>
+
+    <body class="flex h-screen" id="app-container">
+        <div id="nav-placeholder"></div> 
+
+        <div class="flex-grow p-4 md:p-8 overflow-y-auto">
+            <button id="menu-toggle" class="md:hidden p-3 mb-4 bg-white rounded-lg shadow">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            
+            <div class="mb-6">
+                <h1 class="text-3xl font-extrabold text-gray-800">Bookings List</h1>
+                <nav class="text-sm text-gray-500 mt-1" aria-label="breadcrumb">
+                    <ol class="flex space-x-2">
+                        <li><a href="dashboard.html" class="hover:text-custom-blue">Home</a></li>
+                        <li class="text-gray-400">/</li>
+                        <li><a href="#" class="hover:text-custom-blue">Bookings</a></li>
+                        <li class="text-gray-400">/</li>
+                        <li class="font-semibold text-gray-700">View All</li>
+                    </ol>
+                </nav>
+                <div class="h-px bg-gray-200 mt-4"></div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 md:mb-0">
+                        Current and Upcoming Jobs
+                    </h2>
+                    <div class="flex flex-wrap space-x-2 space-y-2 md:space-y-0 items-center">
+                        <select id="status-filter" class="p-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-custom-blue">
+                            <option value="">Filter by Status</option>
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="Pending Assignment">Pending Assignment</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                        
+                        <input id="date-filter" type="date" value="2025-10-01" class="p-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-custom-blue"/>
+                        
+                        <button id="export-button" class="flex items-center text-sm px-4 py-2 bg-custom-blue text-white rounded-lg shadow hover:bg-indigo-600 transition-colors" onclick="handleExport()">
+                            <i class="fa-solid fa-file-export mr-2"></i> Export
+                        </button>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-medium text-gray-700 mb-4">
+                    Booking Details (<span class="font-bold text-custom-blue" id="total-bookings-count">148</span> Total Active)
+                </h3>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                                <th class="px-4 py-3">ID</th>
+                                <th class="px-4 py-3">Client</th>
+                                <th class="px-4 py-3">Service</th>
+                                <th class="px-4 py-3">Date/Time</th>
+                                <th class="px-4 py-3">Employee</th>
+                                <th class="px-4 py-3">Status</th>
+                                <th class="px-4 py-3 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="bookings-table-body">
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">2025-154</td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 font-semibold">Alice M.</td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">Deep Clean (4hr)</td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">2025-10-05<div class="text-xs text-gray-500">10:00</div></td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 font-medium">Jane D.</td>
+                                <td class="px-4 py-3 whitespace-nowrap">
+                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-custom-green text-white">
+                                        Completed
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-custom-blue hover:text-indigo-600 font-semibold">View Payout</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-4 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">
+                    <span class="mb-2 sm:mb-0" id="pagination-summary">Showing 1 to 6 of 148 active results</span>
+
+                    <div class="space-x-1" id="pagination-controls">
+                        <button id="prev-page-button" class="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50" disabled>&leftarrow; Previous</button>
+                        <span id="current-page-span" class="px-3 py-1 bg-custom-blue text-white rounded-lg">1</span>
+                        <button id="next-page-button" class="p-2 rounded-lg hover:bg-gray-100">Next &rightarrow;</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+        <script src="js/sidebar.js"></script>
+        <script src="js/bookings-list.js"></script>
+
+    </body>
+</html>

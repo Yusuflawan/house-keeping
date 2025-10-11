@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Book a Service - ScrubIt Client</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        :root {
+            --custom-blue: #3f51b5; /* Primary accent */
+            --custom-green: #00897b; /* Success/Main action */
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #f4f5f7; }
+        .bg-custom-green { background-color: var(--custom-green); }
+        .text-custom-green { color: var(--custom-green); }
+        .border-custom-green { border-color: var(--custom-green); }
+        .hover\:bg-custom-green:hover { background-color: #00796b; } 
+        .bg-custom-blue { background-color: var(--custom-blue); }
+        .text-custom-blue { color: var(--custom-blue); }
+        .hover\:bg-custom-blue:hover { background-color: #3040a0; }
+
+        /* Step Indicator Styling */
+        .step-indicator {
+            width: 3rem; 
+            height: 3rem; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 9999px; /* full circle */
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+        .step-active {
+            background-color: var(--custom-green);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 137, 123, 0.4);
+        }
+        .step-complete {
+            background-color: var(--custom-blue);
+            color: white;
+        }
+
+        /* Loading Overlay */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+
+        /* Hide HTML inputs for custom radio/checkbox styling */
+        .radio-card input[type="radio"], 
+        .checkbox-extra input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* Style the card when the input is checked */
+        .radio-card input[type="radio"]:checked + label {
+            border-color: var(--custom-green);
+            background-color: #e6fffb; /* Light teal background */
+            box-shadow: 0 0 0 3px rgba(0, 137, 123, 0.3);
+            transform: scale(1.02);
+        }
+        
+        /* New styling for product preference radios */
+        .radio-card input[name="product_preference"]:checked + label {
+            border-color: var(--custom-blue);
+            background-color: #e8eaf6; /* Light blue background */
+            box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.3);
+            transform: scale(1.02);
+        }
+
+        .checkbox-extra input[type="checkbox"]:checked + label {
+            border-color: var(--custom-blue);
+            background-color: #e8eaf6; /* Light blue background */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    
+
+    <!-- Placeholder for the Fixed Top Header (Desktop Nav & User Icon) -->
+    <div id="top-nav-placeholder" class="h-16 hidden md:block border-b"></div>
+
+    <main class="flex-grow p-4 pt-20 pb-20 md:p-8">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-6 text-center">Book Your Cleaning Service</h1>
+            
+            <div class="relative flex justify-between items-center mb-10 mt-8">
+                <div class="absolute top-1/2 left-0 w-full h-1 bg-gray-300 z-0 transform -translate-y-1/2">
+                    <div id="progress-fill" class="h-full bg-custom-green transition-all duration-500 rounded-full" style="width: 0%;"></div>
+                </div>
+
+                <div id="step-indicator-1" class="step-indicator step-active">1</div>
+                <div id="step-indicator-2" class="step-indicator bg-gray-300 text-gray-600">2</div>
+                <div id="step-indicator-3" class="step-indicator bg-gray-300 text-gray-600">3</div>
+            </div>
+
+            <form id="booking-form" class="bg-white p-6 md:p-10 rounded-xl shadow-2xl space-y-8">
+                <h2 id="step-title" class="text-xl md:text-2xl font-bold text-gray-700 mb-6 text-center">Step 1: Choose Service & Size</h2>
+
+                <p id="form-message" class="text-center text-sm font-semibold mt-4 transition-all duration-300 hidden"></p>
+
+                <div id="step-1" class="form-step transition-all duration-500 ease-in-out">
+                    <div class="space-y-6">
+                        <label class="block text-gray-700 font-semibold mb-2">1. Select Service Type <span class="text-red-500">*</span></label>
+                        <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+                            <div class="radio-card">
+                                <input type="radio" id="service_standard" name="service_type" value="Standard" required>
+                                <label for="service_standard" class="block p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-200 hover:border-custom-green shadow-sm text-center">
+                                    <i class="fa-solid fa-broom text-2xl text-custom-green mb-2"></i>
+                                    <span class="font-medium text-gray-800 block">Standard Clean</span>
+                                    <span class="text-xs text-gray-500">Regular maintenance</span>
+                                </label>
+                            </div>
+                            <div class="radio-card">
+                                <input type="radio" id="service_deep" name="service_type" value="Deep" required>
+                                <label for="service_deep" class="block p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-200 hover:border-custom-green shadow-sm text-center">
+                                    <i class="fa-solid fa-house-chimney-crack text-2xl text-custom-green mb-2"></i>
+                                    <span class="font-medium text-gray-800 block">Deep Clean</span>
+                                    <span class="text-xs text-gray-500">Intensive cleaning</span>
+                                </label>
+                            </div>
+                            <div class="radio-card">
+                                <input type="radio" id="service_move" name="service_type" value="Move In/Out" required>
+                                <label for="service_move" class="block p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-200 hover:border-custom-green shadow-sm text-center">
+                                    <i class="fa-solid fa-truck-moving text-2xl text-custom-green mb-2"></i>
+                                    <span class="font-medium text-gray-800 block">Move In/Out</span>
+                                    <span class="text-xs text-gray-500">Empty home cleaning</span>
+                                </label>
+                            </div>
+                            <div class="radio-card">
+                                <input type="radio" id="service_office" name="service_type" value="Office" required>
+                                <label for="service_office" class="block p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-200 hover:border-custom-green shadow-sm text-center">
+                                    <i class="fa-solid fa-building text-2xl text-custom-green mb-2"></i>
+                                    <span class="font-medium text-gray-800 block">Office Cleaning</span>
+                                    <span class="text-xs text-gray-500">Businesses & workspaces</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                            <div>
+                                <label for="bedrooms" class="block text-gray-700 font-semibold mb-2">2. Bedrooms <span class="text-red-500">*</span></label>
+                                <select id="bedrooms" name="bedrooms" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-green focus:border-custom-green transition-colors">
+                                    <option value="" disabled selected>Select number of bedrooms</option>
+                                    <option value="0">No Bedroom</option>
+                                    <option value="1">1 Bedroom</option>
+                                    <option value="2">2 Bedrooms</option>
+                                    <option value="3">3 Bedrooms</option>
+                                    <option value="4+">4+ Bedrooms</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="bathrooms" class="block text-gray-700 font-semibold mb-2">3. Bathrooms <span class="text-red-500">*</span></label>
+                                <select id="bathrooms" name="bathrooms" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-green focus:border-custom-green transition-colors">
+                                    <option value="" disabled selected>Select number of bathrooms</option>
+                                    <option value="0">No Bathroom</option>
+                                    <option value="1">1 Bathroom</option>
+                                    <option value="2">2 Bathrooms</option>
+                                    <option value="3">3 Bathrooms</option>
+                                    <option value="4+">4+ Bathrooms</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="pt-6 border-t border-gray-100">
+                            <label class="block text-gray-700 text-xl font-bold mb-4">4. Cleaning Add-ons (Optional) <span class="text-xs font-normal text-gray-500"> (Adds 0.5 hours per extra)</span></label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="checkbox-extra">
+                                    <input type="checkbox" id="extra_oven" name="extras" value="Oven Cleaning">
+                                    <label for="extra_oven" class="block p-4 border-2 border-gray-200 rounded-lg cursor-pointer transition-all duration-200 hover:border-custom-blue text-center">
+                                        <i class="fa-solid fa-fire-burner text-xl text-custom-blue mb-1"></i>
+                                        <span class="text-sm font-medium">Oven Cleaning</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-extra">
+                                    <input type="checkbox" id="extra_windows" name="extras" value="Interior Windows">
+                                    <label for="extra_windows" class="block p-4 border-2 border-gray-200 rounded-lg cursor-pointer transition-all duration-200 hover:border-custom-blue text-center">
+                                        <i class="fa-solid fa-window-restore text-xl text-custom-blue mb-1"></i>
+                                        <span class="text-sm font-medium">Interior Windows</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-extra">
+                                    <input type="checkbox" id="extra_laundry" name="extras" value="Laundry Service (Includes Ironing)">
+                                    <label for="extra_laundry" class="block p-4 border-2 border-gray-200 rounded-lg cursor-pointer transition-all duration-200 hover:border-custom-blue text-center">
+                                        <i class="fa-solid fa-shirt text-xl text-custom-blue mb-1"></i>
+                                        <span class="text-sm font-medium">Laundry Service</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-extra">
+                                    <input type="checkbox" id="extra_fridge" name="extras" value="Fridge Interior">
+                                    <label for="extra_fridge" class="block p-4 border-2 border-gray-200 rounded-lg cursor-pointer transition-all duration-200 hover:border-custom-blue text-center">
+                                        <i class="fa-solid fa-temperature-arrow-down text-xl text-custom-blue mb-1"></i>
+                                        <span class="text-sm font-medium">Fridge Interior</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-gray-100">
+                            <label for="custom_hours" class="block text-gray-700 font-semibold mb-2">5. Service Duration (Hours) <span class="text-red-500">*</span></label>
+                            <div class="flex flex-col md:flex-row items-stretch md:items-center space-y-3 md:space-y-0 md:space-x-4">
+                                <input type="number" id="custom_hours" name="custom_hours" min="1.0" step="0.5" placeholder="Enter custom hours (e.g. 3.0)" required class="w-full md:w-1/2 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-green focus:border-custom-green transition-colors">
+                                <button type="button" id="use-recommended-btn" class="w-full md:w-1/2 flex-shrink-0 px-4 py-3 bg-custom-blue text-white rounded-lg shadow-md hover:bg-custom-blue disabled:opacity-50 transition-colors text-sm font-medium" disabled>
+                                    Use Recommended: <span id="recommended-hours-display">3.0</span> Hours
+                                </button>
+                            </div>
+                            <p id="duration-feedback" class="text-xs mt-2 text-gray-500">Select a service and size to see our recommended duration.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="step-2" class="form-step hidden transition-all duration-500 ease-in-out">
+                    <div class="space-y-6">
+                        <label class="block text-gray-700 font-semibold mb-2 flex justify-between items-center">
+                            <span>1. Service Address <span class="text-red-500">*</span></span>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="use-saved-address" class="w-4 h-4 text-custom-blue bg-gray-100 border-gray-300 rounded focus:ring-custom-blue">
+                                <label for="use-saved-address" class="ml-2 text-sm text-custom-blue font-medium hover:text-custom-green transition-colors cursor-pointer select-none">
+                                    Use My Saved Address
+                                </label>
+                            </div>
+                        </label>
+
+                        <input type="text" id="address" name="address" placeholder="Street Address" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-green focus:border-custom-green transition-colors mb-4">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <input type="text" id="city" name="city" placeholder="City" required class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-green focus:border-custom-green transition-colors">
+                            <input type="text" id="state" name="state" placeholder="State/Province" required class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-green focus:border-custom-green transition-colors">
+                            <input type="text" 
+                            id="zip" 
+                            name="zip" 
+                            pattern="^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})$" 
+                            placeholder="e.g., SW1A 0AA" 
+                            required 
+                            class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-green focus:border-custom-green transition-colors">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                            <div>
+                                <label for="service_date" class="block text-gray-700 font-semibold mb-2">2. Preferred Date <span class="text-red-500">*</span></label>
+                                <input type="date" id="service_date" name="service_date" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-green focus:border-custom-green transition-colors">
+                            </div>
+                            <div>
+                                <label for="service_time" class="block text-gray-700 font-semibold mb-2">3. Preferred Time Slot <span class="text-red-500">*</span></label>
+                                <select id="service_time" name="service_time" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-green focus:border-custom-green transition-colors">
+                                    <option value="" disabled selected>Select a time slot</option>
+                                    <option value="8:00 AM - 12:00 PM">Morning (8:00 AM - 12:00 PM)</option>
+                                    <option value="12:00 PM - 4:00 PM">Afternoon (12:00 PM - 4:00 PM)</option>
+                                    <option value="4:00 PM - 8:00 PM">Evening (4:00 PM - 8:00 PM)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="step-3" class="form-step hidden transition-all duration-500 ease-in-out">
+                    <div class="space-y-8">
+                        
+                        <div>
+                            <label class="block text-gray-700 text-xl font-bold mb-4">1. Logistics & Entry Details</label>
+
+                            <div class="mb-6 p-4 border border-gray-200 rounded-xl bg-blue-50">
+                                <label class="block text-gray-700 font-semibold mb-3">1a. Cleaning Products: Who is providing them? <span class="text-red-500">*</span></label>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="radio-card">
+                                        <input type="radio" id="products_scrubit" name="product_preference" value="ScrubIt" required>
+                                        <label for="products_scrubit" class="block p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-200 hover:border-custom-blue shadow-sm text-center">
+                                            <i class="fa-solid fa-bottle-droplet text-2xl text-custom-blue mb-2"></i>
+                                            <span class="font-medium text-gray-800 block">ScrubIt Provides</span>
+                                            <span class="text-xs text-gray-500">We bring eco-friendly supplies at an additional cost of just £6.</span>
+                                        </label>
+                                    </div>
+                                    <div class="radio-card">
+                                        <input type="radio" id="products_client" name="product_preference" value="Client" required>
+                                        <label for="products_client" class="block p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-200 hover:border-custom-blue shadow-sm text-center">
+                                            <i class="fa-solid fa-hand-holding-box text-2xl text-custom-blue mb-2"></i>
+                                            <span class="font-medium text-gray-800 block">Client Provides</span>
+                                            <span class="text-xs text-gray-500">Cleaner uses your supplies/brands.</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 border border-gray-200 rounded-xl bg-blue-50">
+                                <label class="block text-gray-700 font-semibold mb-3">1b. How will the cleaner access the property? <span class="text-red-500">*</span></label>
+                                <select id="access_method" name="access_method" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors">
+                                    <option value="" disabled selected>Select access method</option>
+                                    <option value="Lockbox/Code">Key in Lockbox / Numeric Code</option>
+                                    <option value="In-Person Handover">Meet Cleaner in Person</option>
+                                    <option value="Concierge/Front Desk">Concierge / Front Desk Drop-off</option>
+                                    <option value="Other">Other (e.g. key hidden, friend assisting)</option>
+                                </select>
+                                
+                                <textarea id="access_details" name="access_details" placeholder="Please provide detailed instructions (e.g., Lockbox location and code, specific entry instructions, etc.)" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors mt-4" style="display: none;"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-gray-100">
+                            <label for="additional_info" class="block text-gray-700 text-xl font-bold mb-4">2. Additional Information (Optional)</label>
+                            <textarea id="additional_info" name="additional_info" placeholder="Please provide any extra details that might help the cleaner (e.g., parking instructions, pet details, areas of focus, or preferred cleaning products if you are providing them)." rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-green focus:border-custom-green transition-colors"></textarea>
+                        </div>
+
+
+                        <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <h3 class="text-xl font-bold text-custom-green mb-4">3. Booking Summary</h3>
+                            <div id="summary-details" class="space-y-2 text-gray-700 text-sm">
+                                <p><strong>Service:</strong> <span id="summary_service">-</span></p>
+                                <p><strong>Property Size:</strong> <span id="summary_size">-</span></p>
+                                <p><strong>Duration:</strong> <span id="summary_duration">-</span></p>
+                                <p><strong>Date & Time:</strong> <span id="summary_datetime">-</span></p>
+                                <p><strong>Address:</strong> <span id="summary_address">-</span></p>
+                                <p><strong>Add-ons:</strong> <span id="summary_extras">-</span></p>
+                                <p><strong>Cleaning Products:</strong> <span id="summary_products">-</span></p>
+                                <p><strong>Property Access:</strong> <span id="summary_access">-</span></p>
+                                <p id="summary_note_container" class="italic text-gray-500 mt-2 hidden"><strong>Note:</strong> <span id="summary_note"></span></p>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center">
+                                <span class="text-2xl font-bold text-gray-800">Total Price:</span>
+                                <span id="summary_price" class="text-3xl font-extrabold text-custom-blue">£0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <input type="checkbox" id="agreement" name="agreement" required class="mt-1 w-5 h-5 text-custom-green bg-gray-100 border-gray-300 rounded focus:ring-custom-green">
+                            <label for="agreement" class="ml-2 text-sm text-gray-600">
+                                I agree to the <a href="#" class="text-custom-blue hover:underline font-medium">Terms of Service</a> and confirm all details are correct. <span class="text-red-500">*</span>
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row justify-between pt-6 space-y-4 md:space-y-0 md:space-x-4">
+                    <button type="button" id="prev-button" class="flex items-center justify-center text-sm px-6 py-3 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 transition-colors hidden">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> Back
+                    </button>
+                    <button type="button" id="next-button" class="flex-grow md:flex-none md:ml-auto flex items-center justify-center text-sm px-8 py-3 bg-custom-green text-white rounded-lg shadow-lg hover:bg-custom-green transition-colors disabled:opacity-50">
+                        Next Step <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                    <button type="button" id="submit-button" class="flex-grow md:flex-none md:ml-auto flex items-center justify-center text-sm px-8 py-3 bg-custom-blue text-white rounded-lg shadow-lg hover:bg-custom-blue transition-colors hidden disabled:opacity-50" disabled>
+                        <i class="fa-solid fa-calendar-check mr-2"></i> Confirm Booking
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </main>
+
+    <div id="bottom-nav-placeholder" class="md:hidden"></div>
+    
+    <script src="js/client_nav.js"></script>
+    <script src="js/book_now.js"></script>
+
+    <script>
+        // Call the injection function on load
+        window.onload = loadClientNav;
+    </script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Employee Sign Up - ScrubIt</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+            :root {
+                --custom-blue: #3f51b5; /* Primary accent */
+                --custom-green: #00897b; /* Success/Main action */
+            }
+            body { font-family: 'Inter', sans-serif; background-color: #f4f5f7; }
+            .bg-custom-green { background-color: var(--custom-green); }
+            .text-custom-green { color: var(--custom-green); }
+            .hover\:bg-custom-green:hover { background-color: #00796b; } 
+            .bg-custom-blue { background-color: var(--custom-blue); }
+            .text-custom-blue { color: var(--custom-blue); }
+            .hover\:bg-custom-blue:hover { background-color: #304e9c; } 
+            
+            /* Input focus styling */
+            .input-focus:focus { 
+                border-color: var(--custom-green); 
+                box-shadow: 0 0 0 3px rgba(0, 137, 123, 0.4); /* Green shadow */
+            }
+
+            /* Step indicator styling */
+            .step-active {
+                background-color: var(--custom-green);
+                border-color: var(--custom-green);
+                color: white;
+            }
+            .step-inactive {
+                background-color: #e5e7eb;
+                border-color: #9ca3af;
+                color: #4b5563;
+            }
+            .step-complete {
+                background-color: var(--custom-blue);
+                border-color: var(--custom-blue);
+                color: white;
+            }
+        </style>
+    </head>
+
+    <body class="flex items-center justify-center min-h-screen p-4">
+        
+        <div id="loading-overlay" class="fixed inset-0 bg-white/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+            <div class="text-center">
+                <i class="fa-solid fa-spinner fa-spin-pulse text-6xl text-custom-green"></i>
+                <p class="text-xl font-semibold text-gray-700 mt-4" id="loading-text">Initializing application...</p>
+            </div>
+        </div>
+
+        <div class="w-full max-w-2xl bg-white p-6 md:p-10 rounded-xl shadow-2xl transition-all duration-300">
+            
+            <header class="mb-8 text-center">
+                <h1 class="text-3xl font-bold text-gray-800 flex items-center justify-center">
+                    <i class="fa-solid fa-hand-sparkles text-custom-green text-4xl mr-3"></i> ScrubIt Employee Sign Up
+                </h1>
+                <p class="text-gray-500 mt-2">Join our team of professional cleaners.</p>
+            </header>
+
+            <!-- Step Indicator -->
+            <div class="flex justify-between items-center mb-8">
+                <div class="flex-1 text-center">
+                    <div id="step-1-indicator" class="w-10 h-10 mx-auto rounded-full flex items-center justify-center text-sm font-bold border-2 step-active">1</div>
+                    <p class="text-xs mt-1 text-custom-green font-semibold">Details</p>
+                </div>
+                <div class="flex-1 h-0.5 bg-gray-300"></div>
+                <div class="flex-1 text-center">
+                    <div id="step-2-indicator" class="w-10 h-10 mx-auto rounded-full flex items-center justify-center text-sm font-bold border-2 step-inactive">2</div>
+                    <p class="text-xs mt-1 text-gray-500">Experience</p>
+                </div>
+                <div class="flex-1 h-0.5 bg-gray-300"></div>
+                <div class="flex-1 text-center">
+                    <div id="step-3-indicator" class="w-10 h-10 mx-auto rounded-full flex items-center justify-center text-sm font-bold border-2 step-inactive">3</div>
+                    <p class="text-xs mt-1 text-gray-500">Availability</p>
+                </div>
+            </div>
+
+            <!-- Form Container -->
+            <form id="signup-form" onsubmit="event.preventDefault(); nextStep();">
+                <!-- Step 1: Personal Details (Default active step) -->
+                <div id="step-1" class="form-step">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-6 border-b pb-2">1. Personal Information & Account</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- First Name -->
+                        <div>
+                            <label for="first-name" class="block text-sm font-medium text-gray-700">First Name(s) <span class="text-red-500">*</span></label>
+                            <input type="text" id="first-name" name="first-name" required class="input-focus mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3" placeholder="Jane">
+                        </div>
+                        
+                        <!-- Last Name -->
+                        <div>
+                            <label for="last-name" class="block text-sm font-medium text-gray-700">Last Name <span class="text-red-500">*</span></label>
+                            <input type="text" id="last-name" name="last-name" required class="input-focus mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3" placeholder="Doe">
+                        </div>
+                        
+                        <!-- Email Address -->
+                        <div class="md:col-span-2">
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email Address <span class="text-red-500">*</span></label>
+                            <input type="email" id="email" name="email" required class="input-focus mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3" placeholder="jane.doe@example.com">
+                            <input type="email" id="confirm-email" name="confirm-email" required class="input-focus mt-3 block w-full border border-gray-300 rounded-lg shadow-sm p-3" placeholder="Confirm Email Address">
+                            <p id="email-error" class="text-red-500 text-sm mt-1 hidden">Emails do not match.</p>
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Mobile Number (UK)</label>
+                            <input type="tel" id="phone" name="phone" 
+                                   placeholder="e.g., 07700 900000" 
+                                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-custom-green focus:border-custom-green" 
+                                   pattern="^(\+44\s?|0)7\d{3}\s?\d{6}$" 
+                                   required>
+                        </div>
+                        
+                        <!-- Postcode -->
+                        <div>
+                            <label for="zip_code" class="block text-sm font-medium text-gray-700 mb-1">Postcode (Service Area)</label>
+                            <!-- UPDATED: Replaced US ZIP code format with comprehensive UK Postcode Regex -->
+                            <input type="text" id="zip_code" name="zip_code" placeholder="e.g., SW1A 0AA" 
+                                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-custom-green focus:border-custom-green" 
+                                   pattern="^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})$" 
+                                   required>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="md:col-span-2">
+                            <label for="password" class="block text-sm font-medium text-gray-700">Set Password <span class="text-red-500">*</span></label>
+                            
+                            <!-- Password Input Field -->
+                            <div class="relative mt-1">
+                                <input type="password" id="password" name="password" required minlength="8" class="input-focus block w-full border border-gray-300 rounded-lg shadow-sm pr-12 p-3" placeholder="Must be at least 8 characters">
+                                <span class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onclick="togglePasswordVisibility('password', 'toggle-password-icon')">
+                                    <i id="toggle-password-icon" class="fa-solid fa-eye text-gray-400 hover:text-custom-green transition-colors"></i>
+                                </span>
+                            </div>
+
+                            <!-- Confirm Password Input Field -->
+                            <div class="relative mt-3">
+                                <input type="password" id="confirm-password" name="confirm-password" required class="input-focus block w-full border border-gray-300 rounded-lg shadow-sm pr-12 p-3" placeholder="Confirm Password">
+                                <span class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onclick="togglePasswordVisibility('confirm-password', 'toggle-confirm-password-icon')">
+                                    <i id="toggle-confirm-password-icon" class="fa-solid fa-eye text-gray-400 hover:text-custom-green transition-colors"></i>
+                                </span>
+                            </div>
+                            
+                            <p id="password-error" class="text-red-500 text-sm mt-1 hidden">Passwords do not match.</p>
+                        </div>
+
+                        <!-- Gender (Optional) -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Gender (Optional)</label>
+                            <div class="flex space-x-6">
+                                <label class="flex items-center">
+                                    <input type="radio" name="gender" value="male" class="form-radio text-custom-green h-4 w-4">
+                                    <span class="ml-2 text-gray-700">Male</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="gender" value="female" class="form-radio text-custom-green h-4 w-4">
+                                    <span class="ml-2 text-gray-700">Female</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="gender" value="prefer_not_to_say" class="form-radio text-custom-green h-4 w-4">
+                                    <span class="ml-2 text-gray-700">Prefer not to say</span>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Step 2: Experience -->
+                <div id="step-2" class="form-step hidden">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-6 border-b pb-2">2. Experience and Skills</h2>
+                    <div class="space-y-6">
+                        
+                        <!-- Professional Experience -->
+                        <div>
+                            <label for="experience-years" class="block text-sm font-medium text-gray-700">How many years of professional cleaning experience do you have? <span class="text-red-500">*</span></label>
+                            <select id="experience-years" name="experience-years" required class="input-focus mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3 bg-white">
+                                <option value="" disabled selected>Select years</option>
+                                <option value="<1">Less than 1 year</option>
+                                <option value="1-2">1 - 2 years</option>
+                                <option value="3-5">3 - 5 years</option>
+                                <option value="5+">5+ years</option>
+                            </select>
+                        </div>
+
+                        <!-- Cleaning Types -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-3">What type of cleaning experience do you have? <span class="text-red-500">*</span></label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="cleaning-types" value="Home cleaning" class="form-checkbox text-custom-green h-4 w-4 rounded">
+                                    <span class="ml-2 text-gray-700">Home Cleaning</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="cleaning-types" value="Hotel cleaning" class="form-checkbox text-custom-green h-4 w-4 rounded">
+                                    <span class="ml-2 text-gray-700">Hotel/Hospitality</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="cleaning-types" value="End of tenancy" class="form-checkbox text-custom-green h-4 w-4 rounded">
+                                    <span class="ml-2 text-gray-700">End of Tenancy</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="cleaning-types" value="Office cleaning" class="form-checkbox text-custom-green h-4 w-4 rounded">
+                                    <span class="ml-2 text-gray-700">Office/Commercial</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="cleaning-types" value="Deep cleaning" class="form-checkbox text-custom-green h-4 w-4 rounded">
+                                    <span class="ml-2 text-gray-700">Deep Cleaning</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="cleaning-types" value="Specialized cleaning" class="form-checkbox text-custom-green h-4 w-4 rounded">
+                                    <span class="ml-2 text-gray-700">Specialized Tasks</span>
+                                </label>
+                            </div>
+                            <p id="cleaning-type-error" class="text-red-500 text-sm mt-2 hidden">Please select at least one type of experience.</p>
+                        </div>
+
+                        <!-- Description -->
+                        <div>
+                            <label for="experience-description" class="block text-sm font-medium text-gray-700">Describe your home cleaning experience: <span class="text-red-500">*</span></label>
+                            <textarea id="experience-description" name="experience-description" required rows="4" class="input-focus mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3" placeholder="e.g. I worked for 'CleanPro Agency' for 3 years specializing in deep residential cleans and customer service."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Availability & Compliance -->
+                <div id="step-3" class="form-step hidden">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-6 border-b pb-2">3. Availability & Eligibility</h2>
+                    <div class="space-y-6">
+
+                        <!-- Desired Hours -->
+                        <div>
+                            <label for="desired-hours" class="block text-sm font-medium text-gray-700">How many hours of work do you want per week? <span class="text-red-500">*</span></label>
+                            <select id="desired-hours" name="desired-hours" required class="input-focus mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3 bg-white">
+                                <option value="" disabled selected>Select hours</option>
+                                <option value="<10">Less than 10 hours</option>
+                                <option value="10-20">10 - 20 hours</option>
+                                <option value="20-30">20 - 30 hours</option>
+                                <option value="30+">30+ hours (Full Time)</option>
+                            </select>
+                        </div>
+
+                        <!-- Available Days -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-3">Which days do you want to work? <span class="text-red-500">*</span></label>
+                            <div class="grid grid-cols-3 md:grid-cols-4 gap-3">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="available-days" value="Monday" class="form-checkbox text-custom-green h-4 w-4 rounded">
+                                    <span class="ml-2 text-gray-700">Monday</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="available-days" value="Tuesday" class="form-checkbox text-custom-green h-4 w-4 rounded">
+                                    <span class="ml-2 text-gray-700">Tuesday</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="available-days" value="Wednesday" class="form-checkbox text-custom-green h-4 w-4 rounded">
+                                    <span class="ml-2 text-gray-700">Wednesday</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="available-days" value="Thursday" class="form-checkbox text-custom-green h-4 w-4 rounded">
+                                    <span class="ml-2 text-gray-700">Thursday</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="available-days" value="Friday" class="form-checkbox text-custom-green h-4 w-4 rounded">
+                                    <span class="ml-2 text-gray-700">Friday</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="available-days" value="Saturday" class="form-checkbox text-custom-green h-4 w-4 rounded">
+                                    <span class="ml-2 text-gray-700">Saturday</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="available-days" value="Sunday" class="form-checkbox text-custom-green h-4 w-4 rounded">
+                                    <span class="ml-2 text-gray-700">Sunday</span>
+                                </label>
+                            </div>
+                            <p id="days-error" class="text-red-500 text-sm mt-2 hidden">Please select at least one available day.</p>
+                        </div>
+
+                        <!-- Preferred Work Duration -->
+                        <div>
+                            <label for="work-duration" class="block text-sm font-medium text-gray-700">How long would you like to work with ScrubIt?</label>
+                            <select id="work-duration" name="work-duration" class="input-focus mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3 bg-white">
+                                <option value="<6m">Less than 6 months</option>
+                                <option value="6m-1y">6 months to 1 year</option>
+                                <option value="1y+">1 year or longer</option>
+                            </select>
+                        </div>
+
+                        <h3 class="text-lg font-semibold text-gray-700 mt-8 mb-4 pt-4 border-t">Eligibility & Compliance</h3>
+                        <!-- Eligibility Checkboxes -->
+                        <div class="space-y-4">
+                            <label class="flex items-start">
+                                <input type="checkbox" id="check-right-to-work" name="eligibility" value="right_to_work" required class="mt-1 form-checkbox text-custom-green h-5 w-5 rounded">
+                                <span class="ml-3 text-gray-700">I have the legal right to work in the UK and consent to ScrubIt verifying this. <span class="text-red-500">*</span></span>
+                            </label>
+                            <label class="flex items-start">
+                                <input type="checkbox" id="check-bank-account" name="eligibility" value="bank_account" required class="mt-1 form-checkbox text-custom-green h-5 w-5 rounded">
+                                <span class="ml-3 text-gray-700">I have a UK bank account in my name. <span class="text-red-500">*</span></span>
+                            </label>
+                            <label class="flex items-start">
+                                <input type="checkbox" id="check-self-employed" name="eligibility" value="self_employed" required class="mt-1 form-checkbox text-custom-green h-5 w-5 rounded">
+                                <span class="ml-3 text-gray-700">I understand I will be self-employed and responsible for my own tax/NI contributions. <span class="text-red-500">*</span></span>
+                            </label>
+                            <label class="flex items-start">
+                                <input type="checkbox" id="check-no-criminal-record" name="eligibility" value="no_criminal_record" required class="mt-1 form-checkbox text-custom-green h-5 w-5 rounded">
+                                <span class="ml-3 text-gray-700">I confirm I do not have a criminal record or any unspent police convictions. <span class="text-red-500">*</span></span>
+                            </label>
+                            <label class="flex items-start">
+                                <input type="checkbox" id="check-terms" name="eligibility" value="terms_read" required class="mt-1 form-checkbox text-custom-green h-5 w-5 rounded">
+                                <span class="ml-3 text-gray-700">I have read and agree to the <a href="#" class="text-custom-blue hover:underline font-medium">Terms of Service</a> and <a href="#" class="text-custom-blue hover:underline font-medium">Privacy Policy</a>. <span class="text-red-500">*</span></span>
+                            </label>
+                            <p id="eligibility-error" class="text-red-500 text-sm mt-2 hidden">All eligibility checkboxes must be ticked to continue.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between mt-8 pt-6 border-t border-gray-200">
+                    <button type="button" id="prev-button" onclick="prevStep()" class="flex items-center text-sm px-6 py-3 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 transition-colors hidden">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> Back
+                    </button>
+                    <button type="submit" id="next-button" class="flex-grow md:flex-none md:ml-auto flex items-center justify-center text-sm px-8 py-3 bg-custom-green text-white rounded-lg shadow-lg hover:bg-custom-green transition-colors disabled:opacity-50" disabled>
+                        Next Step <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                    <button type="button" id="submit-button" onclick="submitForm()" class="flex-grow md:flex-none md:ml-auto flex items-center justify-center text-sm px-8 py-3 bg-custom-blue text-white rounded-lg shadow-lg hover:bg-custom-blue transition-colors hidden disabled:opacity-50" disabled>
+                        <i class="fa-solid fa-check-circle mr-2"></i> Submit Application
+                    </button>
+                </div>
+                
+                <p id="form-message" class="text-center text-sm mt-4 hidden"></p>
+                <p class="text-center text-sm text-gray-500 mt-6">Already have an account? <a href="../sign_in.html" class="text-custom-blue hover:underline font-semibold">Log in here</a></p>
+            </form>
+
+        </div>
+
+        <script src="js/employee_signup.js"></script>
+    </body>
+</html>

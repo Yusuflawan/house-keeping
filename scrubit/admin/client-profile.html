@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title id="page-title">Client Profile - ScrubIt Admin</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+        <style>
+            /* Custom Scrollbar and layout styles (as before) */
+            ::-webkit-scrollbar { width: 8px; }
+            ::-webkit-scrollbar-track { background: #f1f1f1; }
+            ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+            ::-webkit-scrollbar-thumb:hover { background: #555; }
+            html, body {
+                height: 100%;
+                margin: 0;
+                font-family: 'Inter', sans-serif;
+                background-color: #f7f9fc;
+            }
+            .bg-custom-blue { background-color: #3f51b5; }
+            .bg-custom-green { background-color: #00897b; }
+            .bg-custom-yellow { background-color: #ffb300; }
+            .bg-custom-red { background-color: #e53935; }
+            .bg-custom-purple { background-color: #673ab7; }
+        </style>
+    </head>
+
+    <body class="flex h-screen" id="app-container">
+        <div id="nav-placeholder"></div> 
+
+        <div id="sidebar-backdrop" 
+            class="fixed inset-0 bg-gray-900 bg-opacity-50 z-10 hidden md:hidden"
+            onclick="
+                document.getElementById('sidebar').classList.add('-translate-x-full'); 
+                this.classList.add('hidden');
+            ">
+        </div>
+
+        <div class="flex-grow p-4 md:p-8 overflow-y-auto">
+            <button id="menu-toggle" class="md:hidden p-3 mb-4 bg-white rounded-lg shadow">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            
+            <div class="mb-6">
+                <h1 class="text-3xl font-extrabold text-gray-800">Client Profile</h1>
+                <nav class="text-sm text-gray-500 mt-1" aria-label="breadcrumb">
+                    <ol class="flex space-x-2">
+                        <li><a href="dashboard.html" class="hover:text-custom-blue">Home</a></li>
+                        <li class="text-gray-400">/</li>
+                        <li><a href="clients-list.html" class="hover:text-custom-blue">Clients</a></li>
+                        <li class="text-gray-400">/</li>
+                        <li class="font-semibold text-gray-700" id="profile-breadcrumb-name">Alice Johnson (C-001)</li>
+                    </ol>
+                </nav>
+                <div class="h-px bg-gray-200 mt-4"></div>
+            </div>
+
+            <div id="client-profile-header" class="bg-white p-6 rounded-xl shadow-xl mb-6 flex flex-col md:flex-row justify-between items-start md:items-center">
+                <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                    <div id="client-initials" class="w-16 h-16 bg-custom-blue rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-md">
+                        AJ
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800" id="client-full-name">Alice Johnson</h2>
+                        <p class="text-gray-500 text-sm">Client ID: <span id="client-id">C-001</span> | VIP Status: <span class="font-semibold" id="client-vip-status">Yes</span></p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap space-x-3 space-y-2 md:space-y-0 text-sm">
+                    <button class="bg-custom-blue text-white p-2 rounded-lg font-medium hover:bg-indigo-600 transition-colors shadow-md">
+                        <i class="fa-solid fa-envelope mr-1"></i> Send Email
+                    </button>
+                    <button class="bg-custom-red text-white p-2 rounded-lg font-medium hover:bg-red-600 transition-colors shadow-md">
+                        <i class="fa-solid fa-user-lock mr-1"></i> Suspend Account
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl shadow-lg mb-6 flex border-b border-gray-200 space-x-4 overflow-x-auto">
+                <button id="tab-account" onclick="switchTab('account')" class="tab-button p-2 px-4 rounded-lg text-gray-600 bg-white font-medium whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-address-card mr-2"></i> Account Details
+                </button>
+                <button id="tab-bookings" onclick="switchTab('bookings')" class="tab-button p-2 px-4 rounded-lg text-gray-600 bg-white font-medium whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-calendar-alt mr-2"></i> Booking History
+                </button>
+                <button id="tab-payments" onclick="switchTab('payments')" class="tab-button p-2 px-4 rounded-lg text-gray-600 bg-white font-medium whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-credit-card mr-2"></i> Invoices & Payments
+                </button>
+            </div>
+
+            <div id="content-account" class="tab-content bg-white p-6 rounded-xl shadow-xl hidden">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Client Contact Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Email Address</p>
+                        <p class="text-lg font-semibold" id="client-email">alice.j@email.com</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Phone Number</p>
+                        <p class="text-lg font-semibold" id="client-phone">(555) 123-4567</p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <p class="text-sm font-medium text-gray-500">Primary Address</p>
+                        <p class="text-lg font-semibold" id="client-address">123 Main St, Apartment 4B, Cityville, CA 90210</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Account Created</p>
+                        <p class="text-lg font-semibold" id="client-created-date">2023-01-15</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Total Spent</p>
+                        <p class="text-lg font-semibold text-custom-green" id="client-total-spent">$4,250.00</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-bookings" class="tab-content bg-white p-6 rounded-xl shadow-xl">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Booking History</h3>
+                <div class="bg-gray-50 p-4 rounded-lg text-gray-600">
+                    <p class="font-bold">Last 5 Bookings:</p>
+                    <ul class="list-disc ml-6 mt-2 text-sm" id="client-booking-history-list">
+                        <li>#2025-10-02: Deep Clean ($150) - Completed</li>
+                        <li>#2025-09-15: Standard Clean ($80) - Completed</li>
+                        <li>#2025-08-30: Window Clean ($95) - Cancelled</li>
+                        <li>#2025-08-01: Deep Clean ($160) - Completed</li>
+                        <li>#2025-07-15: Standard Clean ($80) - Completed</li>
+                    </ul>
+                </div>
+                <button class="mt-4 bg-gray-200 text-gray-700 p-2 rounded-lg font-medium hover:bg-gray-300 transition-colors">
+                    View All Bookings
+                </button>
+            </div>
+
+            <div id="content-payments" class="tab-content bg-white p-6 rounded-xl shadow-xl hidden">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Invoices & Payment Methods</h3>
+                
+                <div class="mb-6 p-4 border border-custom-blue/30 rounded-lg bg-custom-blue/5">
+                    <p class="font-medium text-custom-blue">Default Payment Method:</p>
+                    <p class="text-sm text-gray-700" id="client-payment-method">Visa ending in **** 4242 (Expires 12/26)</p>
+                    <button class="mt-2 text-custom-blue text-sm font-medium hover:text-indigo-700 transition-colors">
+                        <i class="fa-solid fa-pen mr-1"></i> Edit Payment
+                    </button>
+                </div>
+            
+                <h4 class="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Invoice History</h4>
+                
+                <div class="overflow-x-auto bg-white rounded-lg border">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoice-history-table-body" class="bg-white divide-y divide-gray-200">
+                            </tbody>
+                    </table>
+                </div>
+            
+                <button class="mt-4 bg-gray-200 text-gray-700 p-2 rounded-lg font-medium hover:bg-gray-300 transition-colors">
+                    View All Invoices
+                </button>
+            </div>
+            
+        </div>
+
+        <script src="js/sidebar.js"></script> 
+        <script src="js/client-profile.js"></script>
+    </body>
+</html>

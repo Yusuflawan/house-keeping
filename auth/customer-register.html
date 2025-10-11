@@ -26,20 +26,48 @@
               <div class="form-side">
                 <h6 class="mb-4">Signup</h6>
                 <span id="message"></span>
-                <form id="login-form">
+                
+                <form id="signup-form" class="tooltip-right-bottom">
+                    
                     <label class="form-group has-float-label mb-4">
-                        <input class="form-control" id="email" /> <span>Email</span>
+                        <input class="form-control" id="full-name" name="fullName" required/>
+                        <span>Full Name</span>
                     </label>
+                    
                     <label class="form-group has-float-label mb-4">
-                        <input class="form-control" id="password" type="password" placeholder="" /> <span>Password</span>
+                        <input class="form-control" id="email" name="email" type="email" required/>
+                        <span>Email</span>
                     </label>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <!-- <a href="#">Forget password?</a> -->
-                    <a href="login.html">Already have an account? Login</a>
-                    <a href="../customer/dashboard.html" class="btn btn-primary btn-lg btn-shadow" type="submit">SIGNUP</a>
-                </div>
+                    
+                    <label class="form-group has-float-label mb-4">
+                        <input class="form-control" id="phone" name="phone" required/>
+                        <span>Phone Number</span>
+                    </label>
+            
+                    <label class="form-group has-float-label mb-4">
+                        <input data-role="tagsinput" class="tags-input form-control" type="text" id="address" name="address" required/> 
+                        <span>Address / Postal Code</span>
+                    </label>
+            
+                    <label class="form-group has-float-label mb-4">
+                        <input class="form-control" id="password" name="password" type="password" required/>
+                        <span>Password</span>
+                    </label>
+                    
+                    <label class="form-group has-float-label mb-4">
+                        <input class="form-control" id="confirm-password" name="confirmPassword" type="password" required/>
+                        <span>Confirm Password</span>
+                    </label>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="login.html">Already have an account? Login</a>
+                        
+                        <button class="btn btn-primary btn-lg btn-shadow" type="submit">
+                            SIGNUP
+                        </button>
+                    </div>
                 </form>
-              </div>
+            </div>
             </div>
           </div>
         </div>

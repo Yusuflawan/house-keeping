@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Scrub and Clean It Limited - Employee Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+        
+        <style>
+            /* Custom Scrollbar for a cleaner look */
+            ::-webkit-scrollbar { width: 8px; }
+            ::-webkit-scrollbar-track { background: #f1f1f1; }
+            ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+            ::-webkit-scrollbar-thumb:hover { background: #555; }
+            
+            /* Global Styles */
+            html, body {
+                height: 100%;
+                margin: 0;
+                font-family: 'Inter', sans-serif;
+                background-color: #f7f9fc;
+            }
+
+            /* Tailwind custom colors for the template aesthetics (matching admin) */
+            .text-custom-blue, .hover\:text-custom-blue:hover { color: #3f51b5; }
+            .bg-custom-blue { background-color: #3f51b5; }
+            .bg-custom-green { background-color: #00897b; }
+            .bg-custom-red { background-color: #e53935; }
+            .border-custom-blue { border-color: #3f51b5; }
+        </style>
+    </head>
+
+    <body class="flex flex-col h-screen" id="app-container">
+        
+        <!-- Placeholder for the Fixed Top Header (Desktop Nav & User Icon) -->
+        <div id="top-nav-placeholder" class="h-16 hidden md:block border-b"></div>
+        
+        <!-- Main Content Wrapper: Scrollable Area -->
+        <!-- On mobile, the content needs padding at the bottom equal to the height of the bottom nav (h-16) -->
+        <div id="main-content" class="flex-grow p-4 md:p-8 overflow-y-auto pt-20 pb-20 md:pb-8">
+            
+            <!-- Dashboard Title and Welcome Message -->
+            <div class="mb-6">
+                <h1 class="text-3xl font-extrabold text-gray-800">Hello, <span id="employee-name-display">Employee!</span></h1>
+                <p class="text-gray-500 mt-1">Your snapshot of tasks and earnings.</p>
+                <div class="h-px bg-gray-200 mt-4"></div>
+            </div>
+
+            <!-- 1. Metric Cards: My Performance at a Glance -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                
+                <!-- Card 1: Hours Worked -->
+                <div id="card-hours-worked" class="bg-white rounded-xl shadow-lg p-4 text-center border-t-4 border-custom-blue">
+                    <i class="fa-solid fa-clock text-3xl text-custom-blue mb-2"></i>
+                    <h6 class="text-sm text-gray-500">Hours Worked (This Week)</h6>
+                    <div class="text-2xl font-bold text-gray-800" id="metric-hours-worked">0.0</div>
+                </div>
+
+                <!-- Card 2: Earnings -->
+                <div id="card-earnings" class="bg-white rounded-xl shadow-lg p-4 text-center border-t-4 border-custom-green">
+                    <i class="fa-solid fa-wallet text-3xl text-custom-green mb-2"></i>
+                    <h6 class="text-sm text-gray-500">Net Earnings (This Week)</h6>
+                    <div class="text-2xl font-bold text-gray-800" id="metric-earnings">£0.00</div>
+                </div>
+
+                <!-- Card 3: Jobs Completed -->
+                <div id="card-jobs-completed" class="bg-white rounded-xl shadow-lg p-4 text-center border-t-4 border-yellow-500">
+                    <i class="fa-solid fa-circle-check text-3xl text-yellow-500 mb-2"></i>
+                    <h6 class="text-sm text-gray-500">Jobs Completed (Month)</h6>
+                    <div class="text-2xl font-bold text-gray-800" id="metric-jobs-completed">0</div>
+                </div>
+
+                <!-- Card 4: Cancellation Fines -->
+                <div id="card-cancellation-fines" class="bg-white rounded-xl shadow-lg p-4 text-center border-t-4 border-custom-red">
+                    <i class="fa-solid fa-triangle-exclamation text-3xl text-custom-red mb-2"></i>
+                    <h6 class="text-sm text-gray-500">Cancellation Fines</h6>
+                    <div class="text-2xl font-bold text-gray-800" id="metric-fines">£0.00</div>
+                </div>
+            </div>
+
+            <!-- Unified Current / Next Job Card -->
+            <div id="current-job-card" class="bg-white rounded-xl shadow-lg p-6 mb-8 border-t-4 border-custom-blue">
+                <!-- Header -->
+                <div class="flex justify-between items-start mb-3">
+                    <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                        <i class="fa-solid fa-hourglass-start text-custom-blue mr-2"></i>
+                        Current / Next Job
+                    </h2>
+                    <span id="job-status-tag" class="text-sm font-medium bg-indigo-100 text-custom-blue px-3 py-1 rounded-full">
+                        Confirmed
+                    </span>
+                </div>
+
+                <!-- Job Details -->
+                <div id="current-job-details" class="space-y-2 mb-4">
+                    <p class="text-lg font-bold text-gray-700" id="job-client-name">Client Placeholder Name</p>
+                    <p class="text-gray-500 flex items-center">
+                        <i class="fa-solid fa-location-dot w-4 mr-2 text-custom-blue"></i>
+                        <span id="job-address">123 Example St, City, PO1 1EX</span>
+                    </p>
+                    <p class="text-gray-500 flex items-center">
+                        <i class="fa-solid fa-calendar-day w-4 mr-2 text-custom-blue"></i>
+                        <span id="job-time">Today, 10:00 AM – 12:00 PM</span>
+                    </p>
+                    <p class="text-gray-500 flex items-center">
+                        <i class="fa-solid fa-clock w-4 mr-2 text-custom-blue"></i>
+                        <span id="job-estimated-time">Est. Duration: 2 hours</span>
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-2 gap-4 mt-4" id="current-job-action-buttons">
+                    <button id="action-button-clockin" class="w-full inline-block text-center py-3 bg-custom-blue text-white rounded-lg font-bold shadow-md hover:bg-indigo-600 transition-colors">
+                        <i class="fa-solid fa-clock mr-2"></i> Clock In
+                    </button>
+
+                    <button id="action-button-cancel" class="w-full inline-block text-center py-3 bg-custom-red text-white border border-custom-blue rounded-lg font-bold shadow-sm hover:bg-red-700 transition-colors">
+                        <i class="fa-solid fa-xmark mr-2"></i> Cancel
+                    </button>
+                </div>
+
+                <!-- Placeholder (when no job available) -->
+                <div id="job-placeholder" class="hidden text-center p-4">
+                    <i class="fa-solid fa-spinner fa-spin text-2xl text-gray-500"></i>
+                    <p class="text-gray-500 mt-2">No active job at the moment.</p>
+                </div>
+            </div>
+
+
+            <!-- 3. Available Jobs Table (Dashboard Specific) -->
+            <div class="bg-white rounded-xl shadow-lg p-6" id="available-jobs-section">
+                <div class="flex justify-between items-center mb-4 border-b pb-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Available Jobs (Next 7 Days)</h2>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200" id="available-jobs-table">
+                        <thead>
+                            <tr class="text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                                <th class="px-4 py-3">Client</th>
+                                <th class="px-4 py-3">Date & Time</th>
+                                <th class="px-4 py-3">Service Type</th>
+                                <th class="px-4 py-3 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="avaiable-jobs-table-body">
+                            <!-- Placeholder Data -->
+                            <tr>
+                                <td class="px-4 py-3 text-sm text-gray-900">John Smith</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Tomorrow, 9:00 AM</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Deep Cleaning</td>
+                                <td class="px-4 py-3 text-right">
+                                    <a href="employee_booking_details.html" class="text-custom-blue hover:text-indigo-600 text-sm font-medium">Details</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 text-sm text-gray-900">Jane Doe</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Thurs, 2:00 PM</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">End of Tenancy Cleaning</td>
+                                <td class="px-4 py-3 text-right">
+                                    <a href="employee_booking_details.html" class="text-custom-blue hover:text-indigo-600 text-sm font-medium">Details</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Placeholder for the Fixed Bottom Navigation (Mobile Only) -->
+        <div id="bottom-nav-placeholder" class="md:hidden"></div>
+
+        <script src="js/employee_nav.js"></script>
+        <!-- Logic for the dashboard features will go into employee_dashboard.js later -->
+        <script src="js/employee_dashboard.js"></script>
+
+        <script>
+            // Call the injection function on load
+            window.onload = loadEmployeeNav;
+        </script>
+    </body>
+</html>

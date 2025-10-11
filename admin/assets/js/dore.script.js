@@ -1187,7 +1187,7 @@
           new Chart(te, {
             plugins: [ee],
             type: "DoughnutWithShadow",
-            data: { labels: ["Cakes", "Cupcakes", "Desserts"], datasets: [{ label: "", borderColor: [s, r, t], backgroundColor: [u, p, c], borderWidth: 2, data: [15, 25, 20] }] },
+            data: { labels: ["Completed", "Pending", "Cancelled"], datasets: [{ label: "", borderColor: [s, r, t], backgroundColor: [u, p, c], borderWidth: 2, data: [15, 25, 20] }] },
             draw: function () {},
             options: {
               plugins: { datalabels: { display: !1 } },

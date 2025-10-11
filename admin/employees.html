@@ -74,10 +74,10 @@
                               >
                               Name
                               </th>
-                              <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 57px" aria-label="Email: activate to sort column ascending">Email</th>
-                              <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 58px" aria-label="Phone: activate to sort column ascending">Phone</th>
-                              <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 88px" aria-label="Salary: activate to sort column ascending">Salary</th>
-                              <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 88px" aria-label="Salary: activate to sort column ascending">Date Employed</th>
+                              <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 57px" aria-label="Email: activate to sort column ascending">Total Jobs</th>
+                              <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 58px" aria-label="Phone: activate to sort column ascending">Rating</th>
+                              <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 88px" aria-label="Salary: activate to sort column ascending">Service Types</th>
+                              <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 88px" aria-label="Salary: activate to sort column ascending">Status</th>
                               <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 88px" aria-label="Action: activate to sort column ascending">Action</th>
                           </tr>
                           </thead>
@@ -96,42 +96,74 @@
 
 
       <div class="modal fade" id="addEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-              <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="addEmployeeModalLabel">Add Employee</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-              <div class="modal-body">
-                  <!-- Add your employee form fields here -->
-                  <form>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEmployeeModalLabel">Add Employee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Add your employee form fields here -->
+                <form>
                   <div class="form-group">
-                      <label for="employeeName">Name</label>
-                      <input type="text" class="form-control" id="employeeName" placeholder="Enter name">
+                    <label for="employeeName">Full Name</label>
+                    <input type="text" class="form-control" id="employeeName" placeholder="Enter full name" required>
                   </div>
+      
                   <div class="form-group">
-                      <label for="email">Email</label>
-                      <input type="email" class="form-control" id="email" placeholder="Enter email">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" class="form-control" id="phone" placeholder="Enter phone number" required>
                   </div>
+      
                   <div class="form-group">
-                      <label for="phone">Phone</label>
-                      <input type="tel" class="form-control" id="phone" placeholder="Enter phone">
+                    <label for="email">Email <small class="text-muted">(optional)</small></label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter email">
                   </div>
+      
                   <div class="form-group">
-                      <label for="salary">Salary</label>
-                      <input type="text" class="form-control" id="salary" placeholder="Enter salary">
+                    <label for="workAreas">Assigned Work Areas (Locations/Postcodes)</label>
+                    <textarea class="form-control" id="workAreas" rows="2" placeholder="Enter areas, e.g. NW10, SW3, Office 21" required></textarea>
+                    <small class="form-text text-muted">You can enter multiple areas separated by commas.</small>
                   </div>
-                  </form>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" id="add-employee-btn" class="btn btn-primary">Save Employee</button>
-              </div>
-              </div>
-          </div>
+      
+                  <div class="form-group">
+                    <label for="role">Role</label>
+                    <select class="form-control" id="role" required>
+                      <option value="">-- Select Role --</option>
+                      <option value="cleaner">Cleaner</option>
+                      <option value="rider">Rider</option>
+                      <option value="manager">Manager</option>
+                      <option value="supervisor">Supervisor</option>
+                    </select>
+                  </div>
+      
+                  <div class="form-group">
+                    <label for="shiftAvailability">Shift Availability</label>
+                    <textarea class="form-control" id="shiftAvailability" rows="2" placeholder="E.g. Mon-Fri mornings, Weekends evenings" required></textarea>
+                    <small class="form-text text-muted">Enter the days/times the employee is available.</small>
+                  </div>
+      
+                  <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+                  </div>
+      
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+                  </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="add-employee-btn" class="btn btn-primary">Save Employee</button>
+            </div>
+            </div>
+        </div>
       </div>
+      
 
       <div class="modal fade" id="editEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Financials - ScrubIt Admin</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+        <style>
+            /* Custom Scrollbar and layout styles */
+            ::-webkit-scrollbar { width: 8px; }
+            ::-webkit-scrollbar-track { background: #f1f1f1; }
+            ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+            ::-webkit-scrollbar-thumb:hover { background: #555; }
+            html, body {
+                height: 100%;
+                margin: 0;
+                font-family: 'Inter', sans-serif;
+                background-color: #f7f9fc;
+            }
+            /* Tailwind custom colors */
+            .bg-custom-blue { background-color: #3f51b5; }
+            .bg-custom-green { background-color: #00897b; }
+            .bg-custom-yellow { background-color: #ffb300; }
+            .bg-custom-red { background-color: #e53935; }
+        </style>
+    </head>
+
+    <body class="flex h-screen" id="app-container">
+        <div id="nav-placeholder"></div> 
+
+        <div id="sidebar-backdrop" 
+            class="fixed inset-0 bg-gray-900 bg-opacity-50 z-10 hidden md:hidden"
+            onclick="
+                document.getElementById('sidebar').classList.add('-translate-x-full'); 
+                this.classList.add('hidden');
+            ">
+        </div>
+
+        <div class="flex-grow p-4 md:p-8 overflow-y-auto">
+            <button id="menu-toggle" class="md:hidden p-3 mb-4 bg-white rounded-lg shadow">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            
+            <div class="mb-6">
+                <h1 class="text-3xl font-extrabold text-gray-800">Financial Overview</h1>
+                <nav class="text-sm text-gray-500 mt-1" aria-label="breadcrumb">
+                    <ol class="flex space-x-2">
+                        <li><a href="dashboard.html" class="hover:text-custom-blue">Home</a></li>
+                        <li class="text-gray-400">/</li>
+                        <li class="font-semibold text-gray-700">Financials</li>
+                    </ol>
+                </nav>
+                <div class="h-px bg-gray-200 mt-4"></div>
+            </div>
+
+            <div class="mb-6 flex space-x-2 p-2 bg-white rounded-xl shadow-lg border-l-4 border-custom-yellow">
+                <button id="invoices-tab" onclick="switchView('invoices')" class="flex-1 px-4 py-2 text-sm font-semibold rounded-lg transition-colors">
+                    <i class="fa-solid fa-receipt mr-2"></i> Client Invoices
+                </button>
+                <button id="payouts-tab" onclick="switchView('payouts')" class="flex-1 px-4 py-2 text-sm font-semibold rounded-lg transition-colors">
+                    <i class="fa-solid fa-money-bill-transfer mr-2"></i> Employee Payouts
+                </button>
+                <button id="export-data-button" onclick="handleAction('export-data')" class="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                    <i class="fa-solid fa-file-export mr-1"></i> Export Data
+                </button>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg mb-6 flex flex-col md:flex-row justify-between items-start md:items-center">
+                <div class="w-full md:w-1/3 mb-4 md:mb-0">
+                    <input type="text" id="search-input" placeholder="Search invoice or client..." class="w-full p-2 border border-gray-300 rounded-lg focus:ring-custom-blue focus:border-custom-blue"/>
+                </div>
+                <div class="flex space-x-3">
+                    <select id="status-filter" class="p-2 border border-gray-300 rounded-lg text-sm">
+                        <option>All Statuses</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Overdue">Overdue</option>
+                        <option value="Refunded">Refunded</option>
+                        <option value="Failed">Failed</option>
+                    </select>
+                    <input type="month" value="2025-09" id="month-filter" class="p-2 border border-gray-300 rounded-lg text-sm" />
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-medium text-gray-700 mb-4 border-b pb-2">
+                    Invoices (<span id="count-display" class="font-bold text-custom-blue">0</span> Total)
+                </h3>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr id="table-headers" class="text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="financials-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+
+        <script src="js/sidebar.js"></script> 
+        <script src="js/financials-list.js"></script> 
+    </body>
+</html>
